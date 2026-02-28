@@ -1,0 +1,45 @@
+<div class="space-y-4">
+  <div class="flex items-center justify-between">
+    <h1 class="text-xl font-bold" style="color: #E2E8F0;">Categories</h1>
+    <%= link_to new_category_path, class: "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors hover:opacity-90", style: "background-color: #6C63FF; color: white;" do %>
+      <%= svg_icon "plus", css_class: "w-4 h-4", stroke: "white" %>
+      New Category
+    <% end %>
+  </div>
+
+  <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
+    <% if @categories.any? %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-y sm:divide-y-0 gap-0" style="border-color: #2A2F45;">
+        <% @categories.each do |cat| %>
+          <div class="flex items-center justify-between gap-3 px-4 py-3 border-b hover:bg-white/[0.02] transition-colors" style="border-color: #2A2F45;">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: <%= cat.color %>22;">
+                <%= svg_icon cat.icon, css_class: "w-4 h-4", stroke: cat.color %>
+              </div>
+              <div>
+                <p class="text-sm font-medium" style="color: #E2E8F0;"><%= cat.name %></p>
+                <p class="text-xs font-mono" style="color: #8892A4;"><%= cat.color %></p>
+              </div>
+            </div>
+            <div class="flex items-center gap-1">
+              <%= link_to edit_category_path(cat), class: "p-1.5 rounded-lg hover:bg-white/5 transition-colors", style: "color: #8892A4;" do %>
+                <%= svg_icon "edit", css_class: "w-3.5 h-3.5" %>
+              <% end %>
+              <%= button_to category_path(cat), method: :delete,
+                  form: { data: { turbo_confirm: "Delete this category? Expenses will lose their category." } },
+                  class: "p-1.5 rounded-lg hover:bg-white/5 transition-colors",
+                  style: "color: #8892A4; background: none; border: none; cursor: pointer;" do %>
+                <%= svg_icon "trash-2", css_class: "w-3.5 h-3.5" %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="flex flex-col items-center justify-center py-16 gap-3">
+        <%= svg_icon "tag", css_class: "w-12 h-12 opacity-20", stroke: "#8892A4" %>
+        <p class="text-sm font-medium" style="color: #8892A4;">No categories yet</p>
+      </div>
+    <% end %>
+  </div>
+</div>

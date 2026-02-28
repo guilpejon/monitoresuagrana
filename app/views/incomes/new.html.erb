@@ -1,0 +1,11 @@
+<div class="max-w-lg mx-auto">
+  <div class="flex items-center gap-3 mb-6">
+    <%= link_to incomes_path, class: "p-2 rounded-lg hover:bg-white/5 transition-colors", style: "color: #8892A4;" do %>
+      <%= svg_icon "chevron-left", css_class: "w-5 h-5" %>
+    <% end %>
+    <h1 class="text-xl font-bold" style="color: #E2E8F0;">New Income</h1>
+  </div>
+  <div class="rounded-xl border p-6" style="background-color: #1E2130; border-color: #2A2F45;">
+    <%= render "form", income: @income %>
+  </div>
+</div>

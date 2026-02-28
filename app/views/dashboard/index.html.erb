@@ -1,0 +1,131 @@
+<%# Dashboard – FinTrack %>
+<div class="space-y-6">
+
+  <%# Summary Cards %>
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <%# Total Income %>
+    <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-medium uppercase tracking-wide" style="color: #8892A4;">Total Income</span>
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(0,212,170,0.15);">
+          <%= svg_icon "wallet", css_class: "w-4 h-4", stroke: "#00D4AA" %>
+        </div>
+      </div>
+      <p class="text-xl font-bold" style="color: #00D4AA;"><%= format_brl(@total_income) %></p>
+      <p class="text-xs mt-1" style="color: #8892A4;"><%= @current_date.strftime("%B %Y") %></p>
+    </div>
+
+    <%# Total Expenses %>
+    <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-medium uppercase tracking-wide" style="color: #8892A4;">Expenses</span>
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(255,107,107,0.15);">
+          <%= svg_icon "credit-card", css_class: "w-4 h-4", stroke: "#FF6B6B" %>
+        </div>
+      </div>
+      <p class="text-xl font-bold" style="color: #FF6B6B;"><%= format_brl(@total_expenses) %></p>
+      <p class="text-xs mt-1" style="color: #8892A4;"><%= @current_date.strftime("%B %Y") %></p>
+    </div>
+
+    <%# Net Balance %>
+    <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-medium uppercase tracking-wide" style="color: #8892A4;">Net Balance</span>
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(108,99,255,0.15);">
+          <%= svg_icon "trending-up", css_class: "w-4 h-4", stroke: "#6C63FF" %>
+        </div>
+      </div>
+      <p class="text-xl font-bold" style="color: <%= @net_balance >= 0 ? '#00D4AA' : '#FF6B6B' %>;"><%= format_brl(@net_balance) %></p>
+      <p class="text-xs mt-1" style="color: #8892A4;">Income - Expenses</p>
+    </div>
+
+    <%# Credit Card Bills %>
+    <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-medium uppercase tracking-wide" style="color: #8892A4;">Card Bills</span>
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(247,183,49,0.15);">
+          <%= svg_icon "credit-card", css_class: "w-4 h-4", stroke: "#F7B731" %>
+        </div>
+      </div>
+      <p class="text-xl font-bold" style="color: #F7B731;"><%= format_brl(@total_card_bills) %></p>
+      <p class="text-xs mt-1" style="color: #8892A4;"><%= @credit_cards.count %> card<%= @credit_cards.count == 1 ? "" : "s" %></p>
+    </div>
+  </div>
+
+  <%# Charts Row %>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <%# Spending by Category – Donut %>
+    <div class="rounded-xl border p-5" style="background-color: #1E2130; border-color: #2A2F45;">
+      <h2 class="text-sm font-semibold mb-4" style="color: #E2E8F0;">Spending by Category</h2>
+      <% if @spending_by_category.any? %>
+        <%= pie_chart @spending_by_category.transform_values(&:to_f),
+            donut: true,
+            colors: ["#6C63FF", "#00D4AA", "#FF6B6B", "#F7B731", "#A78BFA", "#34D399", "#60A5FA", "#FBBF24"],
+            legend: true,
+            library: {
+              plugins: {
+                legend: {
+                  position: "bottom",
+                  labels: { color: "#8892A4", font: { size: 12 }, padding: 12 }
+                }
+              }
+            } %>
+      <% else %>
+        <%= render "shared/empty_state", message: "No expenses recorded this month" %>
+      <% end %>
+    </div>
+
+    <%# Monthly Cash Flow – Bar %>
+    <div class="rounded-xl border p-5" style="background-color: #1E2130; border-color: #2A2F45;">
+      <h2 class="text-sm font-semibold mb-4" style="color: #E2E8F0;">Cash Flow — Last 6 Months</h2>
+      <% if @monthly_income.any? || @monthly_expenses.any? %>
+        <%= bar_chart [
+              { name: "Income", data: @monthly_income },
+              { name: "Expenses", data: @monthly_expenses }
+            ],
+            colors: ["#00D4AA", "#FF6B6B"],
+            library: {
+              plugins: {
+                legend: {
+                  labels: { color: "#8892A4", font: { size: 12 } }
+                }
+              },
+              scales: {
+                x: { ticks: { color: "#8892A4" }, grid: { color: "#2A2F45" } },
+                y: { ticks: { color: "#8892A4" }, grid: { color: "#2A2F45" } }
+              }
+            } %>
+      <% else %>
+        <%= render "shared/empty_state", message: "No data for the last 6 months" %>
+      <% end %>
+    </div>
+  </div>
+
+  <%# Recent Transactions %>
+  <div class="rounded-xl border p-5" style="background-color: #1E2130; border-color: #2A2F45;">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-sm font-semibold" style="color: #E2E8F0;">Recent Transactions</h2>
+      <%= link_to "View all", expenses_path, class: "text-xs font-medium hover:opacity-80 transition-opacity", style: "color: #6C63FF;" %>
+    </div>
+
+    <% if @recent_transactions.any? %>
+      <div class="space-y-3">
+        <% @recent_transactions.each do |expense| %>
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: <%= expense.category.color %>22;">
+              <%= svg_icon expense.category.icon, css_class: "w-4 h-4", stroke: expense.category.color %>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium truncate" style="color: #E2E8F0;"><%= expense.description %></p>
+              <p class="text-xs" style="color: #8892A4;"><%= expense.category.name %> · <%= expense.date.strftime("%d %b") %></p>
+            </div>
+            <span class="text-sm font-semibold flex-shrink-0" style="color: #FF6B6B;"><%= format_brl(expense.amount) %></span>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <%= render "shared/empty_state", message: "No recent transactions" %>
+    <% end %>
+  </div>
+
+</div>

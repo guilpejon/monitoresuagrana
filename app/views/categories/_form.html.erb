@@ -1,0 +1,53 @@
+<%= form_with model: category, class: "space-y-4" do |f| %>
+  <% if category.errors.any? %>
+    <div class="px-4 py-3 rounded-lg border text-sm" style="background-color: rgba(255,107,107,0.1); border-color: #FF6B6B; color: #FF6B6B;">
+      <% category.errors.full_messages.each do |msg| %><p><%= msg %></p><% end %>
+    </div>
+  <% end %>
+
+  <div>
+    <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;">Name *</label>
+    <%= f.text_field :name, class: "w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-all", style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;", placeholder: "e.g. Subscriptions", autofocus: true %>
+  </div>
+
+  <div>
+    <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;">Color *</label>
+    <div class="flex items-center gap-3">
+      <%= f.color_field :color, class: "w-10 h-10 rounded-lg cursor-pointer border-0 p-0.5", style: "background-color: #0F1117;" %>
+      <div class="flex gap-2 flex-wrap">
+        <% %w[#6C63FF #00D4AA #FF6B6B #F7B731 #A78BFA #34D399 #60A5FA #FBBF24 #F472B6].each do |preset| %>
+          <button type="button" class="w-6 h-6 rounded-full border-2 transition-all hover:scale-110" style="background-color: <%= preset %>; border-color: transparent;"
+                  onclick="document.querySelector('[name=\'category[color]\']').value='<%= preset %>'">
+          </button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <label class="block text-xs font-medium mb-2" style="color: #8892A4;">Icon</label>
+    <div class="grid grid-cols-6 gap-2">
+      <% %w[home utensils car heart-pulse gamepad-2 shopping-cart book-open zap plane circle-dollar-sign wallet trending-up credit-card bar-chart-2 tag calendar clock repeat filter search].each do |icon_name| %>
+        <label class="cursor-pointer">
+          <%= f.radio_button :icon, icon_name, class: "sr-only peer", id: "icon_#{icon_name}" %>
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center border transition-all hover:border-purple-500 peer-checked:border-purple-500 peer-checked:bg-purple-500/10"
+               style="border-color: #2A2F45;">
+            <%= svg_icon icon_name, css_class: "w-4 h-4", stroke: "#8892A4" %>
+          </div>
+        </label>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="flex gap-3 pt-2">
+    <%= f.submit category.new_record? ? "Create Category" : "Update Category", class: "flex-1 py-2.5 rounded-lg text-sm font-semibold cursor-pointer transition-colors hover:opacity-90", style: "background-color: #6C63FF; color: white;" %>
+    <%= link_to "Cancel", categories_path, class: "px-4 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-white/5", style: "color: #8892A4;" %>
+  </div>
+<% end %>
+
+<style>
+  input[type="radio"].sr-only:checked + div {
+    border-color: #6C63FF !important;
+    background-color: rgba(108,99,255,0.1);
+  }
+</style>

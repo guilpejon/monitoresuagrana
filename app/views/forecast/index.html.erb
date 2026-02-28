@@ -1,0 +1,94 @@
+<div class="space-y-5">
+  <div>
+    <h1 class="text-xl font-bold" style="color: #E2E8F0;">Forecast</h1>
+    <p class="text-sm mt-0.5" style="color: #8892A4;">Recurring expense projection for <%= @current_date.strftime("%B %Y") %></p>
+  </div>
+
+  <%# Projected summary cards %>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
+      <p class="text-xs font-medium uppercase tracking-wide mb-2" style="color: #8892A4;">Projected Income</p>
+      <p class="text-xl font-bold" style="color: #00D4AA;"><%= format_brl(@projected_income) %></p>
+      <p class="text-xs mt-1" style="color: #8892A4;"><%= @recurring_incomes.count %> recurring source<%= @recurring_incomes.count == 1 ? "" : "s" %></p>
+    </div>
+    <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
+      <p class="text-xs font-medium uppercase tracking-wide mb-2" style="color: #8892A4;">Projected Expenses</p>
+      <p class="text-xl font-bold" style="color: #FF6B6B;"><%= format_brl(@projected_total) %></p>
+      <p class="text-xs mt-1" style="color: #8892A4;"><%= @recurring_expenses.count %> recurring expense<%= @recurring_expenses.count == 1 ? "" : "s" %></p>
+    </div>
+    <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
+      <p class="text-xs font-medium uppercase tracking-wide mb-2" style="color: #8892A4;">Projected Balance</p>
+      <p class="text-xl font-bold" style="color: <%= @projected_balance >= 0 ? '#00D4AA' : '#FF6B6B' %>;"><%= format_brl(@projected_balance) %></p>
+      <p class="text-xs mt-1" style="color: #8892A4;">vs <%= format_brl(@prev_month_total) %> in <%= @prev_month_label %></p>
+    </div>
+  </div>
+
+  <%# Forecast chart %>
+  <div class="rounded-xl border p-5" style="background-color: #1E2130; border-color: #2A2F45;">
+    <h2 class="text-sm font-semibold mb-4" style="color: #E2E8F0;">Projected Spending by Category</h2>
+    <% if @forecast_chart_data.any? %>
+      <%= bar_chart @forecast_chart_data,
+          colors: ["#6C63FF"],
+          library: {
+            indexAxis: "y",
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { ticks: { color: "#8892A4" }, grid: { color: "#2A2F45" } },
+              y: { ticks: { color: "#8892A4" }, grid: { color: "#2A2F45" } }
+            }
+          } %>
+    <% else %>
+      <%= render "shared/empty_state", message: "No recurring expenses found" %>
+    <% end %>
+  </div>
+
+  <%# Recurring expenses list %>
+  <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
+    <div class="px-4 py-3 border-b" style="border-color: #2A2F45;">
+      <h2 class="text-sm font-semibold" style="color: #E2E8F0;">Recurring Expenses</h2>
+    </div>
+
+    <% if @recurring_expenses.any? %>
+      <div class="divide-y" style="border-color: #2A2F45;">
+        <% @recurring_expenses.each do |expense| %>
+          <div class="flex items-center gap-3 px-4 py-3">
+            <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: <%= expense.category.color %>22;">
+              <%= svg_icon expense.category.icon, css_class: "w-4 h-4", stroke: expense.category.color %>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium truncate" style="color: #E2E8F0;"><%= expense.description %></p>
+              <p class="text-xs" style="color: #8892A4;"><%= expense.category.name %> · Day <%= expense.recurrence_day || "?" %></p>
+            </div>
+            <div class="flex items-center gap-2 flex-shrink-0">
+              <%= expense_type_badge(expense.expense_type) %>
+              <span class="text-sm font-semibold" style="color: #FF6B6B;"><%= format_brl(expense.amount) %></span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="flex flex-col items-center justify-center py-12 gap-3">
+        <%= svg_icon "repeat", css_class: "w-10 h-10 opacity-20", stroke: "#8892A4" %>
+        <p class="text-sm" style="color: #8892A4;">No recurring expenses yet</p>
+        <p class="text-xs text-center max-w-xs" style="color: #8892A4;">Mark expenses as "recurring" when adding them to see your forecast here.</p>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Previous month comparison %>
+  <% if @prev_month_by_category.any? %>
+    <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="px-4 py-3 border-b" style="border-color: #2A2F45;">
+        <h2 class="text-sm font-semibold" style="color: #E2E8F0;">Actuals — <%= @prev_month_label %></h2>
+      </div>
+      <div class="divide-y" style="border-color: #2A2F45;">
+        <% @prev_month_by_category.sort_by { |_, v| -v }.first(6).each do |cat_name, amount| %>
+          <div class="flex items-center justify-between gap-3 px-4 py-3">
+            <span class="text-sm" style="color: #E2E8F0;"><%= cat_name %></span>
+            <span class="text-sm font-semibold" style="color: #FF6B6B;"><%= format_brl(amount) %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

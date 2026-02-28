@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg-primary: #0F1117;
+  --color-bg-sidebar: #1A1D27;
+  --color-bg-card: #1E2130;
+  --color-border: #2A2F45;
+  --color-accent: #6C63FF;
+  --color-income: #00D4AA;
+  --color-expense: #FF6B6B;
+  --color-investment: #F7B731;
+  --color-text: #E2E8F0;
+  --color-subtext: #8892A4;
+
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #1A1D27;
+}
+::-webkit-scrollbar-thumb {
+  background: #2A2F45;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #6C63FF;
+}
+
+/* Turbo progress bar */
+.turbo-progress-bar {
+  background: #6C63FF;
+}

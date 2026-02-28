@@ -1,0 +1,43 @@
+<div class="space-y-4">
+  <%# Header %>
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-xl font-bold" style="color: #E2E8F0;">Expenses</h1>
+      <p class="text-sm mt-0.5" style="color: #8892A4;">
+        Total: <span class="font-semibold" style="color: #FF6B6B;" id="expenses-total-amount"><%= format_brl(@total) %></span>
+      </p>
+    </div>
+    <%= link_to new_expense_path, class: "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors hover:opacity-90", style: "background-color: #6C63FF; color: white;" do %>
+      <%= svg_icon "plus", css_class: "w-4 h-4", stroke: "white" %>
+      Add Expense
+    <% end %>
+  </div>
+
+  <%# Expenses list %>
+  <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
+    <% if @expenses.any? %>
+      <div id="expenses_list" class="divide-y" style="border-color: #2A2F45;">
+        <% @expenses.each do |expense| %>
+          <%= render "expense", expense: expense %>
+        <% end %>
+      </div>
+    <% else %>
+      <div id="expenses_list">
+        <div class="flex flex-col items-center justify-center py-16 gap-3">
+          <%= svg_icon "credit-card", css_class: "w-12 h-12 opacity-20", stroke: "#8892A4" %>
+          <p class="text-sm font-medium" style="color: #8892A4;">No expenses this month</p>
+          <%= link_to "Add your first expense", new_expense_path, class: "text-sm font-medium hover:opacity-80", style: "color: #6C63FF;" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Pagination %>
+  <% if @pagy.pages > 1 %>
+    <div class="flex justify-center">
+      <%== pagy_nav(@pagy) %>
+    </div>
+  <% end %>
+</div>
+
+<div id="expenses_total" class="hidden"></div>

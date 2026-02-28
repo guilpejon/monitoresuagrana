@@ -1,0 +1,48 @@
+<%= form_with model: investment, class: "space-y-4" do |f| %>
+  <% if investment.errors.any? %>
+    <div class="px-4 py-3 rounded-lg border text-sm" style="background-color: rgba(255,107,107,0.1); border-color: #FF6B6B; color: #FF6B6B;">
+      <% investment.errors.full_messages.each do |msg| %><p><%= msg %></p><% end %>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-2 gap-3">
+    <div>
+      <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;">Name *</label>
+      <%= f.text_field :name, class: "w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-all", style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;", placeholder: "e.g. Petrobras", autofocus: true %>
+    </div>
+    <div>
+      <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;">Ticker / ID</label>
+      <%= f.text_field :ticker, class: "w-full px-3 py-2.5 rounded-lg border text-sm font-mono uppercase outline-none transition-all", style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;", placeholder: "PETR4 or bitcoin" %>
+    </div>
+  </div>
+
+  <div>
+    <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;">Type *</label>
+    <%= f.select :investment_type,
+        [["Stock / FII", "stock"], ["Crypto", "crypto"], ["Fund", "fund"]],
+        {},
+        class: "w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-all",
+        style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;" %>
+  </div>
+
+  <div class="grid grid-cols-2 gap-3">
+    <div>
+      <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;">Quantity</label>
+      <%= f.number_field :quantity, step: "0.00000001", min: "0", class: "w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-all", style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;", placeholder: "100" %>
+    </div>
+    <div>
+      <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;">Avg Price (R$)</label>
+      <%= f.number_field :average_price, step: "0.00000001", min: "0", class: "w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-all", style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;", placeholder: "0.00" %>
+    </div>
+  </div>
+
+  <div>
+    <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;">Current Price (R$) <span class="normal-case font-normal" style="color: #8892A4;">— auto-updated via API</span></label>
+    <%= f.number_field :current_price, step: "0.00000001", min: "0", class: "w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-all", style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;", placeholder: "0.00" %>
+  </div>
+
+  <div class="flex gap-3 pt-2">
+    <%= f.submit investment.new_record? ? "Add Investment" : "Update Investment", class: "flex-1 py-2.5 rounded-lg text-sm font-semibold cursor-pointer transition-colors hover:opacity-90", style: "background-color: #6C63FF; color: white;" %>
+    <%= link_to "Cancel", investments_path, class: "px-4 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-white/5", style: "color: #8892A4;" %>
+  </div>
+<% end %>

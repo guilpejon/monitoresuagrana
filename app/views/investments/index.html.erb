@@ -1,0 +1,141 @@
+<div class="space-y-5">
+  <div class="flex items-center justify-between">
+    <h1 class="text-xl font-bold" style="color: #E2E8F0;">Investments</h1>
+    <div class="flex items-center gap-2">
+      <%= button_to refresh_all_prices_investments_path, method: :post,
+          class: "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/5",
+          style: "background-color: #1E2130; border: 1px solid #2A2F45; color: #8892A4; cursor: pointer;" do %>
+        <%= svg_icon "refresh-cw", css_class: "w-4 h-4" %>
+        Refresh Prices
+      <% end %>
+      <%= link_to new_investment_path, class: "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors hover:opacity-90", style: "background-color: #6C63FF; color: white;" do %>
+        <%= svg_icon "plus", css_class: "w-4 h-4", stroke: "white" %>
+        Add Investment
+      <% end %>
+    </div>
+  </div>
+
+  <%# Summary cards %>
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
+      <p class="text-xs font-medium uppercase tracking-wide mb-2" style="color: #8892A4;">Total Invested</p>
+      <p class="text-lg font-bold" style="color: #E2E8F0;"><%= format_brl(@total_invested) %></p>
+    </div>
+    <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
+      <p class="text-xs font-medium uppercase tracking-wide mb-2" style="color: #8892A4;">Current Value</p>
+      <p class="text-lg font-bold" style="color: #F7B731;"><%= format_brl(@current_value) %></p>
+    </div>
+    <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
+      <p class="text-xs font-medium uppercase tracking-wide mb-2" style="color: #8892A4;">P&L</p>
+      <p class="text-lg font-bold" style="color: <%= pnl_color(@total_pnl) %>;"><%= format_brl(@total_pnl) %></p>
+    </div>
+    <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
+      <p class="text-xs font-medium uppercase tracking-wide mb-2" style="color: #8892A4;">Return</p>
+      <div class="flex items-center gap-1.5">
+        <%= svg_icon(@total_pnl_percent >= 0 ? "arrow-up" : "arrow-down", css_class: "w-4 h-4", stroke: pnl_color(@total_pnl_percent)) %>
+        <p class="text-lg font-bold" style="color: <%= pnl_color(@total_pnl_percent) %>;"><%= @total_pnl_percent %>%</p>
+      </div>
+    </div>
+  </div>
+
+  <%# Investments by type %>
+  <% if @investments.any? %>
+    <% @by_type.each do |type, investments| %>
+      <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
+        <div class="px-4 py-3 border-b" style="border-color: #2A2F45; background-color: rgba(42,47,69,0.4);">
+          <h2 class="text-sm font-semibold capitalize" style="color: #E2E8F0;">
+            <%= type == "stock" ? "Stocks" : type == "crypto" ? "Crypto" : "Funds" %>
+            <span class="ml-2 text-xs font-normal" style="color: #8892A4;"><%= investments.count %></span>
+          </h2>
+        </div>
+
+        <%# Table header %>
+        <div class="hidden md:grid grid-cols-7 gap-3 px-4 py-2 text-xs font-medium uppercase tracking-wide border-b" style="color: #8892A4; border-color: #2A2F45;">
+          <div class="col-span-2">Name / Ticker</div>
+          <div class="text-right">Qty</div>
+          <div class="text-right">Avg Price</div>
+          <div class="text-right">Curr. Price</div>
+          <div class="text-right">Total Value</div>
+          <div class="text-right">P&L</div>
+        </div>
+
+        <div class="divide-y" style="border-color: #2A2F45;">
+          <% investments.each do |inv| %>
+            <div class="px-4 py-3 hover:bg-white/[0.02] transition-colors">
+              <div class="flex items-center justify-between md:grid md:grid-cols-7 md:gap-3">
+                <%# Name/Ticker %>
+                <div class="col-span-2 flex items-center gap-2 min-w-0">
+                  <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: rgba(247,183,49,0.15);">
+                    <%= svg_icon "trending-up", css_class: "w-4 h-4", stroke: "#F7B731" %>
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-sm font-medium truncate" style="color: #E2E8F0;"><%= inv.name %></p>
+                    <% if inv.ticker.present? %>
+                      <p class="text-xs font-mono" style="color: #8892A4;"><%= inv.ticker.upcase %></p>
+                    <% end %>
+                  </div>
+                </div>
+
+                <%# Mobile: just show value and P&L %>
+                <div class="md:hidden flex flex-col items-end gap-0.5">
+                  <span class="text-sm font-semibold" style="color: #F7B731;"><%= format_brl(inv.current_value) %></span>
+                  <span class="text-xs font-medium" style="color: <%= pnl_color(inv.profit_loss_percent) %>;">
+                    <%= inv.profit_loss_percent >= 0 ? "+" : "" %><%= inv.profit_loss_percent %>%
+                  </span>
+                </div>
+
+                <%# Desktop columns %>
+                <div class="hidden md:block text-right">
+                  <span class="text-sm" style="color: #E2E8F0;"><%= inv.quantity.to_f %></span>
+                </div>
+                <div class="hidden md:block text-right">
+                  <span class="text-sm" style="color: #E2E8F0;"><%= format_brl(inv.average_price) %></span>
+                </div>
+                <div class="hidden md:block text-right">
+                  <span class="text-sm" style="color: #E2E8F0;"><%= format_brl(inv.current_price) %></span>
+                  <% if inv.last_price_update_at %>
+                    <p class="text-xs" style="color: #8892A4;"><%= inv.last_price_update_at.strftime("%d/%m %H:%M") %></p>
+                  <% end %>
+                </div>
+                <div class="hidden md:block text-right">
+                  <span class="text-sm font-semibold" style="color: #F7B731;"><%= format_brl(inv.current_value) %></span>
+                </div>
+                <div class="hidden md:flex items-center justify-end gap-1.5">
+                  <span class="text-sm font-medium" style="color: <%= pnl_color(inv.profit_loss_percent) %>;">
+                    <%= inv.profit_loss_percent >= 0 ? "+" : "" %><%= inv.profit_loss_percent %>%
+                  </span>
+                </div>
+              </div>
+
+              <%# Actions row %>
+              <div class="flex items-center justify-end gap-1 mt-1">
+                <% if inv.ticker.present? %>
+                  <%= button_to refresh_price_investment_path(inv), method: :post,
+                      class: "p-1.5 rounded-lg hover:bg-white/5 transition-colors",
+                      style: "color: #8892A4; background: none; border: none; cursor: pointer;" do %>
+                    <%= svg_icon "refresh-cw", css_class: "w-3.5 h-3.5" %>
+                  <% end %>
+                <% end %>
+                <%= link_to edit_investment_path(inv), class: "p-1.5 rounded-lg hover:bg-white/5 transition-colors", style: "color: #8892A4;" do %>
+                  <%= svg_icon "edit", css_class: "w-3.5 h-3.5" %>
+                <% end %>
+                <%= button_to investment_path(inv), method: :delete,
+                    form: { data: { turbo_confirm: "Remove this investment?" } },
+                    class: "p-1.5 rounded-lg hover:bg-white/5 transition-colors",
+                    style: "color: #8892A4; background: none; border: none; cursor: pointer;" do %>
+                  <%= svg_icon "trash-2", css_class: "w-3.5 h-3.5" %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="rounded-xl border flex flex-col items-center justify-center py-16 gap-3" style="background-color: #1E2130; border-color: #2A2F45;">
+      <%= svg_icon "trending-up", css_class: "w-12 h-12 opacity-20", stroke: "#8892A4" %>
+      <p class="text-sm font-medium" style="color: #8892A4;">No investments added yet</p>
+      <%= link_to "Add your first investment", new_investment_path, class: "text-sm font-medium hover:opacity-80", style: "color: #6C63FF;" %>
+    </div>
+  <% end %>
+</div>

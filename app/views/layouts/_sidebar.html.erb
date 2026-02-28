@@ -1,0 +1,42 @@
+<aside class="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-30 lg:flex lg:w-60 lg:flex-col border-r"
+       style="background-color: #1A1D27; border-color: #2A2F45;"
+       data-sidebar-target="sidebar">
+
+  <%# Logo %>
+  <div class="flex h-16 items-center px-6 border-b" style="border-color: #2A2F45;">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: #6C63FF;">
+        <%= svg_icon "wallet", css_class: "w-4 h-4", stroke: "white" %>
+      </div>
+      <span class="font-bold text-lg" style="color: #E2E8F0;">FinTrack</span>
+    </div>
+  </div>
+
+  <%# Navigation %>
+  <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+    <%= render "layouts/nav_item", icon: "home", label: "Dashboard", path: root_path, active: current_page?(root_path) %>
+    <%= render "layouts/nav_item", icon: "credit-card", label: "Expenses", path: expenses_path, active: controller_name == "expenses" %>
+    <%= render "layouts/nav_item", icon: "wallet", label: "Income", path: incomes_path, active: controller_name == "incomes" %>
+    <%= render "layouts/nav_item", icon: "credit-card", label: "Credit Cards", path: credit_cards_path, active: controller_name == "credit_cards" %>
+    <%= render "layouts/nav_item", icon: "trending-up", label: "Investments", path: investments_path, active: controller_name == "investments" %>
+    <%= render "layouts/nav_item", icon: "bar-chart-2", label: "Forecast", path: forecast_path, active: controller_name == "forecast" %>
+    <%= render "layouts/nav_item", icon: "tag", label: "Categories", path: categories_path, active: controller_name == "categories" %>
+  </nav>
+
+  <%# User section %>
+  <div class="border-t px-3 py-3" style="border-color: #2A2F45;">
+    <div class="flex items-center gap-3 px-3 py-2 rounded-lg mb-1" style="background-color: rgba(42,47,69,0.5);">
+      <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0" style="background-color: #6C63FF; color: white;">
+        <%= current_user.name&.first&.upcase || current_user.email.first.upcase %>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-medium truncate" style="color: #E2E8F0;"><%= current_user.name || current_user.email.split("@").first %></p>
+        <p class="text-xs truncate" style="color: #8892A4;"><%= current_user.currency || "BRL" %></p>
+      </div>
+    </div>
+    <%= link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/5", style: "color: #8892A4;" do %>
+      <%= svg_icon "log-out", css_class: "w-4 h-4" %>
+      Sign out
+    <% end %>
+  </div>
+</aside>

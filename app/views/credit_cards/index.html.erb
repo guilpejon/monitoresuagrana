@@ -1,0 +1,80 @@
+<div class="space-y-4">
+  <div class="flex items-center justify-between">
+    <h1 class="text-xl font-bold" style="color: #E2E8F0;">Credit Cards</h1>
+    <%= link_to new_credit_card_path, class: "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors hover:opacity-90", style: "background-color: #6C63FF; color: white;" do %>
+      <%= svg_icon "plus", css_class: "w-4 h-4", stroke: "white" %>
+      Add Card
+    <% end %>
+  </div>
+
+  <% if @credit_cards.any? %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <% @credit_cards.each do |card| %>
+        <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
+          <%# Card visual %>
+          <div class="p-5 relative" style="background: linear-gradient(135deg, <%= card.color_hex %>, <%= card.color_hex %>88);">
+            <div class="flex items-start justify-between mb-6">
+              <div>
+                <p class="text-xs font-medium opacity-80" style="color: white;">Credit Card</p>
+                <p class="text-base font-bold mt-0.5" style="color: white;"><%= card.name %></p>
+              </div>
+              <div class="opacity-80">
+                <%= svg_icon "credit-card", css_class: "w-7 h-7", stroke: "white" %>
+              </div>
+            </div>
+            <p class="text-sm font-mono tracking-widest opacity-90" style="color: white;">
+              •••• •••• •••• <%= card.last4 || "••••" %>
+            </p>
+            <p class="text-xs mt-1 opacity-70" style="color: white;"><%= card.brand&.upcase || "CARD" %></p>
+          </div>
+
+          <%# Card details %>
+          <div class="p-4 space-y-3">
+            <div class="flex items-center justify-between text-sm">
+              <span style="color: #8892A4;">Current Bill</span>
+              <span class="font-semibold" style="color: #F7B731;"><%= format_brl(card.current_bill(@current_date)) %></span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <span style="color: #8892A4;">Limit</span>
+              <span class="font-medium" style="color: #E2E8F0;"><%= format_brl(card.limit) %></span>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+              <span style="color: #8892A4;">Billing / Due</span>
+              <span class="font-medium" style="color: #E2E8F0;">Day <%= card.billing_day %> / Day <%= card.due_day %></span>
+            </div>
+
+            <%# Progress bar %>
+            <% usage_pct = card.limit.positive? ? [(card.current_bill(@current_date) / card.limit * 100).round, 100].min : 0 %>
+            <div>
+              <div class="flex justify-between text-xs mb-1" style="color: #8892A4;">
+                <span>Usage</span>
+                <span><%= usage_pct %>%</span>
+              </div>
+              <div class="h-1.5 rounded-full" style="background-color: #2A2F45;">
+                <div class="h-1.5 rounded-full transition-all" style="width: <%= usage_pct %>%; background-color: <%= usage_pct > 80 ? '#FF6B6B' : card.color_hex %>;"></div>
+              </div>
+            </div>
+
+            <div class="flex gap-2 pt-1">
+              <%= link_to edit_credit_card_path(card), class: "flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors hover:bg-white/5", style: "color: #8892A4; border: 1px solid #2A2F45;" do %>
+                <%= svg_icon "edit", css_class: "w-3.5 h-3.5" %> Edit
+              <% end %>
+              <%= button_to credit_card_path(card), method: :delete,
+                  form: { data: { turbo_confirm: "Remove this card?" } },
+                  class: "px-3 py-2 rounded-lg text-xs font-medium transition-colors hover:bg-white/5",
+                  style: "color: #FF6B6B; border: 1px solid #2A2F45; background: none; cursor: pointer;" do %>
+                <%= svg_icon "trash-2", css_class: "w-3.5 h-3.5" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="rounded-xl border flex flex-col items-center justify-center py-16 gap-3" style="background-color: #1E2130; border-color: #2A2F45;">
+      <%= svg_icon "credit-card", css_class: "w-12 h-12 opacity-20", stroke: "#8892A4" %>
+      <p class="text-sm font-medium" style="color: #8892A4;">No credit cards added yet</p>
+      <%= link_to "Add your first card", new_credit_card_path, class: "text-sm font-medium hover:opacity-80", style: "color: #6C63FF;" %>
+    </div>
+  <% end %>
+</div>

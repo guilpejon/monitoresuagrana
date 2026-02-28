@@ -1,0 +1,4 @@
+<%= link_to path, class: "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all #{active ? '' : 'hover:bg-white/5'}", style: active ? "background-color: rgba(108,99,255,0.15); color: #6C63FF;" : "color: #8892A4;" do %>
+  <%= svg_icon icon, css_class: "w-5 h-5 flex-shrink-0" %>
+  <span><%= label %></span>
+<% end %>

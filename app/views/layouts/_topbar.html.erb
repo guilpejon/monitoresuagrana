@@ -1,0 +1,27 @@
+<header class="flex h-16 items-center justify-between px-4 md:px-6 border-b flex-shrink-0" style="background-color: #1A1D27; border-color: #2A2F45;">
+  <%# Mobile menu button %>
+  <button class="lg:hidden p-2 rounded-lg transition-colors hover:bg-white/5" style="color: #8892A4;" data-action="click->sidebar#toggle">
+    <%= svg_icon "menu", css_class: "w-5 h-5" %>
+  </button>
+
+  <%# Month selector %>
+  <div class="flex items-center gap-2">
+    <%= link_to request.path + "?month=#{(@current_date - 1.month).strftime('%Y-%m')}", class: "p-1.5 rounded-lg transition-colors hover:bg-white/5", style: "color: #8892A4;" do %>
+      <%= svg_icon "chevron-left", css_class: "w-4 h-4" %>
+    <% end %>
+    <span class="text-sm font-semibold min-w-32 text-center" style="color: #E2E8F0;">
+      <%= @current_date&.strftime("%B %Y") || Date.current.strftime("%B %Y") %>
+    </span>
+    <%= link_to request.path + "?month=#{(@current_date + 1.month).strftime('%Y-%m')}", class: "p-1.5 rounded-lg transition-colors hover:bg-white/5", style: "color: #8892A4;" do %>
+      <%= svg_icon "chevron-right", css_class: "w-4 h-4" %>
+    <% end %>
+  </div>
+
+  <%# Quick Add button — desktop %>
+  <div class="hidden lg:flex items-center gap-3">
+    <%= link_to new_expense_path(quick: true), class: "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors hover:opacity-90", style: "background-color: #6C63FF; color: white;", data: { turbo_frame: "modal_content" }, id: "quick-add-btn" do %>
+      <%= svg_icon "plus", css_class: "w-4 h-4", stroke: "white" %>
+      Add Expense
+    <% end %>
+  </div>
+</header>
