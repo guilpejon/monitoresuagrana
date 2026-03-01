@@ -1,4 +1,4 @@
-<%= form_with model: bank_account, class: "space-y-4" do |f| %>
+<%= form_with model: bank_account, data: { controller: "bank-account-rate" }, class: "space-y-4" do |f| %>
   <% if bank_account.errors.any? %>
     <div class="px-4 py-3 rounded-lg border text-sm" style="background-color: rgba(255,107,107,0.1); border-color: #FF6B6B; color: #FF6B6B;">
       <% bank_account.errors.full_messages.each do |msg| %><p><%= msg %></p><% end %>
@@ -25,15 +25,37 @@
         style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;" %>
   </div>
 
-  <div class="grid grid-cols-2 gap-3">
-    <div>
-      <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;">Balance (R$)</label>
-      <%= f.number_field :balance, step: "0.01", min: "0", class: "w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-all", style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;", placeholder: "0.00" %>
-    </div>
-    <div>
-      <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;">Interest Rate (% p.a.)</label>
-      <%= f.number_field :interest_rate, step: "0.0001", min: "0", class: "w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-all", style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;", placeholder: "0.00" %>
-    </div>
+  <div>
+    <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;">Balance (R$)</label>
+    <%= f.number_field :balance, step: "0.01", min: "0", class: "w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-all", style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;", placeholder: "0.00" %>
+  </div>
+
+  <div>
+    <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;">Rate Type</label>
+    <%= f.select :rate_type,
+        [["Fixed Rate (% p.a.)", "fixed"], ["% of CDI", "cdi_percentage"]],
+        {},
+        class: "w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-all",
+        style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;",
+        data: { "bank-account-rate-target": "rateTypeSelect", action: "change->bank-account-rate#toggle" } %>
+  </div>
+
+  <div data-bank-account-rate-target="fixedFields">
+    <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;">Interest Rate (% p.a.)</label>
+    <%= f.number_field :interest_rate, step: "0.0001", min: "0", class: "w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-all", style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;", placeholder: "0.00" %>
+  </div>
+
+  <div data-bank-account-rate-target="cdiFields" class="hidden">
+    <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;">CDI Multiplier (%)</label>
+    <%= f.number_field :cdi_multiplier, step: "0.01", min: "0.01", class: "w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-all", style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;", placeholder: "100.00" %>
+    <% if @cdi_info %>
+      <p class="mt-1.5 text-xs" style="color: #00D4AA;">
+        Current CDI: <%= number_with_precision(@cdi_info[:rate], precision: 2) %>% p.a.
+        (as of <%= @cdi_info[:date] %>, updated <%= time_ago_in_words(@cdi_info[:updated_at]) %> ago)
+      </p>
+    <% else %>
+      <p class="mt-1.5 text-xs" style="color: #F7B731;">CDI rate not available — click "Refresh CDI" on the accounts page.</p>
+    <% end %>
   </div>
 
   <div>

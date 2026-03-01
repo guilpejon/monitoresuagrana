@@ -7,7 +7,7 @@
   <%# Month selector with boundaries %>
   <% today_month = Date.current.beginning_of_month %>
   <% min_month = today_month - 24.months %>
-  <% max_month = today_month + 1.month %>
+  <% max_month = @max_date || today_month + 1.month %>
   <% prev_date = @current_date - 1.month %>
   <% next_date = @current_date + 1.month %>
   <% at_min = @current_date <= min_month %>
@@ -20,7 +20,7 @@
         <%= svg_icon "chevron-left", css_class: "w-4 h-4" %>
       </span>
     <% else %>
-      <%= link_to request.path + "?month=#{prev_date.strftime('%Y-%m')}", class: "p-1.5 rounded-lg transition-colors hover:bg-white/5", style: "color: #8892A4;" do %>
+      <%= link_to request.path + "?month=#{prev_date.strftime('%Y-%m')}", class: "p-1.5 rounded-lg transition-colors hover:bg-white/5", style: "color: #8892A4;", data: { turbo_prefetch: "false" } do %>
         <%= svg_icon "chevron-left", css_class: "w-4 h-4" %>
       <% end %>
     <% end %>
@@ -41,7 +41,7 @@
         <%= svg_icon "chevron-right", css_class: "w-4 h-4" %>
       </span>
     <% else %>
-      <%= link_to request.path + "?month=#{next_date.strftime('%Y-%m')}", class: "p-1.5 rounded-lg transition-colors hover:bg-white/5", style: "color: #8892A4;" do %>
+      <%= link_to request.path + "?month=#{next_date.strftime('%Y-%m')}", class: "p-1.5 rounded-lg transition-colors hover:bg-white/5", style: "color: #8892A4;", data: { turbo_prefetch: "false" } do %>
         <%= svg_icon "chevron-right", css_class: "w-4 h-4" %>
       <% end %>
     <% end %>

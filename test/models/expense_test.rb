@@ -110,4 +110,48 @@ class ExpenseTest < ActiveSupport::TestCase
     assert_includes Expense.recurring, recurring
     assert_not_includes Expense.recurring, one_time
   end
+
+  # payment_method
+  test "validates payment_method inclusion" do
+    expense = build(:expense, payment_method: "wire_transfer")
+    assert_not expense.valid?
+  end
+
+  test "accepts all valid payment methods" do
+    %w[cash pix boleto credit_card].each do |method|
+      expense = build(:expense, payment_method: method)
+      assert expense.valid?, "Expected #{method} to be valid"
+    end
+  end
+
+  # total_installments
+  test "validates total_installments is in 1..60" do
+    assert_not build(:expense, total_installments: 0).valid?
+    assert_not build(:expense, total_installments: 61).valid?
+    assert build(:expense, total_installments: 1).valid?
+    assert build(:expense, total_installments: 60).valid?
+  end
+
+  # installment_number
+  test "validates installment_number is in 1..60" do
+    assert_not build(:expense, installment_number: 0).valid?
+    assert_not build(:expense, installment_number: 61).valid?
+    assert build(:expense, installment_number: 1).valid?
+    assert build(:expense, installment_number: 60).valid?
+  end
+
+  # installment?
+  test "installment? returns false when total_installments is 1" do
+    assert_not build(:expense, total_installments: 1).installment?
+  end
+
+  test "installment? returns true when total_installments > 1" do
+    assert build(:expense, total_installments: 3, installment_number: 2).installment?
+  end
+
+  # installment_label
+  test "installment_label returns installment_number/total_installments" do
+    expense = build(:expense, installment_number: 2, total_installments: 6)
+    assert_equal "2/6", expense.installment_label
+  end
 end

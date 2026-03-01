@@ -71,7 +71,7 @@
       <% if @spending_by_category.any? %>
         <%= pie_chart @spending_by_category.transform_values(&:to_f),
             donut: true,
-            colors: ["#6C63FF", "#00D4AA", "#FF6B6B", "#F7B731", "#A78BFA", "#34D399", "#60A5FA", "#FBBF24"],
+            colors: @spending_colors,
             legend: true,
             library: {
               plugins: {

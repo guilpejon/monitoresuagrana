@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_01_005317) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_01_200000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -18,11 +18,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_01_005317) do
     t.string "account_type", default: "checking", null: false
     t.decimal "balance", precision: 15, scale: 2, default: "0.0"
     t.string "bank_name"
+    t.decimal "cdi_multiplier", precision: 8, scale: 4, default: "100.0"
     t.string "color", default: "#6C63FF"
     t.datetime "created_at", null: false
     t.string "currency", default: "BRL"
     t.decimal "interest_rate", precision: 8, scale: 4, default: "0.0"
     t.string "name", null: false
+    t.string "rate_type", default: "fixed", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_bank_accounts_on_user_id"
@@ -60,8 +62,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_01_005317) do
     t.date "date", null: false
     t.string "description", null: false
     t.string "expense_type", default: "variable", null: false
+    t.string "installment_group_id"
+    t.integer "installment_number", default: 1, null: false
+    t.string "payment_method", default: "cash", null: false
     t.integer "recurrence_day"
     t.boolean "recurring", default: false
+    t.integer "total_installments", default: 1, null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["category_id"], name: "index_expenses_on_category_id"

@@ -20,6 +20,9 @@ class DashboardController < ApplicationController
       .first(8)
       .to_h
 
+    category_color_map = current_user.categories.pluck(:name, :color).to_h
+    @spending_colors = @spending_by_category.keys.map { |name| category_color_map[name] || "#6C63FF" }
+
     # Monthly cash flow for last 6 months (bar chart)
     @monthly_income = current_user.incomes
       .where(date: 6.months.ago.beginning_of_month..Date.current.end_of_month)

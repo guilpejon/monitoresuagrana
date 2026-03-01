@@ -1,11 +1,36 @@
 <div class="space-y-5">
   <div class="flex items-center justify-between">
     <h1 class="text-xl font-bold" style="color: #E2E8F0;">Bank Accounts</h1>
-    <%= link_to new_bank_account_path, class: "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors hover:opacity-90", style: "background-color: #6C63FF; color: white;" do %>
-      <%= svg_icon "plus", css_class: "w-4 h-4", stroke: "white" %>
-      Add Account
-    <% end %>
+    <div class="flex items-center gap-2">
+      <%= button_to refresh_cdi_rate_bank_accounts_path, method: :post, class: "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors hover:opacity-90", style: "background-color: #2A2F45; color: #8892A4; border: none; cursor: pointer;" do %>
+        <%= svg_icon "refresh-cw", css_class: "w-3.5 h-3.5" %>
+        Refresh CDI
+      <% end %>
+      <%= link_to new_bank_account_path, class: "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors hover:opacity-90", style: "background-color: #6C63FF; color: white;" do %>
+        <%= svg_icon "plus", css_class: "w-4 h-4", stroke: "white" %>
+        Add Account
+      <% end %>
+    </div>
   </div>
+
+  <%# CDI banner %>
+  <% if @cdi_info %>
+    <div class="rounded-xl border px-4 py-3 flex items-center gap-3" style="background-color: rgba(0,212,170,0.08); border-color: rgba(0,212,170,0.3);">
+      <div class="flex-1">
+        <p class="text-xs font-medium uppercase tracking-wide mb-0.5" style="color: #00D4AA;">CDI Rate (Annual)</p>
+        <p class="text-sm font-semibold" style="color: #E2E8F0;">
+          <%= number_with_precision(@cdi_info[:rate], precision: 2) %>% p.a.
+          <span class="text-xs font-normal ml-2" style="color: #8892A4;">
+            as of <%= @cdi_info[:date] %> &middot; updated <%= time_ago_in_words(@cdi_info[:updated_at]) %> ago
+          </span>
+        </p>
+      </div>
+    </div>
+  <% else %>
+    <div class="rounded-xl border px-4 py-3 flex items-center gap-3" style="background-color: rgba(247,183,49,0.08); border-color: rgba(247,183,49,0.3);">
+      <p class="text-sm" style="color: #F7B731;">CDI rate not cached — click "Refresh CDI" to fetch the current rate from Brazil's Central Bank.</p>
+    </div>
+  <% end %>
 
   <%# Summary cards %>
   <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -59,7 +84,9 @@
                 <%# Mobile: show balance %>
                 <div class="md:hidden flex flex-col items-end gap-0.5">
                   <span class="text-sm font-semibold" style="color: #E2E8F0;"><%= format_brl(account.balance) %></span>
-                  <% if account.interest_rate > 0 %>
+                  <% if account.cdi_percentage? %>
+                    <span class="text-xs" style="color: #00D4AA;"><%= number_with_precision(account.cdi_multiplier, precision: 0) %>% CDI</span>
+                  <% elsif account.interest_rate > 0 %>
                     <span class="text-xs" style="color: #00D4AA;"><%= account.interest_rate %>% p.a.</span>
                   <% end %>
                 </div>
@@ -72,7 +99,12 @@
                   <span class="text-sm font-semibold" style="color: #E2E8F0;"><%= format_brl(account.balance) %></span>
                 </div>
                 <div class="hidden md:block text-right">
-                  <% if account.interest_rate > 0 %>
+                  <% if account.cdi_percentage? %>
+                    <span class="text-sm" style="color: #00D4AA;"><%= number_with_precision(account.cdi_multiplier, precision: 0) %>% CDI</span>
+                    <% if @cdi_rate %>
+                      <p class="text-xs" style="color: #8892A4;">&#8776; <%= number_with_precision(account.effective_rate, precision: 2) %>% p.a.</p>
+                    <% end %>
+                  <% elsif account.interest_rate > 0 %>
                     <span class="text-sm" style="color: #00D4AA;"><%= account.interest_rate %>% p.a.</span>
                   <% else %>
                     <span class="text-sm" style="color: #8892A4;">—</span>

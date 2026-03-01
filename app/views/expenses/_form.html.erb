@@ -1,4 +1,4 @@
-<%= form_with model: expense, class: "space-y-4" do |f| %>
+<%= form_with model: expense, class: "space-y-4", data: { controller: "expense-payment" } do |f| %>
   <% if expense.errors.any? %>
     <div class="px-4 py-3 rounded-lg border text-sm" style="background-color: rgba(255,107,107,0.1); border-color: #FF6B6B; color: #FF6B6B;">
       <ul class="space-y-1">
@@ -17,7 +17,28 @@
       <%= f.number_field :amount, step: "0.01", min: "0",
           class: "w-full pl-9 pr-3 py-2.5 rounded-lg border text-sm font-semibold outline-none focus:ring-2 transition-all",
           style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;",
-          placeholder: "0,00", autofocus: true %>
+          placeholder: "0,00", autofocus: true,
+          data: { expense_payment_target: "amount", action: "input->expense-payment#updatePerInstallment" } %>
+    </div>
+  </div>
+
+  <%# Payment Method %>
+  <div>
+    <label class="block text-xs font-medium mb-2" style="color: #8892A4;">Payment Method</label>
+    <div class="grid grid-cols-4 gap-2">
+      <% [["Cash", "cash"], ["PIX", "pix"], ["Boleto", "boleto"], ["Credit Card", "credit_card"]].each do |label, value| %>
+        <label class="cursor-pointer">
+          <%= f.radio_button :payment_method, value,
+              class: "sr-only peer",
+              id: "pm_#{value}",
+              checked: (expense.payment_method == value || (expense.payment_method.blank? && value == "cash")),
+              data: { action: "change->expense-payment#methodChanged" } %>
+          <div class="flex flex-col items-center gap-1 p-2 rounded-lg border transition-all peer-checked:border-accent text-center"
+               style="border-color: #2A2F45;">
+            <span class="text-xs font-medium" style="color: #8892A4;"><%= label %></span>
+          </div>
+        </label>
+      <% end %>
     </div>
   </div>
 
@@ -79,21 +100,46 @@
     </div>
   </div>
 
-  <%# Credit Card (optional) %>
-  <% if credit_cards.any? %>
-    <div>
-      <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;">Credit Card (optional)</label>
-      <%= f.select :credit_card_id,
-          [["— Cash / Debit —", ""]] + credit_cards.map { |c| [c.name, c.id] },
-          { include_blank: false },
-          class: "w-full px-3 py-2.5 rounded-lg border text-sm outline-none focus:ring-2 transition-all",
-          style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;" %>
+  <%# Credit Card picker (shown only when Credit Card selected) %>
+  <div data-expense-payment-target="creditCardField" style="display: none;">
+    <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;">Credit Card</label>
+    <%= f.select :credit_card_id,
+        [["— Select Card —", ""]] + credit_cards.map { |c| [c.name, c.id] },
+        { include_blank: false },
+        class: "w-full px-3 py-2.5 rounded-lg border text-sm outline-none focus:ring-2 transition-all",
+        style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;" %>
+  </div>
+
+  <%# Installments %>
+  <% if expense.new_record? %>
+    <%# New record: show editable installments count %>
+    <div data-expense-payment-target="installmentsField" style="display: none;">
+      <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;">Installments</label>
+      <div class="flex items-center gap-3">
+        <%= f.number_field :total_installments, min: 1, max: 60, value: 1,
+            class: "w-24 px-3 py-2.5 rounded-lg border text-sm outline-none focus:ring-2 transition-all",
+            style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;",
+            data: { expense_payment_target: "installments", action: "input->expense-payment#installmentsChanged" } %>
+        <span class="text-xs" style="color: #8892A4;">
+          Per installment: <span data-expense-payment-target="perInstallmentDisplay" class="font-medium" style="color: #E2E8F0;">R$ 0,00</span>
+        </span>
+      </div>
+    </div>
+  <% elsif expense.installment? %>
+    <%# Editing an existing installment: show read-only info and preserve values %>
+    <%= f.hidden_field :total_installments %>
+    <%= f.hidden_field :installment_number %>
+    <%= f.hidden_field :installment_group_id %>
+    <div class="px-3 py-2.5 rounded-lg border text-sm" style="background-color: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.3);">
+      <span style="color: #F59E0B;">Installment <%= expense.installment_label %></span>
+      <span class="ml-2" style="color: #8892A4;">— only this installment will be updated</span>
     </div>
   <% end %>
 
   <%# Recurring toggle %>
-  <div class="flex items-center gap-3">
-    <%= f.check_box :recurring, class: "w-4 h-4 rounded", style: "accent-color: #6C63FF;" %>
+  <div class="flex items-center gap-3" data-expense-payment-target="recurringField">
+    <%= f.check_box :recurring, class: "w-4 h-4 rounded", style: "accent-color: #6C63FF;",
+        data: { expense_payment_target: "recurring", action: "change->expense-payment#recurringChanged" } %>
     <label class="text-sm" style="color: #8892A4;">Recurring expense</label>
   </div>
 
