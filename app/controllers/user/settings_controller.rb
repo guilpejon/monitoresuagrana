@@ -24,7 +24,13 @@ class User::SettingsController < ApplicationController
   end
 
   def update_password
-    if @user.update_with_password(password_params)
+    result = if @user.provider.present?
+      @user.update(password_params.except(:current_password))
+    else
+      @user.update_with_password(password_params)
+    end
+
+    if result
       bypass_sign_in(@user)
       redirect_to edit_user_settings_path, notice: t("controllers.settings.password_updated")
     else

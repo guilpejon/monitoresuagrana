@@ -93,6 +93,18 @@
 
     <% else %>
       <div class="min-h-full">
+        <% if notice %>
+          <div class="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-3 rounded-lg text-sm font-medium border flex items-center gap-4 shadow-lg" style="background-color: rgba(0,212,170,0.1); border-color: #00D4AA; color: #00D4AA; max-width: 24rem;">
+            <span><%= notice %></span>
+            <button type="button" onclick="this.closest('div').remove()" class="shrink-0 opacity-70 hover:opacity-100 transition-opacity cursor-pointer" aria-label="Dismiss">&times;</button>
+          </div>
+        <% end %>
+        <% if alert %>
+          <div class="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-3 rounded-lg text-sm font-medium border flex items-center gap-4 shadow-lg" style="background-color: rgba(255,107,107,0.1); border-color: #FF6B6B; color: #FF6B6B; max-width: 24rem;">
+            <span><%= alert %></span>
+            <button type="button" onclick="this.closest('div').remove()" class="shrink-0 opacity-70 hover:opacity-100 transition-opacity cursor-pointer" aria-label="Dismiss">&times;</button>
+          </div>
+        <% end %>
         <%= yield %>
       </div>
     <% end %>

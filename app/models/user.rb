@@ -2,7 +2,32 @@
 
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable,
+         :omniauthable, omniauth_providers: [ :google_oauth2 ]
+
+  def self.from_omniauth(auth)
+    # Returning Google user
+    user = find_by(provider: auth.provider, uid: auth.uid)
+    return user if user
+
+    # Existing email account — connect Google to it
+    user = find_by(email: auth.info.email)
+    if user
+      user.update!(provider: auth.provider, uid: auth.uid)
+      return user
+    end
+
+    # New user via Google
+    create!(
+      provider: auth.provider,
+      uid: auth.uid,
+      email: auth.info.email,
+      password: Devise.friendly_token[0, 20],
+      name: auth.info.name,
+      locale: I18n.locale.to_s,
+      currency: I18n.locale.to_s == "pt-BR" ? "BRL" : "USD"
+    )
+  end
 
   validates :locale, inclusion: { in: %w[en pt-BR] }
 

@@ -405,6 +405,7 @@ pt-BR:
       language: "Idioma"
       save_changes: "Salvar Alterações"
       password_section: "Alterar Senha"
+      set_password_section: "Definir uma Senha"
       current_password: "Senha Atual"
       new_password: "Nova Senha"
       password_hint: "Mínimo 6 caracteres"
@@ -432,6 +433,8 @@ pt-BR:
         sign_up: "Cadastre-se"
         forgot_password: "Esqueceu a senha?"
         remember_me: "Lembrar de mim"
+        or_continue_with: "ou continue com"
+        sign_in_with_google: "Entrar com Google"
     registrations:
       new:
         create_account: "Crie sua conta"
@@ -445,6 +448,8 @@ pt-BR:
         create_btn: "Criar conta"
         have_account: "Já tem uma conta?"
         sign_in: "Entrar"
+        or_sign_up_with: "ou cadastre-se com"
+        sign_up_with_google: "Cadastrar com Google"
     passwords:
       new:
         title: "Esqueceu sua senha?"
