@@ -5,7 +5,8 @@
       "Bash(bin/rails test:*)",
       "Bash(bin/rails generate:*)",
       "Bash(bin/rails db:migrate:*)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(chmod +x:*)"
     ]
   }
 }
