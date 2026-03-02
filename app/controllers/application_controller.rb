@@ -43,7 +43,7 @@ class ApplicationController < ActionController::Base
   end
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :currency])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:name, :currency, :locale])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [ :name, :currency ])
+    devise_parameter_sanitizer.permit(:account_update, keys: [ :name, :currency, :locale ])
   end
 end

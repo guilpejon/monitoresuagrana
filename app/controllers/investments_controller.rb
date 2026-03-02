@@ -54,7 +54,7 @@ class InvestmentsController < ApplicationController
   end
 
   def refresh_all_prices
-    current_user.investments.where.not(ticker: [nil, ""]).each do |inv|
+    current_user.investments.where.not(ticker: [ nil, "" ]).each do |inv|
       Investments::FetchPriceJob.perform_later(inv.id)
     end
     redirect_to investments_path, notice: t("controllers.investments.price_queued_all")

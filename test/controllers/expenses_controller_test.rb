@@ -165,7 +165,7 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
       }
     }
     amounts = @user.expenses.order(id: :asc).last(3).map(&:amount).map(&:to_f)
-    assert_equal [100.0, 100.0, 100.0], amounts
+    assert_equal [ 100.0, 100.0, 100.0 ], amounts
   end
 
   test "POST create with multiple installments advances date by month" do
@@ -184,7 +184,7 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
       }
     }
     dates = @user.expenses.order(id: :asc).last(3).map(&:date)
-    assert_equal [base, base >> 1, base >> 2], dates
+    assert_equal [ base, base >> 1, base >> 2 ], dates
   end
 
   test "POST create with installments and invalid description re-renders new" do

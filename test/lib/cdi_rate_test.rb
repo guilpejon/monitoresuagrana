@@ -35,7 +35,7 @@ class CdiRateTest < ActiveSupport::TestCase
 
     fake_response = Object.new
     fake_response.define_singleton_method(:success?) { true }
-    fake_response.define_singleton_method(:parsed_response) { [{ "valor" => daily.to_s, "data" => "01/03/2026" }] }
+    fake_response.define_singleton_method(:parsed_response) { [ { "valor" => daily.to_s, "data" => "01/03/2026" } ] }
 
     original = HTTParty.method(:get)
     HTTParty.define_singleton_method(:get) { |*| fake_response }

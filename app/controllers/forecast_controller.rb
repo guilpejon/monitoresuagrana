@@ -45,6 +45,6 @@ class ForecastController < ApplicationController
     @projected_balance = @projected_income - @projected_total
 
     # Chart data (with translated category names)
-    @forecast_chart_data = @projected_by_category.map { |(name, _color), amt| [I18n.t("category_names.#{name}", default: name), amt.to_f] }.to_h
+    @forecast_chart_data = @projected_by_category.map { |(name, _color), amt| [ I18n.t("category_names.#{name}", default: name), amt.to_f ] }.to_h
   end
 end

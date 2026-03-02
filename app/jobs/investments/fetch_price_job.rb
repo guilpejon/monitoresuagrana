@@ -7,11 +7,11 @@ module Investments
       return unless investment&.ticker.present?
 
       price = case investment.investment_type
-              when "stock"
+      when "stock"
                 fetch_stock_price(investment.ticker)
-              when "crypto"
+      when "crypto"
                 fetch_crypto_price(investment.ticker)
-              end
+      end
 
       if price && price > 0
         investment.update!(current_price: price, last_price_update_at: Time.current)
