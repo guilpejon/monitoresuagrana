@@ -39,11 +39,27 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    I18n.locale = current_user&.locale || I18n.default_locale
+    if current_user
+      I18n.locale = current_user.locale || I18n.default_locale
+    elsif cookies[:locale].present?
+      I18n.locale = cookies[:locale]
+    elsif session[:locale].present?
+      I18n.locale = session[:locale]
+    else
+      detected = detect_locale_from_browser
+      session[:locale] = detected
+      I18n.locale = detected
+    end
   end
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [ :name, :currency ])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [ :name, :currency, :locale ])
     devise_parameter_sanitizer.permit(:account_update, keys: [ :name, :currency, :locale ])
+  end
+
+  def detect_locale_from_browser
+    accept_language = request.env["HTTP_ACCEPT_LANGUAGE"].to_s
+    lang = accept_language.split(",").first&.split(";")&.first&.strip&.downcase || ""
+    lang.start_with?("pt") ? "pt-BR" : "en"
   end
 end

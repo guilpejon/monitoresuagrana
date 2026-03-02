@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  root "dashboard#index"
+  authenticated :user do
+    root "dashboard#index", as: :authenticated_root
+  end
+  root "pages#showcase"
 
   resources :expenses
   resources :incomes
@@ -27,6 +30,8 @@ Rails.application.routes.draw do
   namespace :user do
     resource :settings, only: [ :edit, :update ]
   end
+
+  get "/locale/:locale", to: "locales#set", as: :set_locale
 
   get "up" => "rails/health#show", as: :rails_health_check
 end

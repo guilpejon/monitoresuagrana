@@ -456,6 +456,41 @@ pt-BR:
         confirm_password: "Confirmar nova senha"
         change_password: "Alterar minha senha"
 
+  pages:
+    showcase:
+      nav_sign_in: "Entrar"
+      nav_sign_up: "Criar conta"
+      hero_title: "Suas finanças,"
+      hero_title_highlight: "organizadas"
+      hero_description: "Controle despesas, receitas, cartões, investimentos e patrimônio em um só lugar. Gratuito e sem complicação."
+      hero_cta_primary: "Criar conta grátis"
+      hero_cta_secondary: "Já tenho conta"
+      features_title: "Tudo que você precisa"
+      features_subtitle: "Funcionalidades completas para você ter controle total da sua vida financeira"
+      dashboard_title: "Painel"
+      dashboard_desc: "Visão geral de receitas, despesas e saldo. Gráficos de fluxo de caixa e gastos por categoria."
+      expenses_title: "Despesas"
+      expenses_desc: "Registre gastos com categorias e formas de pagamento. Suporte a parcelas e despesas recorrentes."
+      incomes_title: "Receitas"
+      incomes_desc: "Controle suas fontes de renda: salário, freelance, dividendos e outros."
+      credit_cards_title: "Cartões de Crédito"
+      credit_cards_desc: "Acompanhe faturas, limites e vencimentos de todos os seus cartões."
+      bank_accounts_title: "Contas Bancárias"
+      bank_accounts_desc: "Gerencie saldos e rendimentos com taxa CDI atualizada automaticamente via Banco Central."
+      investments_title: "Investimentos"
+      investments_desc: "Portfólio de ações, crypto e fundos com atualização automática de preços via API."
+      possessions_title: "Patrimônio"
+      possessions_desc: "Registre e acompanhe o valor de bens como imóveis, veículos e eletrônicos."
+      forecast_title: "Projeção"
+      forecast_desc: "Veja uma projeção futura com base em despesas recorrentes e parceladas."
+      categories_title: "Categorias & Beneficiários"
+      categories_desc: "Organize seus gastos com categorias e beneficiários personalizados."
+      cta_title: "Pronto para começar?"
+      cta_description: "Crie sua conta gratuitamente e tenha controle total das suas finanças."
+      cta_button: "Criar conta grátis"
+      cta_signin: "Entrar"
+      cta_signin_prefix: "Já tem uma conta?"
+
   # Flash messages
   controllers:
     settings:

@@ -48,6 +48,8 @@
               placeholder: "••••••••" %>
         </div>
 
+        <%= f.hidden_field :locale, value: I18n.locale %>
+        <%= f.hidden_field :currency, value: I18n.locale.to_s == "pt-BR" ? "BRL" : "USD" %>
         <%= f.submit t("devise.registrations.new.create_btn"), class: "w-full py-2.5 rounded-lg text-sm font-semibold cursor-pointer transition-colors hover:opacity-90 mt-2", style: "background-color: #6C63FF; color: white;" %>
       <% end %>
 

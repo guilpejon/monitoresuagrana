@@ -456,6 +456,41 @@ en:
         confirm_password: "Confirm new password"
         change_password: "Change my password"
 
+  pages:
+    showcase:
+      nav_sign_in: "Sign in"
+      nav_sign_up: "Create account"
+      hero_title: "Your finances,"
+      hero_title_highlight: "organized"
+      hero_description: "Track expenses, income, credit cards, investments, and assets all in one place. Free and hassle-free."
+      hero_cta_primary: "Create free account"
+      hero_cta_secondary: "I already have an account"
+      features_title: "Everything you need"
+      features_subtitle: "Complete features to give you full control of your financial life"
+      dashboard_title: "Dashboard"
+      dashboard_desc: "Overview of income, expenses, and balance. Cash flow charts and spending by category."
+      expenses_title: "Expenses"
+      expenses_desc: "Record spending with categories and payment methods. Support for installments and recurring expenses."
+      incomes_title: "Income"
+      incomes_desc: "Track your income sources: salary, freelance, dividends, and others."
+      credit_cards_title: "Credit Cards"
+      credit_cards_desc: "Monitor bills, limits, and due dates for all your credit cards."
+      bank_accounts_title: "Bank Accounts"
+      bank_accounts_desc: "Manage balances and track interest earnings with auto-refreshed CDI rates."
+      investments_title: "Investments"
+      investments_desc: "Stock, crypto, and fund portfolio with automatic price updates via API."
+      possessions_title: "Possessions"
+      possessions_desc: "Register and track the value of assets like real estate, vehicles, and electronics."
+      forecast_title: "Forecast"
+      forecast_desc: "See future projections based on recurring and installment expenses."
+      categories_title: "Categories & Payees"
+      categories_desc: "Organize your spending with custom categories and payees."
+      cta_title: "Ready to get started?"
+      cta_description: "Create your account for free and take full control of your finances."
+      cta_button: "Create free account"
+      cta_signin: "Sign in"
+      cta_signin_prefix: "Already have an account?"
+
   # Flash messages
   controllers:
     settings:

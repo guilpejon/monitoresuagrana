@@ -1,0 +1,213 @@
+<div class="min-h-screen" style="background-color: #0F1117; color: #E2E8F0; font-family: 'Inter', system-ui, sans-serif;">
+
+  <%# Navigation %>
+  <nav class="flex items-center justify-between px-6 py-4 border-b max-w-7xl mx-auto" style="border-color: #2A2F45;">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background-color: #6C63FF;">
+        <%= svg_icon "wallet", css_class: "w-5 h-5", stroke: "white" %>
+      </div>
+      <span class="font-bold text-lg" style="color: #E2E8F0;"><%= t("app.name") %></span>
+    </div>
+    <div class="flex items-center gap-3">
+      <%= link_to t("pages.showcase.nav_sign_in"), new_user_session_path,
+            class: "px-4 py-2 rounded-lg text-sm font-medium transition-opacity hover:opacity-80",
+            style: "color: #E2E8F0; border: 1px solid #2A2F45;" %>
+      <%= link_to t("pages.showcase.nav_sign_up"), new_user_registration_path,
+            class: "px-4 py-2 rounded-lg text-sm font-semibold transition-opacity hover:opacity-90",
+            style: "background-color: #6C63FF; color: white;" %>
+    </div>
+  </nav>
+
+  <%# Hero %>
+  <section class="text-center py-24 px-4 max-w-4xl mx-auto">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-8 border" style="background-color: rgba(108,99,255,0.1); border-color: rgba(108,99,255,0.3); color: #A78BFA;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+      <%= t("devise.sessions.new.subtitle") %>
+    </div>
+    <h1 class="text-5xl font-bold mb-5 leading-tight">
+      <%= t("pages.showcase.hero_title") %>
+      <span style="color: #6C63FF;"> <%= t("pages.showcase.hero_title_highlight") %></span>
+    </h1>
+    <p class="text-xl mb-10 mx-auto max-w-2xl" style="color: #8892A4;">
+      <%= t("pages.showcase.hero_description") %>
+    </p>
+    <div class="flex flex-wrap items-center justify-center gap-4">
+      <%= link_to t("pages.showcase.hero_cta_primary"), new_user_registration_path,
+            class: "px-8 py-3 rounded-xl font-semibold text-white transition-opacity hover:opacity-90 text-base",
+            style: "background-color: #6C63FF;" %>
+      <%= link_to t("pages.showcase.hero_cta_secondary"), new_user_session_path,
+            class: "px-8 py-3 rounded-xl font-semibold transition-opacity hover:opacity-80 text-base border",
+            style: "color: #E2E8F0; border-color: #2A2F45;" %>
+    </div>
+  </section>
+
+  <%# Features Grid %>
+  <section class="py-16 px-4 max-w-6xl mx-auto">
+    <div class="text-center mb-14">
+      <h2 class="text-3xl font-bold mb-3"><%= t("pages.showcase.features_title") %></h2>
+      <p style="color: #8892A4;"><%= t("pages.showcase.features_subtitle") %></p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      <%# Dashboard %>
+      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80" style="background-color: #1E2130; border-color: #2A2F45;">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background-color: rgba(108,99,255,0.15);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+        </div>
+        <h3 class="font-semibold text-base mb-2" style="color: #E2E8F0;"><%= t("pages.showcase.dashboard_title") %></h3>
+        <p class="text-sm leading-relaxed" style="color: #8892A4;"><%= t("pages.showcase.dashboard_desc") %></p>
+      </div>
+
+      <%# Expenses %>
+      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80" style="background-color: #1E2130; border-color: #2A2F45;">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background-color: rgba(255,107,107,0.15);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+        </div>
+        <h3 class="font-semibold text-base mb-2" style="color: #E2E8F0;"><%= t("pages.showcase.expenses_title") %></h3>
+        <p class="text-sm leading-relaxed" style="color: #8892A4;"><%= t("pages.showcase.expenses_desc") %></p>
+      </div>
+
+      <%# Income %>
+      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80" style="background-color: #1E2130; border-color: #2A2F45;">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background-color: rgba(0,212,170,0.15);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+        </div>
+        <h3 class="font-semibold text-base mb-2" style="color: #E2E8F0;"><%= t("pages.showcase.incomes_title") %></h3>
+        <p class="text-sm leading-relaxed" style="color: #8892A4;"><%= t("pages.showcase.incomes_desc") %></p>
+      </div>
+
+      <%# Credit Cards %>
+      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80" style="background-color: #1E2130; border-color: #2A2F45;">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background-color: rgba(247,183,49,0.15);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F7B731" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+            <line x1="5" y1="15" x2="9" y2="15"></line>
+          </svg>
+        </div>
+        <h3 class="font-semibold text-base mb-2" style="color: #E2E8F0;"><%= t("pages.showcase.credit_cards_title") %></h3>
+        <p class="text-sm leading-relaxed" style="color: #8892A4;"><%= t("pages.showcase.credit_cards_desc") %></p>
+      </div>
+
+      <%# Bank Accounts %>
+      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80" style="background-color: #1E2130; border-color: #2A2F45;">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background-color: rgba(167,139,250,0.15);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="22" x2="21" y2="22"></line>
+            <line x1="6" y1="18" x2="6" y2="11"></line>
+            <line x1="10" y1="18" x2="10" y2="11"></line>
+            <line x1="14" y1="18" x2="14" y2="11"></line>
+            <line x1="18" y1="18" x2="18" y2="11"></line>
+            <polygon points="12 2 20 7 4 7"></polygon>
+          </svg>
+        </div>
+        <h3 class="font-semibold text-base mb-2" style="color: #E2E8F0;"><%= t("pages.showcase.bank_accounts_title") %></h3>
+        <p class="text-sm leading-relaxed" style="color: #8892A4;"><%= t("pages.showcase.bank_accounts_desc") %></p>
+      </div>
+
+      <%# Investments %>
+      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80" style="background-color: #1E2130; border-color: #2A2F45;">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background-color: rgba(52,211,153,0.15);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
+          </svg>
+        </div>
+        <h3 class="font-semibold text-base mb-2" style="color: #E2E8F0;"><%= t("pages.showcase.investments_title") %></h3>
+        <p class="text-sm leading-relaxed" style="color: #8892A4;"><%= t("pages.showcase.investments_desc") %></p>
+      </div>
+
+      <%# Possessions %>
+      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80" style="background-color: #1E2130; border-color: #2A2F45;">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background-color: rgba(251,146,60,0.15);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FB923C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+        </div>
+        <h3 class="font-semibold text-base mb-2" style="color: #E2E8F0;"><%= t("pages.showcase.possessions_title") %></h3>
+        <p class="text-sm leading-relaxed" style="color: #8892A4;"><%= t("pages.showcase.possessions_desc") %></p>
+      </div>
+
+      <%# Forecast %>
+      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80" style="background-color: #1E2130; border-color: #2A2F45;">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background-color: rgba(96,165,250,0.15);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+        </div>
+        <h3 class="font-semibold text-base mb-2" style="color: #E2E8F0;"><%= t("pages.showcase.forecast_title") %></h3>
+        <p class="text-sm leading-relaxed" style="color: #8892A4;"><%= t("pages.showcase.forecast_desc") %></p>
+      </div>
+
+      <%# Categories & Payees %>
+      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80" style="background-color: #1E2130; border-color: #2A2F45;">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background-color: rgba(236,72,153,0.15);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EC4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+          </svg>
+        </div>
+        <h3 class="font-semibold text-base mb-2" style="color: #E2E8F0;"><%= t("pages.showcase.categories_title") %></h3>
+        <p class="text-sm leading-relaxed" style="color: #8892A4;"><%= t("pages.showcase.categories_desc") %></p>
+      </div>
+
+    </div>
+  </section>
+
+  <%# Divider %>
+  <div class="max-w-6xl mx-auto px-4">
+    <hr style="border-color: #2A2F45;">
+  </div>
+
+  <%# Final CTA %>
+  <section class="py-20 px-4">
+    <div class="max-w-2xl mx-auto rounded-2xl border p-12 text-center" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-6" style="background-color: rgba(108,99,255,0.15);">
+        <%= svg_icon "wallet", css_class: "w-7 h-7", stroke: "#6C63FF" %>
+      </div>
+      <h2 class="text-3xl font-bold mb-3"><%= t("pages.showcase.cta_title") %></h2>
+      <p class="mb-8 text-base" style="color: #8892A4;"><%= t("pages.showcase.cta_description") %></p>
+      <%= link_to t("pages.showcase.cta_button"), new_user_registration_path,
+            class: "inline-block px-10 py-3 rounded-xl font-semibold text-white transition-opacity hover:opacity-90",
+            style: "background-color: #6C63FF;" %>
+      <p class="mt-5 text-sm" style="color: #8892A4;">
+        <%= t("pages.showcase.cta_signin_prefix") %>
+        <%= link_to t("pages.showcase.cta_signin"), new_user_session_path,
+              class: "font-medium hover:opacity-80",
+              style: "color: #6C63FF;" %>
+      </p>
+    </div>
+  </section>
+
+  <%# Footer %>
+  <footer class="border-t px-6 py-6" style="border-color: #2A2F45;">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p class="text-sm" style="color: #8892A4;">
+        &copy; <%= Date.current.year %> <%= t("app.name") %>
+      </p>
+      <div class="flex items-center gap-1">
+        <%= link_to "PT", set_locale_path(locale: "pt-BR"),
+              class: "px-3 py-1.5 rounded-md text-xs font-semibold transition-opacity",
+              style: I18n.locale.to_s == "pt-BR" ? "background-color: #2A2F45; color: #E2E8F0;" : "color: #8892A4;" %>
+        <%= link_to "EN", set_locale_path(locale: "en"),
+              class: "px-3 py-1.5 rounded-md text-xs font-semibold transition-opacity",
+              style: I18n.locale.to_s == "en" ? "background-color: #2A2F45; color: #E2E8F0;" : "color: #8892A4;" %>
+      </div>
+    </div>
+  </footer>
+
+</div>
