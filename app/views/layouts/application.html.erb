@@ -8,6 +8,7 @@
     <meta name="application-name" content="<%= t("app.name") %>">
 
     <%# Open Graph %>
+    <meta property="og:locale" content="<%= I18n.locale.to_s == 'pt-BR' ? 'pt_BR' : 'en_US' %>">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="<%= t('app.name') %>">
     <meta property="og:title" content="<%= content_for?(:title) ? "#{yield(:title)} · #{t('app.name')}" : t('app.name') %>">
