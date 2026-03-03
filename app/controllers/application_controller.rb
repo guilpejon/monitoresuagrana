@@ -58,7 +58,9 @@ class ApplicationController < ActionController::Base
   end
 
   def detect_locale_from_browser
-    accept_language = request.env["HTTP_ACCEPT_LANGUAGE"].to_s
+    accept_language = request.env["HTTP_ACCEPT_LANGUAGE"]
+    return I18n.default_locale.to_s if accept_language.blank?
+
     lang = accept_language.split(",").first&.split(";")&.first&.strip&.downcase || ""
     lang.start_with?("pt") ? "pt-BR" : "en"
   end
