@@ -68,6 +68,8 @@ en:
       forecast: "Forecast"
 
   dashboard:
+    index:
+      title: "Dashboard"
     total_income: "Total Income"
     expenses: "Expenses"
     net_balance: "Net Balance"
@@ -131,6 +133,11 @@ en:
       cancel: "Cancel"
     expense:
       delete_confirm: "Delete this expense?"
+    payment_statuses:
+      pending: "Not Scheduled"
+      scheduled: "Scheduled"
+      paid: "Paid"
+      click_to_advance: "Click to advance status"
 
   incomes:
     index:
@@ -426,6 +433,7 @@ en:
   devise:
     sessions:
       new:
+        title: "Sign In"
         subtitle: "Personal Finance Manager"
         sign_in_heading: "Sign in to your account"
         sign_in: "Sign in"
@@ -437,6 +445,7 @@ en:
         sign_in_with_google: "Sign in with Google"
     registrations:
       new:
+        title: "Sign Up"
         create_account: "Create your account"
         sign_up: "Sign up"
         name_placeholder: "Your name"

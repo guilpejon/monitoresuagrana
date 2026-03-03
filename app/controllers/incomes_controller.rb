@@ -18,6 +18,7 @@ class IncomesController < ApplicationController
     @income = current_user.incomes.build(income_params)
 
     if @income.save
+      Incomes::GenerateRecurringJob.perform_later(template_id: @income.id) if @income.recurring?
       redirect_to incomes_path, notice: t("controllers.incomes.created")
     else
       render :new, status: :unprocessable_entity

@@ -1,5 +1,5 @@
 class ExpensesController < ApplicationController
-  before_action :set_expense, only: %i[edit update destroy]
+  before_action :set_expense, only: %i[edit update destroy update_status]
 
   def index
     @expenses = current_user.expenses
@@ -29,6 +29,7 @@ class ExpensesController < ApplicationController
     else
       @expense = current_user.expenses.build(expense_params)
       if @expense.save
+        Expenses::GenerateRecurringJob.perform_later(template_id: @expense.id) if @expense.recurring?
         redirect_to expenses_path, notice: t("controllers.expenses.created")
       else
         render_new_with_collections
@@ -53,6 +54,20 @@ class ExpensesController < ApplicationController
     end
   end
 
+  def update_status
+    @expense.update!(payment_status: @expense.next_payment_status)
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          "expense_#{@expense.id}",
+          partial: "expenses/expense",
+          locals: { expense: @expense }
+        )
+      end
+      format.html { redirect_to expenses_path }
+    end
+  end
+
   def destroy
     @expense.destroy
     respond_to do |format|
@@ -71,7 +86,7 @@ class ExpensesController < ApplicationController
     params.require(:expense).permit(
       :description, :amount, :date, :expense_type, :category_id, :credit_card_id,
       :recurring, :recurrence_day, :payment_method, :total_installments,
-      :installment_number, :installment_group_id, :payee_id
+      :installment_number, :installment_group_id, :payee_id, :payment_status
     )
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_03_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_03_150000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -66,8 +66,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_03_000000) do
     t.integer "installment_number", default: 1, null: false
     t.bigint "payee_id"
     t.string "payment_method", default: "cash", null: false
+    t.string "payment_status"
     t.integer "recurrence_day"
     t.boolean "recurring", default: false
+    t.bigint "recurring_source_id"
     t.integer "total_installments", default: 1, null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
@@ -85,6 +87,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_03_000000) do
     t.string "income_type", default: "salary", null: false
     t.integer "recurrence_day"
     t.boolean "recurring", default: false
+    t.bigint "recurring_source_id"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_incomes_on_user_id"

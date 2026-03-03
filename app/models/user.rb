@@ -31,9 +31,9 @@ class User < ApplicationRecord
 
   validates :locale, inclusion: { in: %w[en pt-BR] }
 
-  has_many :categories, dependent: :destroy
-  has_many :incomes, dependent: :destroy
   has_many :expenses, dependent: :destroy
+  has_many :incomes, dependent: :destroy
+  has_many :categories, dependent: :destroy
   has_many :credit_cards, dependent: :destroy
   has_many :investments, dependent: :destroy
   has_many :bank_accounts, dependent: :destroy
@@ -59,9 +59,8 @@ class User < ApplicationRecord
       { name: "Transport",     color: "#F7B731", icon: "car" },
       { name: "Health",        color: "#FF6B6B", icon: "heart-pulse" },
       { name: "Entertainment", color: "#A78BFA", icon: "gamepad-2" },
-      { name: "Shopping",      color: "#34D399", icon: "shopping-cart" },
+      { name: "Shopping",      color: "#84CC16", icon: "shopping-cart" },
       { name: "Education",     color: "#60A5FA", icon: "book-open" },
-      { name: "Utilities",     color: "#FBBF24", icon: "zap" },
       { name: "Travel",        color: "#F472B6", icon: "plane" },
       { name: "Other",         color: "#8892A4", icon: "layers" }
     ]

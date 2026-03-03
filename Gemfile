@@ -42,6 +42,9 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 
+# Translations for ActiveRecord validation messages in pt-BR and other locales
+gem "rails-i18n", "~> 8.0"
+
 # Authentication
 gem "devise"
 gem "omniauth-google-oauth2"

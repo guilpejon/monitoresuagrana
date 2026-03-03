@@ -7,7 +7,8 @@
       "Bash(bin/rails db:migrate:*)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(chmod +x:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(bin/rails runner:*)"
     ]
   }
 }

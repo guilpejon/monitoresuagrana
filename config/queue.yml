@@ -2,6 +2,15 @@ default: &default
   dispatchers:
     - polling_interval: 1
       batch_size: 500
+      recurring:
+        generate_recurring_expenses:
+          class: Expenses::GenerateRecurringJob
+          schedule: "5 0 1 * *"
+          description: "Generate expense copies from recurring templates on the 1st of each month"
+        generate_recurring_incomes:
+          class: Incomes::GenerateRecurringJob
+          schedule: "5 0 1 * *"
+          description: "Generate income copies from recurring templates on the 1st of each month"
   workers:
     - queues: "*"
       threads: 3

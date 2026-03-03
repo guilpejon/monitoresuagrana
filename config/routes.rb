@@ -6,7 +6,11 @@ Rails.application.routes.draw do
   end
   root "pages#showcase"
 
-  resources :expenses
+  resources :expenses do
+    member do
+      patch :update_status
+    end
+  end
   resources :incomes
   resources :credit_cards
   resources :investments do

@@ -2,6 +2,47 @@ pt-BR:
   app:
     name: "Acompanhe sua Grana"
 
+  activerecord:
+    attributes:
+      expense:
+        description: "Descrição"
+        amount: "Valor"
+        date: "Data"
+        category: "Categoria"
+        category_id: "Categoria"
+        payment_method: "Forma de pagamento"
+        expense_type: "Tipo"
+        recurrence_day: "Dia de recorrência"
+        total_installments: "Parcelas"
+        installment_number: "Número da parcela"
+        payment_status: "Status do pagamento"
+      income:
+        description: "Descrição"
+        amount: "Valor"
+        date: "Data"
+        income_type: "Tipo"
+      credit_card:
+        name: "Nome"
+        credit_limit: "Limite de crédito"
+        billing_day: "Dia de fechamento"
+        due_day: "Dia de vencimento"
+      bank_account:
+        name: "Nome"
+        balance: "Saldo"
+        account_type: "Tipo de conta"
+      investment:
+        name: "Nome"
+        investment_type: "Tipo"
+        quantity: "Quantidade"
+      category:
+        name: "Nome"
+        color: "Cor"
+      payee:
+        name: "Nome"
+      possession:
+        name: "Nome"
+        possession_type: "Tipo"
+
   date:
     month_names:
       - ~
@@ -68,6 +109,8 @@ pt-BR:
       forecast: "Projeção"
 
   dashboard:
+    index:
+      title: "Painel"
     total_income: "Receita Total"
     expenses: "Despesas"
     net_balance: "Saldo Líquido"
@@ -131,6 +174,11 @@ pt-BR:
       cancel: "Cancelar"
     expense:
       delete_confirm: "Excluir esta despesa?"
+    payment_statuses:
+      pending: "Não Agendado"
+      scheduled: "Agendado"
+      paid: "Pago"
+      click_to_advance: "Clique para avançar o status"
 
   incomes:
     index:
@@ -426,6 +474,7 @@ pt-BR:
   devise:
     sessions:
       new:
+        title: "Entrar"
         subtitle: "Gestor de Finanças Pessoais"
         sign_in_heading: "Entre na sua conta"
         sign_in: "Entrar"
@@ -437,6 +486,7 @@ pt-BR:
         sign_in_with_google: "Entrar com Google"
     registrations:
       new:
+        title: "Cadastro"
         create_account: "Crie sua conta"
         sign_up: "Cadastrar"
         name_placeholder: "Seu nome"
