@@ -39,6 +39,10 @@ module Acompanhesuagrana
     # Don't generate system test files.
     config.generators.system_tests = nil
 
+    # Disable CSS preload Link response headers — they cause "preloaded but not used"
+    # warnings with Turbo Drive, which already has the stylesheets in the DOM.
+    config.action_view.preload_links_header = false
+
     # I18n
     config.i18n.available_locales = [ :en, :"pt-BR" ]
     config.i18n.default_locale = :"pt-BR"
