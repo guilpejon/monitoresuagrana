@@ -1,3 +1,9 @@
+<style>
+  .feature-card:hover {
+    box-shadow: 0 8px 30px rgba(108, 99, 255, 0.15);
+  }
+</style>
+
 <div class="min-h-screen" style="background-color: #0F1117; color: #E2E8F0; font-family: 'Inter', system-ui, sans-serif;">
 
   <%# Navigation %>
@@ -19,12 +25,13 @@
   </nav>
 
   <%# Hero %>
-  <section class="text-center py-24 px-4 max-w-4xl mx-auto">
+  <section class="relative text-center py-24 px-4 max-w-4xl mx-auto overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse at 50% 0%, rgba(108,99,255,0.18) 0%, transparent 65%);"></div>
     <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-8 border" style="background-color: rgba(108,99,255,0.1); border-color: rgba(108,99,255,0.3); color: #A78BFA;">
       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
       <%= t("devise.sessions.new.subtitle") %>
     </div>
-    <h1 class="text-5xl font-bold mb-5 leading-tight">
+    <h1 class="text-5xl sm:text-6xl font-bold mb-5 leading-tight">
       <%= t("pages.showcase.hero_title") %>
       <span style="color: #6C63FF;"> <%= t("pages.showcase.hero_title_highlight") %></span>
     </h1>
@@ -41,6 +48,31 @@
     </div>
   </section>
 
+  <%# How it works %>
+  <section class="py-16 px-4 max-w-4xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold mb-3"><%= t("pages.showcase.how_title") %></h2>
+      <p style="color: #8892A4;"><%= t("pages.showcase.how_subtitle") %></p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="text-center">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-base" style="background-color: #6C63FF;">1</div>
+        <h3 class="font-semibold mb-2" style="color: #E2E8F0;"><%= t("pages.showcase.step1_title") %></h3>
+        <p class="text-sm" style="color: #8892A4;"><%= t("pages.showcase.step1_desc") %></p>
+      </div>
+      <div class="text-center">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-base" style="background-color: #6C63FF;">2</div>
+        <h3 class="font-semibold mb-2" style="color: #E2E8F0;"><%= t("pages.showcase.step2_title") %></h3>
+        <p class="text-sm" style="color: #8892A4;"><%= t("pages.showcase.step2_desc") %></p>
+      </div>
+      <div class="text-center">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-base" style="background-color: #6C63FF;">3</div>
+        <h3 class="font-semibold mb-2" style="color: #E2E8F0;"><%= t("pages.showcase.step3_title") %></h3>
+        <p class="text-sm" style="color: #8892A4;"><%= t("pages.showcase.step3_desc") %></p>
+      </div>
+    </div>
+  </section>
+
   <%# Features Grid %>
   <section class="py-16 px-4 max-w-6xl mx-auto">
     <div class="text-center mb-14">
@@ -51,7 +83,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
       <%# Dashboard %>
-      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80 hover:-translate-y-1 hover:shadow-lg feature-card" style="background-color: #1E2130; border-color: #2A2F45;">
         <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 mx-auto" style="background-color: rgba(108,99,255,0.15);">
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect>
@@ -63,7 +95,7 @@
       </div>
 
       <%# Expenses %>
-      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80 hover:-translate-y-1 hover:shadow-lg feature-card" style="background-color: #1E2130; border-color: #2A2F45;">
         <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 mx-auto" style="background-color: rgba(255,107,107,0.15);">
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
@@ -75,7 +107,7 @@
       </div>
 
       <%# Income %>
-      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80 hover:-translate-y-1 hover:shadow-lg feature-card" style="background-color: #1E2130; border-color: #2A2F45;">
         <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 mx-auto" style="background-color: rgba(0,212,170,0.15);">
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="12" y1="1" x2="12" y2="23"></line>
@@ -87,7 +119,7 @@
       </div>
 
       <%# Credit Cards %>
-      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80 hover:-translate-y-1 hover:shadow-lg feature-card" style="background-color: #1E2130; border-color: #2A2F45;">
         <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 mx-auto" style="background-color: rgba(247,183,49,0.15);">
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F7B731" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
@@ -99,24 +131,8 @@
         <p class="text-sm leading-relaxed text-center" style="color: #8892A4;"><%= t("pages.showcase.credit_cards_desc") %></p>
       </div>
 
-      <%# Bank Accounts %>
-      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80" style="background-color: #1E2130; border-color: #2A2F45;">
-        <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 mx-auto" style="background-color: rgba(167,139,250,0.15);">
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="22" x2="21" y2="22"></line>
-            <line x1="6" y1="18" x2="6" y2="11"></line>
-            <line x1="10" y1="18" x2="10" y2="11"></line>
-            <line x1="14" y1="18" x2="14" y2="11"></line>
-            <line x1="18" y1="18" x2="18" y2="11"></line>
-            <polygon points="12 2 20 7 4 7"></polygon>
-          </svg>
-        </div>
-        <h3 class="font-semibold text-base mb-2 text-center" style="color: #E2E8F0;"><%= t("pages.showcase.bank_accounts_title") %></h3>
-        <p class="text-sm leading-relaxed text-center" style="color: #8892A4;"><%= t("pages.showcase.bank_accounts_desc") %></p>
-      </div>
-
       <%# Investments %>
-      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80 hover:-translate-y-1 hover:shadow-lg feature-card" style="background-color: #1E2130; border-color: #2A2F45;">
         <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 mx-auto" style="background-color: rgba(52,211,153,0.15);">
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
@@ -127,21 +143,8 @@
         <p class="text-sm leading-relaxed text-center" style="color: #8892A4;"><%= t("pages.showcase.investments_desc") %></p>
       </div>
 
-      <%# Possessions %>
-      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80" style="background-color: #1E2130; border-color: #2A2F45;">
-        <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 mx-auto" style="background-color: rgba(251,146,60,0.15);">
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FB923C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-            <line x1="12" y1="22.08" x2="12" y2="12"></line>
-          </svg>
-        </div>
-        <h3 class="font-semibold text-base mb-2 text-center" style="color: #E2E8F0;"><%= t("pages.showcase.possessions_title") %></h3>
-        <p class="text-sm leading-relaxed text-center" style="color: #8892A4;"><%= t("pages.showcase.possessions_desc") %></p>
-      </div>
-
       <%# Forecast %>
-      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80 hover:-translate-y-1 hover:shadow-lg feature-card" style="background-color: #1E2130; border-color: #2A2F45;">
         <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 mx-auto" style="background-color: rgba(96,165,250,0.15);">
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="20" x2="18" y2="10"></line>
@@ -151,18 +154,6 @@
         </div>
         <h3 class="font-semibold text-base mb-2 text-center" style="color: #E2E8F0;"><%= t("pages.showcase.forecast_title") %></h3>
         <p class="text-sm leading-relaxed text-center" style="color: #8892A4;"><%= t("pages.showcase.forecast_desc") %></p>
-      </div>
-
-      <%# Categories & Payees %>
-      <div class="rounded-2xl border p-6 transition-all hover:border-opacity-80" style="background-color: #1E2130; border-color: #2A2F45;">
-        <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 mx-auto" style="background-color: rgba(236,72,153,0.15);">
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EC4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-            <line x1="7" y1="7" x2="7.01" y2="7"></line>
-          </svg>
-        </div>
-        <h3 class="font-semibold text-base mb-2 text-center" style="color: #E2E8F0;"><%= t("pages.showcase.categories_title") %></h3>
-        <p class="text-sm leading-relaxed text-center" style="color: #8892A4;"><%= t("pages.showcase.categories_desc") %></p>
       </div>
 
     </div>
@@ -180,7 +171,11 @@
         <%= svg_icon "wallet", css_class: "w-7 h-7", stroke: "#6C63FF" %>
       </div>
       <h2 class="text-3xl font-bold mb-3"><%= t("pages.showcase.cta_title") %></h2>
-      <p class="mb-8 text-base" style="color: #8892A4;"><%= t("pages.showcase.cta_description") %></p>
+      <p class="mb-6 text-base" style="color: #8892A4;"><%= t("pages.showcase.cta_description") %></p>
+      <div class="flex flex-wrap items-center justify-center gap-4 mb-8 text-sm" style="color: #8892A4;">
+        <span>&#10003; <%= t("pages.showcase.cta_benefit1") %></span>
+        <span>&#10003; <%= t("pages.showcase.cta_benefit2") %></span>
+      </div>
       <%= link_to t("pages.showcase.cta_button"), new_user_registration_path,
             class: "inline-block px-10 py-3 rounded-xl font-semibold text-white transition-opacity hover:opacity-90",
             style: "background-color: #6C63FF;" %>
