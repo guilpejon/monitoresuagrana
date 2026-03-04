@@ -1,5 +1,4 @@
 module ApplicationHelper
-  include Pagy::Frontend
   include IconHelper
 
   def format_currency(amount)
