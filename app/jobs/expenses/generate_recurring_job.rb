@@ -3,12 +3,11 @@ module Expenses
     queue_as :default
 
     def perform(template_id: nil)
-      today = Date.current
       templates = template_id ? Expense.where(id: template_id, recurring: true) : Expense.where(recurring: true)
 
       templates.each do |template|
         12.times do |i|
-          target = today >> i
+          target = template.date >> i
           next if already_generated?(template, target)
 
           day = [ template.date.day, target.end_of_month.day ].min
