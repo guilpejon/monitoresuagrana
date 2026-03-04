@@ -5,6 +5,7 @@
   </button>
 
   <%# Month selector with boundaries — absolutely centred so it stays centred on all screen sizes %>
+  <% show_month_selector = controller_name.in?(%w[dashboard expenses incomes forecast]) %>
   <% today_month = Date.current.beginning_of_month %>
   <% min_month = today_month - 24.months %>
   <% max_month = @max_date || today_month + 1.month %>
@@ -14,7 +15,7 @@
   <% at_max = @current_date >= max_month %>
   <% on_today = @current_date == today_month %>
 
-  <div class="absolute left-1/2 -translate-x-1/2 flex items-center gap-1">
+  <div class="absolute left-1/2 -translate-x-1/2 flex items-center gap-1 <%= 'invisible' unless show_month_selector %>">
     <% if at_min %>
       <span class="p-1.5 rounded-lg cursor-not-allowed opacity-25" style="color: #8892A4;">
         <%= svg_icon "chevron-left", css_class: "w-4 h-4" %>
