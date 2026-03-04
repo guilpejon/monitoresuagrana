@@ -3,7 +3,7 @@ module Incomes
     queue_as :default
 
     def perform(template_id: nil)
-      templates = template_id ? Income.where(id: template_id, recurring: true) : Income.where(recurring: true)
+      templates = template_id ? Income.where(id: template_id, recurring: true, recurring_source_id: nil) : Income.where(recurring: true, recurring_source_id: nil)
 
       templates.each do |template|
         12.times do |i|
@@ -16,7 +16,7 @@ module Incomes
             amount: template.amount,
             date: Date.new(target.year, target.month, day),
             income_type: template.income_type,
-            recurring: false,
+            recurring: true,
             recurring_source_id: template.id
           )
         end

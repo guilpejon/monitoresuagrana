@@ -43,9 +43,25 @@ class ExpensesController < ApplicationController
   end
 
   def update
+    was_recurring = @expense.recurring?
+    source_id = @expense.recurring_source_id
     resolve_payee!
     if @expense.update(expense_params)
       propagate_payee_to_installment_group!
+      if was_recurring && !@expense.recurring?
+        if source_id.present?
+          current_user.expenses
+            .where(recurring_source_id: source_id)
+            .where("date > ?", @expense.date)
+            .destroy_all
+          current_user.expenses.find_by(id: source_id)&.update(recurring: false)
+        else
+          current_user.expenses
+            .where(recurring_source_id: @expense.id)
+            .where("date >= ?", Date.today)
+            .destroy_all
+        end
+      end
       redirect_to expenses_path, notice: t("controllers.expenses.updated")
     else
       @categories = current_user.categories.order(:name)

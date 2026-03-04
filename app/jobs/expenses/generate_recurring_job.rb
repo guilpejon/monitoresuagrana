@@ -3,7 +3,7 @@ module Expenses
     queue_as :default
 
     def perform(template_id: nil)
-      templates = template_id ? Expense.where(id: template_id, recurring: true) : Expense.where(recurring: true)
+      templates = template_id ? Expense.where(id: template_id, recurring: true, recurring_source_id: nil) : Expense.where(recurring: true, recurring_source_id: nil)
 
       templates.each do |template|
         12.times do |i|
@@ -22,7 +22,7 @@ module Expenses
             payment_method: template.payment_method,
             total_installments: 1,
             installment_number: 1,
-            recurring: false,
+            recurring: true,
             recurring_source_id: template.id
           )
         end

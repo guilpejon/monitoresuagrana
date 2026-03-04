@@ -28,7 +28,23 @@ class IncomesController < ApplicationController
   def edit; end
 
   def update
+    was_recurring = @income.recurring?
+    source_id = @income.recurring_source_id
     if @income.update(income_params)
+      if was_recurring && !@income.recurring?
+        if source_id.present?
+          current_user.incomes
+            .where(recurring_source_id: source_id)
+            .where("date > ?", @income.date)
+            .destroy_all
+          current_user.incomes.find_by(id: source_id)&.update(recurring: false)
+        else
+          current_user.incomes
+            .where(recurring_source_id: @income.id)
+            .where("date >= ?", Date.today)
+            .destroy_all
+        end
+      end
       redirect_to incomes_path, notice: t("controllers.incomes.updated")
     else
       render :edit, status: :unprocessable_entity
