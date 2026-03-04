@@ -83,6 +83,9 @@
                   <span class="text-xs font-medium" style="color: <%= pnl_color(inv.profit_loss_percent) %>;">
                     <%= inv.profit_loss_percent >= 0 ? "+" : "" %><%= inv.profit_loss_percent %>%
                   </span>
+                  <% if inv.last_price_update_at %>
+                    <span class="text-xs" style="color: #8892A4;"><%= inv.last_price_update_at.strftime("%d/%m %H:%M") %></span>
+                  <% end %>
                 </div>
 
                 <%# Desktop columns %>
