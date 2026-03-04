@@ -442,6 +442,7 @@ pt-BR:
       no_recurring_yet: "Nenhuma despesa recorrente ainda"
       recurring_hint: 'Marque despesas como "recorrente" ao adicioná-las para ver sua projeção aqui.'
       installment_expenses: "Despesas Parceladas"
+      credit_card_bills: "Faturas de Cartão"
       actuals: "Realizados —"
 
   settings:

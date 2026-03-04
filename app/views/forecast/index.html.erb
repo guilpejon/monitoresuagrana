@@ -16,6 +16,22 @@
       <p class="text-xs font-medium uppercase tracking-wide mb-2" style="color: #8892A4;"><%= t("forecast.index.projected_expenses") %></p>
       <p class="text-xl font-bold" style="color: #FF6B6B;"><%= format_currency(@projected_total) %></p>
       <p class="text-xs mt-1" style="color: #8892A4;"><%= @recurring_expenses.count %> <%= t("forecast.index.recurring") %><% if @installment_expenses.any? %> · <%= @installment_expenses.count %> <%= t("forecast.index.installment") %><% end %></p>
+      <% if @projected_by_payment_method.any? %>
+        <div class="flex flex-wrap gap-1.5 mt-2">
+          <% if @projected_by_payment_method["boleto"] %>
+            <span class="text-xs px-1.5 py-0.5 rounded" style="background-color: rgba(245,158,11,0.15); color: #F59E0B;">Boleto <%= format_currency(@projected_by_payment_method["boleto"]) %></span>
+          <% end %>
+          <% if @projected_by_payment_method["credit_card"] %>
+            <span class="text-xs px-1.5 py-0.5 rounded" style="background-color: rgba(139,92,246,0.15); color: #8B5CF6;"><%= t("expenses.form.credit_card") %> <%= format_currency(@projected_by_payment_method["credit_card"]) %></span>
+          <% end %>
+          <% if @projected_by_payment_method["pix"] %>
+            <span class="text-xs px-1.5 py-0.5 rounded" style="background-color: rgba(20,184,166,0.15); color: #14B8A6;">PIX <%= format_currency(@projected_by_payment_method["pix"]) %></span>
+          <% end %>
+          <% if @projected_by_payment_method["cash"] %>
+            <span class="text-xs px-1.5 py-0.5 rounded" style="background-color: rgba(34,197,94,0.15); color: #22C55E;"><%= t("expenses.form.cash") %> <%= format_currency(@projected_by_payment_method["cash"]) %></span>
+          <% end %>
+        </div>
+      <% end %>
     </div>
     <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
       <p class="text-xs font-medium uppercase tracking-wide mb-2" style="color: #8892A4;"><%= t("forecast.index.projected_balance") %></p>
@@ -58,7 +74,21 @@
             </div>
             <div class="flex-1 min-w-0">
               <p class="text-sm font-medium truncate" style="color: #E2E8F0;"><%= expense.description %></p>
-              <p class="text-xs" style="color: #8892A4;"><%= category_display_name(expense.category) %> · <%= t("forecast.index.day") %> <%= expense.recurrence_day || "?" %></p>
+              <div class="flex items-center gap-1.5 flex-wrap mt-0.5">
+                <span class="text-xs" style="color: #8892A4;"><%= category_display_name(expense.category) %> · <%= t("forecast.index.day") %> <%= expense.recurrence_day || "?" %></span>
+                <% if expense.payment_method == "pix" %>
+                  <span class="text-xs font-medium px-1.5 py-0.5 rounded" style="background-color: rgba(20,184,166,0.15); color: #14B8A6;">PIX</span>
+                <% elsif expense.payment_method == "boleto" %>
+                  <span class="text-xs font-medium px-1.5 py-0.5 rounded" style="background-color: rgba(245,158,11,0.15); color: #F59E0B;">Boleto</span>
+                <% elsif expense.payment_method == "credit_card" %>
+                  <span class="text-xs font-medium px-1.5 py-0.5 rounded" style="background-color: rgba(139,92,246,0.15); color: #8B5CF6;"><%= t("expenses.form.credit_card") %></span>
+                  <% if expense.credit_card %>
+                    <span class="text-xs" style="color: #8892A4;"><%= expense.credit_card.name %></span>
+                  <% end %>
+                <% else %>
+                  <span class="text-xs font-medium px-1.5 py-0.5 rounded" style="background-color: rgba(34,197,94,0.15); color: #22C55E;"><%= t("expenses.form.cash") %></span>
+                <% end %>
+              </div>
             </div>
             <div class="flex items-center gap-2 flex-shrink-0">
               <%= expense_type_badge(expense.expense_type) %>
@@ -90,12 +120,44 @@
             </div>
             <div class="flex-1 min-w-0">
               <p class="text-sm font-medium truncate" style="color: #E2E8F0;"><%= expense.description %></p>
-              <p class="text-xs" style="color: #8892A4;"><%= category_display_name(expense.category) %> · <%= t("forecast.index.installment") %> <%= expense.installment_label %></p>
+              <div class="flex items-center gap-1.5 flex-wrap mt-0.5">
+                <span class="text-xs" style="color: #8892A4;"><%= category_display_name(expense.category) %> · <%= t("forecast.index.installment") %> <%= expense.installment_label %></span>
+                <% if expense.payment_method == "boleto" %>
+                  <span class="text-xs font-medium px-1.5 py-0.5 rounded" style="background-color: rgba(245,158,11,0.15); color: #F59E0B;">Boleto</span>
+                <% elsif expense.payment_method == "credit_card" %>
+                  <span class="text-xs font-medium px-1.5 py-0.5 rounded" style="background-color: rgba(139,92,246,0.15); color: #8B5CF6;"><%= t("expenses.form.credit_card") %></span>
+                  <% if expense.credit_card %>
+                    <span class="text-xs" style="color: #8892A4;"><%= expense.credit_card.name %></span>
+                  <% end %>
+                <% elsif expense.payment_method == "pix" %>
+                  <span class="text-xs font-medium px-1.5 py-0.5 rounded" style="background-color: rgba(20,184,166,0.15); color: #14B8A6;">PIX</span>
+                <% end %>
+              </div>
             </div>
             <div class="flex items-center gap-2 flex-shrink-0">
               <%= expense_type_badge(expense.expense_type) %>
               <span class="text-sm font-semibold" style="color: #FF6B6B;"><%= format_currency(expense.amount) %></span>
             </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Credit card projected bills %>
+  <% if @credit_card_bills.any? %>
+    <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="px-4 py-3 border-b" style="border-color: #2A2F45;">
+        <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("forecast.index.credit_card_bills") %></h2>
+      </div>
+      <div class="divide-y" style="border-color: #2A2F45;">
+        <% @credit_card_bills.each do |card, total| %>
+          <div class="flex items-center gap-3 px-4 py-3">
+            <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: <%= card.color_hex %>22;">
+              <%= svg_icon "credit-card", css_class: "w-4 h-4", stroke: card.color_hex %>
+            </div>
+            <p class="flex-1 text-sm font-medium" style="color: #E2E8F0;"><%= card.name %></p>
+            <span class="text-sm font-semibold" style="color: #FF6B6B;"><%= format_currency(total) %></span>
           </div>
         <% end %>
       </div>

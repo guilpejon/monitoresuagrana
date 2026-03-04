@@ -401,6 +401,7 @@ en:
       no_recurring_yet: "No recurring expenses yet"
       recurring_hint: 'Mark expenses as "recurring" when adding them to see your forecast here.'
       installment_expenses: "Installment Expenses"
+      credit_card_bills: "Credit Card Bills"
       actuals: "Actuals —"
 
   settings:

@@ -11,7 +11,7 @@ module Incomes
           target = today >> i
           next if already_generated?(template, target)
 
-          day = [ template.recurrence_day || 1, target.end_of_month.day ].min
+          day = [ template.date.day, target.end_of_month.day ].min
           template.user.incomes.create!(
             description: template.description,
             amount: template.amount,

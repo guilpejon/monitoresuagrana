@@ -1,61 +1,66 @@
-<div id="expense_<%= expense.id %>" class="flex items-center gap-3 px-4 py-3 hover:bg-white/[0.02] transition-colors">
+<div id="expense_<%= expense.id %>" class="flex gap-3 px-4 py-3 hover:bg-white/[0.02] transition-colors">
   <%# Category icon %>
-  <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: <%= expense.category.color %>22;">
+  <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style="background-color: <%= expense.category.color %>22;">
     <%= svg_icon expense.category.icon, css_class: "w-4 h-4", stroke: expense.category.color %>
   </div>
 
-  <%# Details %>
+  <%# Content %>
   <div class="flex-1 min-w-0">
-    <p class="text-sm font-medium truncate" style="color: #E2E8F0;"><%= expense.description %></p>
-    <div class="flex items-center gap-2 mt-0.5">
-      <span class="text-xs" style="color: #8892A4;"><%= expense.date.strftime("%d %b %Y") %></span>
-      <span class="text-xs" style="color: #2A2F45;">·</span>
-      <span class="text-xs" style="color: #8892A4;"><%= category_display_name(expense.category) %></span>
-      <% if expense.payee %>
-        <span class="text-xs" style="color: #2A2F45;">·</span>
-        <span class="text-xs" style="color: #8892A4;"><%= expense.payee.name %></span>
-      <% end %>
-      <span class="text-xs" style="color: #2A2F45;">·</span>
-      <% if expense.payment_method == "pix" %>
-        <span class="text-xs font-medium px-1.5 py-0.5 rounded" style="background-color: rgba(20,184,166,0.15); color: #14B8A6;">PIX</span>
-      <% elsif expense.payment_method == "boleto" %>
-        <span class="text-xs font-medium px-1.5 py-0.5 rounded" style="background-color: rgba(245,158,11,0.15); color: #F59E0B;">Boleto</span>
-        <%= render "expenses/payment_status_badge", expense: expense %>
-      <% elsif expense.payment_method == "credit_card" %>
-        <span class="text-xs font-medium px-1.5 py-0.5 rounded" style="background-color: rgba(139,92,246,0.15); color: #8B5CF6;"><%= t("expenses.form.credit_card") %></span>
-        <% if expense.credit_card %>
-          <span class="text-xs" style="color: #2A2F45;">·</span>
-          <%= svg_icon "credit-card", css_class: "w-3 h-3 inline", stroke: "#8892A4" %>
-          <span class="text-xs" style="color: #8892A4;"><%= expense.credit_card.name %></span>
+    <%# Top row: description + amount %>
+    <div class="flex items-start justify-between gap-2">
+      <p class="text-sm font-medium truncate" style="color: #E2E8F0;"><%= expense.description %></p>
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <% if expense.recurring? %>
+          <%= svg_icon "repeat", css_class: "w-3 h-3 hidden sm:block", stroke: "#8892A4" %>
         <% end %>
-      <% else %>
-        <span class="text-xs font-medium px-1.5 py-0.5 rounded" style="background-color: rgba(34,197,94,0.15); color: #22C55E;"><%= t("expenses.form.cash") %></span>
-      <% end %>
-      <% if expense.installment? %>
-        <span class="text-xs" style="color: #2A2F45;">·</span>
-        <span class="text-xs font-medium" style="color: #8892A4;"><%= expense.installment_label %></span>
-      <% end %>
+        <span class="text-sm font-semibold whitespace-nowrap" style="color: #FF6B6B;"><%= format_currency(expense.amount) %></span>
+      </div>
     </div>
-  </div>
 
-  <%# Type badge + amount %>
-  <div class="flex items-center gap-3 flex-shrink-0">
-    <%= expense_type_badge(expense.expense_type) %>
-    <% if expense.recurring? %>
-      <%= svg_icon "repeat", css_class: "w-3.5 h-3.5", stroke: "#8892A4" %>
-    <% end %>
-    <span class="text-sm font-semibold min-w-20 text-right" style="color: #FF6B6B;"><%= format_currency(expense.amount) %></span>
-  </div>
+    <%# Bottom row: meta + actions %>
+    <div class="flex items-center justify-between gap-2 mt-1">
+      <%# Meta info %>
+      <div class="flex items-center gap-1.5 flex-wrap min-w-0">
+        <span class="text-xs" style="color: #8892A4;"><%= "#{expense.date.day} #{t('date.month_names')[expense.date.month]}" %></span>
+        <span class="text-xs" style="color: #2A2F45;">·</span>
+        <span class="text-xs truncate" style="color: #8892A4;"><%= category_display_name(expense.category) %></span>
+        <% if expense.payee %>
+          <span class="text-xs hidden sm:inline" style="color: #2A2F45;">·</span>
+          <span class="text-xs hidden sm:inline truncate" style="color: #8892A4;"><%= expense.payee.name %></span>
+        <% end %>
+        <span class="text-xs" style="color: #2A2F45;">·</span>
+        <% if expense.payment_method == "pix" %>
+          <span class="text-xs font-medium px-1.5 py-0.5 rounded" style="background-color: rgba(20,184,166,0.15); color: #14B8A6;">PIX</span>
+        <% elsif expense.payment_method == "boleto" %>
+          <span class="text-xs font-medium px-1.5 py-0.5 rounded" style="background-color: rgba(245,158,11,0.15); color: #F59E0B;">Boleto</span>
+          <%= render "expenses/payment_status_badge", expense: expense %>
+        <% elsif expense.payment_method == "credit_card" %>
+          <span class="text-xs font-medium px-1.5 py-0.5 rounded" style="background-color: rgba(139,92,246,0.15); color: #8B5CF6;"><%= t("expenses.form.credit_card") %></span>
+          <% if expense.credit_card %>
+            <span class="text-xs hidden sm:inline" style="color: #2A2F45;">·</span>
+            <span class="text-xs hidden sm:inline" style="color: #8892A4;"><%= expense.credit_card.name %></span>
+          <% end %>
+        <% else %>
+          <span class="text-xs font-medium px-1.5 py-0.5 rounded" style="background-color: rgba(34,197,94,0.15); color: #22C55E;"><%= t("expenses.form.cash") %></span>
+        <% end %>
+        <% if expense.installment? %>
+          <span class="text-xs hidden sm:inline" style="color: #2A2F45;">·</span>
+          <span class="text-xs font-medium hidden sm:inline" style="color: #8892A4;"><%= expense.installment_label %></span>
+        <% end %>
+        <span class="hidden sm:inline"><%= expense_type_badge(expense.expense_type) %></span>
+      </div>
 
-  <%# Actions %>
-  <div class="flex items-center gap-1">
-    <%= link_to edit_expense_path(expense), class: "p-1.5 rounded-lg hover:bg-white/5 transition-colors", style: "color: #8892A4;" do %>
-      <%= svg_icon "edit", css_class: "w-3.5 h-3.5" %>
-    <% end %>
-    <%= button_to expense_path(expense), method: :delete,
-        form: { data: { turbo_confirm: t("expenses.expense.delete_confirm") } },
-        class: "p-1.5 rounded-lg hover:bg-white/5 transition-colors", style: "color: #8892A4; background: none; border: none; cursor: pointer;" do %>
-      <%= svg_icon "trash-2", css_class: "w-3.5 h-3.5" %>
-    <% end %>
+      <%# Actions %>
+      <div class="flex items-center gap-1 flex-shrink-0">
+        <%= link_to edit_expense_path(expense), class: "p-1.5 rounded-lg hover:bg-white/5 transition-colors", style: "color: #8892A4;" do %>
+          <%= svg_icon "edit", css_class: "w-3.5 h-3.5" %>
+        <% end %>
+        <%= button_to expense_path(expense), method: :delete,
+            form: { data: { turbo_confirm: t("expenses.expense.delete_confirm") } },
+            class: "p-1.5 rounded-lg hover:bg-white/5 transition-colors", style: "color: #8892A4; background: none; border: none; cursor: pointer;" do %>
+          <%= svg_icon "trash-2", css_class: "w-3.5 h-3.5" %>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
