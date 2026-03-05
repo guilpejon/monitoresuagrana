@@ -26,11 +26,11 @@ class ForecastController < ApplicationController
       @actual_income_total = @actual_incomes.sum(:amount)
       @actual_balance = @actual_income_total - @actual_total
 
-      @forecast_chart_data = @actual_expenses
-        .group_by { |e| e.category.name }
-        .transform_values { |exps| exps.sum(&:amount).to_f }
-        .map { |name, amt| [ I18n.t("category_names.#{name}", default: name), amt ] }
+      grouped_by_category = @actual_expenses.group_by(&:category)
+      @forecast_chart_data = grouped_by_category
+        .map { |cat, exps| [ I18n.t("category_names.#{cat.name}", default: cat.name), exps.sum(&:amount).to_f ] }
         .to_h
+      @forecast_chart_colors = grouped_by_category.keys.map(&:color)
     else
       # All recurring expenses (not month-specific — these repeat every month)
       @recurring_expenses = current_user.expenses
@@ -84,6 +84,7 @@ class ForecastController < ApplicationController
 
       # Chart data (with translated category names)
       @forecast_chart_data = @projected_by_category.map { |(name, _color), amt| [ I18n.t("category_names.#{name}", default: name), amt.to_f ] }.to_h
+      @forecast_chart_colors = @projected_by_category.keys.map { |(_name, color)| color }
     end
 
     # Previous month actuals for comparison

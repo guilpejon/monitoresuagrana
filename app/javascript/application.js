@@ -21,7 +21,8 @@ window.Chart.Chart.register({
         return ' ' + formatter.format(context.parsed)
       }
       const label = context.dataset.label || ''
-      return ' ' + (label ? label + ': ' : '') + formatter.format(context.parsed.y)
+      const isHorizontal = context.chart.options.indexAxis === 'y'
+      return ' ' + (label ? label + ': ' : '') + formatter.format(isHorizontal ? context.parsed.x : context.parsed.y)
     }
   }
 })

@@ -85,14 +85,14 @@
     </h2>
     <% if @forecast_chart_data.any? %>
       <%= bar_chart @forecast_chart_data,
-          colors: ["#6C63FF"],
           library: {
             indexAxis: "y",
             plugins: { legend: { display: false } },
             scales: {
               x: { ticks: { color: "#8892A4" }, grid: { color: "#2A2F45" } },
               y: { ticks: { color: "#8892A4" }, grid: { color: "#2A2F45" } }
-            }
+            },
+            datasets: [{ backgroundColor: @forecast_chart_colors }]
           } %>
     <% else %>
       <%= render "shared/empty_state", message: @is_past_month ? t("forecast.index.no_expenses_month") : t("forecast.index.no_recurring") %>
