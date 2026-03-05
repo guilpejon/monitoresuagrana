@@ -13,7 +13,7 @@
   <% next_date = @current_date + 1.month %>
   <% at_min = @current_date <= min_month %>
   <% at_max = @current_date >= max_month %>
-  <% on_today = @current_date == today_month %>
+  <% on_today = @current_date.beginning_of_month == today_month %>
 
   <div class="absolute left-1/2 -translate-x-1/2 flex items-center gap-1 <%= 'invisible' unless show_month_selector %>">
     <% if at_min %>
