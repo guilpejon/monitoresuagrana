@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 const DESKTOP_BREAKPOINT = 1024
 
 export default class extends Controller {
-  static targets = ["panel", "overlay", "label", "userInfo", "content"]
+  static targets = ["panel", "overlay", "label", "userInfo", "userLink", "content"]
 
   connect() {
     const collapsed = localStorage.getItem("sidebar-collapsed") === "true"
@@ -27,6 +27,7 @@ export default class extends Controller {
     panel.classList.remove("flex", "fixed", "inset-y-0", "left-0", "z-50", "flex-col")
     panel.style.width = ""
     overlay.classList.add("hidden")
+    if (this.hasContentTarget) this.contentTarget.style.marginLeft = ""
   }
 
   collapseToggle() {
@@ -64,12 +65,14 @@ export default class extends Controller {
       panel.style.width = "64px"
       this.labelTargets.forEach(el => el.classList.add("lg:hidden"))
       if (this.hasUserInfoTarget) this.userInfoTarget.classList.add("lg:hidden")
-      if (this.hasContentTarget) this.contentTarget.style.marginLeft = "64px"
+      if (this.hasUserLinkTarget) this.userLinkTarget.classList.add("justify-center")
+      if (this.hasContentTarget && window.innerWidth >= DESKTOP_BREAKPOINT) this.contentTarget.style.marginLeft = "64px"
     } else {
       panel.style.width = ""
       this.labelTargets.forEach(el => el.classList.remove("lg:hidden"))
       if (this.hasUserInfoTarget) this.userInfoTarget.classList.remove("lg:hidden")
-      if (this.hasContentTarget) this.contentTarget.style.marginLeft = ""
+      if (this.hasUserLinkTarget) this.userLinkTarget.classList.remove("justify-center")
+      if (this.hasContentTarget && window.innerWidth >= DESKTOP_BREAKPOINT) this.contentTarget.style.marginLeft = ""
     }
   }
 }

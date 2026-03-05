@@ -2,18 +2,19 @@
        style="background-color: #1A1D27; border-color: #2A2F45;"
        data-sidebar-target="panel">
 
+  <% month_param = @current_date&.strftime('%Y-%m') %>
+
   <%# Logo %>
   <div class="flex h-16 items-center px-4 border-b flex-shrink-0" style="border-color: #2A2F45;">
-    <div class="flex items-center gap-2 min-w-0">
+    <%= link_to root_path(month: month_param), class: "flex items-center gap-2 min-w-0" do %>
       <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: #6C63FF;">
         <%= svg_icon "wallet", css_class: "w-4 h-4", stroke: "white" %>
       </div>
       <span class="font-bold text-base truncate" style="color: #E2E8F0;" data-sidebar-target="label"><%= t("app.name") %></span>
-    </div>
+    <% end %>
   </div>
 
   <%# Navigation %>
-  <% month_param = @current_date&.strftime('%Y-%m') %>
   <nav class="flex-1 overflow-y-auto px-3 py-4">
     <%# Overview %>
     <p class="px-3 mb-1 text-xs font-semibold uppercase tracking-wider" style="color: #4A5568;" data-sidebar-target="label"><%= t("layouts.sidebar.section_overview") %></p>
@@ -38,22 +39,25 @@
       <%= render "layouts/nav_item", icon: "credit-card", label: t("layouts.sidebar.credit_cards"), path: credit_cards_path(month: month_param), active: controller_name == "credit_cards" %>
       <%= render "layouts/nav_item", icon: "tag", label: t("layouts.sidebar.categories"), path: categories_path(month: month_param), active: controller_name == "categories" %>
       <%= render "layouts/nav_item", icon: "user", label: t("layouts.sidebar.payees"), path: payees_path, active: controller_name == "payees" %>
-      <%= render "layouts/nav_item", icon: "settings", label: t("layouts.sidebar.settings"), path: edit_user_settings_path, active: controller_name == "settings" %>
     </div>
   </nav>
 
   <%# User section %>
-  <div class="border-t px-3 py-3 flex-shrink-0" style="border-color: #2A2F45;">
-    <div class="flex items-center gap-3 px-3 py-2 rounded-lg mb-1" style="background-color: rgba(42,47,69,0.5);">
+  <div class="border-t px-2 py-3 flex-shrink-0" style="border-color: #2A2F45;" data-controller="privacy">
+    <%= link_to edit_user_settings_path, class: "flex items-center gap-3 w-full px-3 py-2 rounded-lg mb-1 transition-colors overflow-hidden bg-[rgba(42,47,69,0.5)] hover:bg-[rgba(62,67,99,0.6)]", data: { sidebar_target: "userLink" } do %>
       <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0" style="background-color: #6C63FF; color: white;">
         <%= current_user.name&.first&.upcase || current_user.email.first.upcase %>
       </div>
       <div class="flex-1 min-w-0" data-sidebar-target="userInfo">
-        <p class="text-sm font-medium truncate" style="color: #E2E8F0;"><%= current_user.name || current_user.email.split("@").first %></p>
+        <p class="text-sm font-medium truncate" style="color: #E2E8F0;"><%= current_user.name&.split&.first || current_user.email.split("@").first %></p>
         <p class="text-xs truncate" style="color: #8892A4;"><%= current_user.currency || "BRL" %></p>
       </div>
-    </div>
-    <%= link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/5", style: "color: #8892A4;" do %>
+      <button class="p-1.5 rounded-lg transition-colors hover:bg-white/5 flex-shrink-0" style="color: #8892A4;" data-action="click->privacy#toggle" aria-label="Toggle value visibility" data-sidebar-target="label">
+        <span data-privacy-target="eyeIcon"><%= svg_icon "eye", css_class: "w-4 h-4" %></span>
+        <span data-privacy-target="eyeOffIcon" class="hidden"><%= svg_icon "eye-off", css_class: "w-4 h-4" %></span>
+      </button>
+    <% end %>
+    <%= link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "flex items-center gap-3 w-full px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/5", style: "color: #8892A4;" do %>
       <%= svg_icon "log-out", css_class: "w-4 h-4 flex-shrink-0" %>
       <span data-sidebar-target="label"><%= t("layouts.sidebar.sign_out") %></span>
     <% end %>

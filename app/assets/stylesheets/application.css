@@ -8,3 +8,14 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+/* Privacy mode: hide sensitive values */
+html.values-hidden .sensitive-value {
+  filter: blur(8px);
+  user-select: none;
+  transition: filter 0.2s ease;
+}
+
+.sensitive-value {
+  transition: filter 0.2s ease;
+}

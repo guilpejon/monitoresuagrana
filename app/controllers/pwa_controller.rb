@@ -1,5 +1,5 @@
-class PwaController < ApplicationController
-  skip_before_action :authenticate_user!
+class PwaController < ActionController::Base
+  skip_forgery_protection
 
   def service_worker
     render template: "pwa/service-worker", layout: false, content_type: "text/javascript"

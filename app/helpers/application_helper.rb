@@ -3,7 +3,7 @@ module ApplicationHelper
 
   def format_currency(amount)
     number = amount.to_f
-    case current_user&.currency || "BRL"
+    formatted = case current_user&.currency || "BRL"
     when "USD"
       number_to_currency(number, unit: "$", separator: ".", delimiter: ",", precision: 2)
     when "EUR"
@@ -11,6 +11,7 @@ module ApplicationHelper
     else # BRL
       number_to_currency(number, unit: "R$", separator: ",", delimiter: ".", format: "%u %n", precision: 2)
     end
+    content_tag(:span, formatted, class: "sensitive-value")
   end
 
   def category_display_name(category)

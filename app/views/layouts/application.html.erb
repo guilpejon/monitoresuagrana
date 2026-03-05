@@ -39,6 +39,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/themes/dark.css">
     <script src="<%= asset_path('chart.umd.js') %>"></script>
     <%= javascript_importmap_tags %>
+    <script>if(localStorage.getItem('values-hidden')==='true'){document.documentElement.classList.add('values-hidden')}</script>
   </head>
 
   <body class="h-full" style="background-color: #0F1117; color: #E2E8F0; font-family: 'Inter', system-ui, sans-serif;">
