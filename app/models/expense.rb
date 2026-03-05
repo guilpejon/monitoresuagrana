@@ -34,7 +34,7 @@ class Expense < ApplicationRecord
   end
 
   scope :for_month, ->(date) { where(date: date.beginning_of_month..date.end_of_month) }
-  scope :ordered, -> { order(date: :desc) }
+  scope :ordered, -> { order(date: :asc) }
   scope :fixed, -> { where(expense_type: "fixed") }
   scope :variable, -> { where(expense_type: "variable") }
   scope :recurring, -> { where(recurring: true) }
