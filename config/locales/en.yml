@@ -107,6 +107,10 @@ en:
       add_expense: "Add Expense"
       no_expenses: "No expenses this month"
       add_first: "Add your first expense"
+      fixed_expenses: "Fixed"
+      variable_expenses: "Variable"
+      no_fixed_expenses: "No fixed expenses this month"
+      no_variable_expenses: "No variable expenses this month"
     new:
       title: "New Expense"
       quick_title: "Quick Add Expense"

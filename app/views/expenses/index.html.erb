@@ -14,29 +14,60 @@
     <% end %>
   </div>
 
-  <%# Expenses list %>
+  <%# Fixed expenses %>
   <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
-    <% if @expenses.any? %>
-      <div id="expenses_list" class="divide-y" style="border-color: #2A2F45;">
-        <% @expenses.each do |expense| %>
+    <div class="px-4 py-3 border-b flex items-center justify-between" style="border-color: #2A2F45;">
+      <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.fixed_expenses") %></h2>
+      <span class="text-sm font-semibold" style="color: #FF6B6B;"><%= format_currency(@fixed_total) %></span>
+    </div>
+    <% if @fixed_expenses.any? %>
+      <div id="fixed_expenses_list" class="divide-y" style="border-color: #2A2F45;">
+        <% @fixed_expenses.each do |expense| %>
           <%= render "expense", expense: expense %>
         <% end %>
       </div>
     <% else %>
-      <div id="expenses_list">
-        <div class="flex flex-col items-center justify-center py-16 gap-3">
-          <%= svg_icon "credit-card", css_class: "w-12 h-12 opacity-20", stroke: "#8892A4" %>
-          <p class="text-sm font-medium" style="color: #8892A4;"><%= t("expenses.index.no_expenses") %></p>
+      <div id="fixed_expenses_list">
+        <div class="flex flex-col items-center justify-center py-10 gap-2">
+          <p class="text-sm" style="color: #8892A4;"><%= t("expenses.index.no_fixed_expenses") %></p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Fixed pagination %>
+  <% if @pagy_fixed.pages > 1 %>
+    <div class="flex justify-center">
+      <%== @pagy_fixed.series_nav %>
+    </div>
+  <% end %>
+
+  <%# Variable expenses %>
+  <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
+    <div class="px-4 py-3 border-b flex items-center justify-between" style="border-color: #2A2F45;">
+      <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.variable_expenses") %></h2>
+      <span class="text-sm font-semibold" style="color: #FF6B6B;"><%= format_currency(@variable_total) %></span>
+    </div>
+    <% if @variable_expenses.any? %>
+      <div id="variable_expenses_list" class="divide-y" style="border-color: #2A2F45;">
+        <% @variable_expenses.each do |expense| %>
+          <%= render "expense", expense: expense %>
+        <% end %>
+      </div>
+    <% else %>
+      <div id="variable_expenses_list">
+        <div class="flex flex-col items-center justify-center py-10 gap-2">
+          <p class="text-sm" style="color: #8892A4;"><%= t("expenses.index.no_variable_expenses") %></p>
           <%= link_to t("expenses.index.add_first"), new_expense_path, class: "text-sm font-medium hover:opacity-80", style: "color: #6C63FF;" %>
         </div>
       </div>
     <% end %>
   </div>
 
-  <%# Pagination %>
-  <% if @pagy.pages > 1 %>
+  <%# Variable pagination %>
+  <% if @pagy_variable.pages > 1 %>
     <div class="flex justify-center">
-      <%== @pagy.series_nav %>
+      <%== @pagy_variable.series_nav %>
     </div>
   <% end %>
 </div>

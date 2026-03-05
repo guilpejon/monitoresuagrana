@@ -2,15 +2,21 @@ class ExpensesController < ApplicationController
   before_action :set_expense, only: %i[edit update destroy update_status]
 
   def index
-    @expenses = current_user.expenses
+    base = current_user.expenses
       .includes(:category, :credit_card, :payee)
       .for_month(@current_date)
       .ordered
 
-    @pagy, @expenses = pagy(@expenses, limit: 20)
+    @pagy_fixed, @fixed_expenses = pagy(base.fixed, limit: 100, page_key: "fixed_page")
+    @pagy_variable, @variable_expenses = pagy(base.variable, limit: 100, page_key: "variable_page")
+
     @categories = current_user.categories.order(:name)
     @credit_cards = current_user.credit_cards.order(:name)
-    @total = current_user.expenses.for_month(@current_date).sum(:amount)
+
+    totals = current_user.expenses.for_month(@current_date).group(:expense_type).sum(:amount)
+    @fixed_total = totals["fixed"] || 0
+    @variable_total = totals["variable"] || 0
+    @total = @fixed_total + @variable_total
   end
 
   def new

@@ -148,6 +148,10 @@ es:
       add_expense: "Agregar Gasto"
       no_expenses: "Sin gastos este mes"
       add_first: "Agrega tu primer gasto"
+      fixed_expenses: "Fijos"
+      variable_expenses: "Variables"
+      no_fixed_expenses: "Sin gastos fijos este mes"
+      no_variable_expenses: "Sin gastos variables este mes"
     new:
       title: "Nuevo Gasto"
       quick_title: "Agregar Gasto Rápido"

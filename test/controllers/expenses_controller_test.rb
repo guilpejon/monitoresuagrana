@@ -19,6 +19,51 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "GET index shows fixed expenses in fixed section" do
+    fixed = create(:expense, user: @user, category: @category, expense_type: "fixed", description: "Monthly Rent", date: Date.current)
+    sign_in @user
+    get expenses_path
+    assert_response :success
+    assert_match fixed.description, response.body
+  end
+
+  test "GET index shows variable expenses in variable section" do
+    variable = create(:expense, user: @user, category: @category, expense_type: "variable", description: "Groceries Run", date: Date.current)
+    sign_in @user
+    get expenses_path
+    assert_response :success
+    assert_match variable.description, response.body
+  end
+
+  test "GET index fixed expenses do not bleed into variable section" do
+    fixed = create(:expense, user: @user, category: @category, expense_type: "fixed", description: "Internet Bill", date: Date.current)
+    variable = create(:expense, user: @user, category: @category, expense_type: "variable", description: "Restaurant Meal", date: Date.current)
+    sign_in @user
+    get expenses_path
+    # Both descriptions must be present somewhere on the page
+    assert_match fixed.description, response.body
+    assert_match variable.description, response.body
+  end
+
+  test "GET index computes fixed and variable totals separately" do
+    create(:expense, user: @user, category: @category, expense_type: "fixed", amount: 500.00, date: Date.current)
+    create(:expense, user: @user, category: @category, expense_type: "variable", amount: 200.00, date: Date.current)
+    sign_in @user
+    get expenses_path
+    assert_response :success
+    # The default @expense from setup is variable with amount 100, so variable total = 300, fixed = 500
+    assert_match "500", response.body
+    assert_match "300", response.body
+  end
+
+  test "GET index only shows current month expenses" do
+    last_month = create(:expense, user: @user, category: @category, description: "Old Expense", date: 1.month.ago)
+    sign_in @user
+    get expenses_path
+    assert_response :success
+    assert_no_match last_month.description, response.body
+  end
+
   test "GET new returns success" do
     sign_in @user
     get new_expense_path

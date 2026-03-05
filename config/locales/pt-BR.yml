@@ -148,6 +148,10 @@ pt-BR:
       add_expense: "Adicionar Despesa"
       no_expenses: "Nenhuma despesa este mês"
       add_first: "Adicionar primeira despesa"
+      fixed_expenses: "Fixas"
+      variable_expenses: "Variáveis"
+      no_fixed_expenses: "Nenhuma despesa fixa este mês"
+      no_variable_expenses: "Nenhuma despesa variável este mês"
     new:
       title: "Nova Despesa"
       quick_title: "Adicionar Despesa Rápida"
