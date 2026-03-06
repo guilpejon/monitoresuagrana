@@ -8,7 +8,7 @@ class Expense < ApplicationRecord
   PAYMENT_METHODS = %w[cash pix boleto credit_card].freeze
   PAYMENT_STATUSES = %w[pending scheduled paid].freeze
 
-  validates :description, presence: true
+  validates :description, length: { maximum: 255 }, allow_blank: true
   validates :amount, presence: true, numericality: { greater_than: 0 }
   validates :date, presence: true
   validates :expense_type, inclusion: { in: TYPES }

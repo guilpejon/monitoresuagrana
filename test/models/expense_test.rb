@@ -6,10 +6,11 @@ class ExpenseTest < ActiveSupport::TestCase
     assert expense.valid?
   end
 
-  test "requires description" do
+  test "allows blank description" do
     expense = build(:expense, description: nil)
-    assert_not expense.valid?
-    assert expense.errors[:description].any?
+    assert expense.valid?
+    expense2 = build(:expense, description: "")
+    assert expense2.valid?
   end
 
   test "requires amount" do
