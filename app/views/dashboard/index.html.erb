@@ -76,7 +76,7 @@
     </div>
 
     <%# Monthly Cash Flow – Bar %>
-    <div class="rounded-xl border p-5" style="background-color: #1E2130; border-color: #2A2F45;" data-currency-axis="y">
+    <div class="rounded-xl border p-5" style="background-color: #1E2130; border-color: #2A2F45;" data-currency-axis="x">
       <h2 class="text-sm font-semibold mb-4" style="color: #E2E8F0;"><%= t("dashboard.cash_flow") %></h2>
       <% if @monthly_income.any? || @monthly_expenses.any? %>
         <%= bar_chart [

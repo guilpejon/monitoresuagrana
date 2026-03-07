@@ -15,6 +15,13 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def failure
-    redirect_to root_path, alert: t("devise.omniauth_callbacks.failure", kind: "Google", reason: failure_message)
+    # When the OAuth callback is intercepted by the installed PWA but the session
+    # was started in the browser, OmniAuth fails with a CSRF/state mismatch.
+    # Automatically retry so the new flow starts and completes in the same context.
+    if request.env["omniauth.error.type"] == :csrf_detected
+      redirect_to user_google_oauth2_omniauth_authorize_path
+    else
+      redirect_to root_path, alert: t("devise.omniauth_callbacks.failure", kind: "Google", reason: failure_message)
+    end
   end
 end

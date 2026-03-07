@@ -70,4 +70,12 @@ class Users::OmniauthCallbacksControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to root_path
   end
+
+  test "retries oauth on csrf_detected (PWA intercept scenario)" do
+    OmniAuth.config.mock_auth[:google_oauth2] = :csrf_detected
+
+    get user_google_oauth2_omniauth_callback_path
+
+    assert_redirected_to user_google_oauth2_omniauth_authorize_path
+  end
 end
