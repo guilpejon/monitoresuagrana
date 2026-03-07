@@ -99,6 +99,20 @@ en:
     card_count:
       one: "1 card"
       other: "%{count} cards"
+    investments: "Portfolio"
+    portfolio_allocation: "Portfolio Allocation"
+    view_investments: "View investments"
+    no_investments: "No investments recorded"
+    wealth_distribution: "Where Is My Money"
+    wealth:
+      bank: "Bank Accounts"
+      investments: "Investments"
+      possessions: "Possessions"
+    no_wealth_data: "No assets recorded yet"
+    investment_type:
+      stock: "Stocks"
+      crypto: "Crypto"
+      fund: "Funds"
 
   expenses:
     index:
@@ -436,8 +450,12 @@ en:
       recurring_source: "recurring source"
       recurring_sources: "sources"
       projected_expenses: "Projected Expenses"
-      recurring: "recurring"
-      installment: "installment"
+      recurring:
+        one: "recurring"
+        other: "recurring"
+      installment:
+        one: "installment"
+        other: "installments"
       projected_balance: "Projected Balance"
       vs: "vs"
       in: "in"

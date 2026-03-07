@@ -140,6 +140,20 @@ pt-BR:
     card_count:
       one: "1 cartão"
       other: "%{count} cartões"
+    investments: "Carteira"
+    portfolio_allocation: "Alocação da Carteira"
+    view_investments: "Ver investimentos"
+    no_investments: "Nenhum investimento registrado"
+    wealth_distribution: "Onde Está Meu Dinheiro"
+    wealth:
+      bank: "Contas Bancárias"
+      investments: "Investimentos"
+      possessions: "Patrimônio"
+    no_wealth_data: "Nenhum ativo registrado ainda"
+    investment_type:
+      stock: "Ações"
+      crypto: "Cripto"
+      fund: "Fundos"
 
   expenses:
     index:
@@ -477,8 +491,12 @@ pt-BR:
       recurring_source: "fonte recorrente"
       recurring_sources: "fontes"
       projected_expenses: "Despesas Projetadas"
-      recurring: "recorrente"
-      installment: "parcela"
+      recurring:
+        one: "recorrente"
+        other: "recorrentes"
+      installment:
+        one: "parcela"
+        other: "parcelas"
       projected_balance: "Saldo Projetado"
       vs: "vs"
       in: "em"

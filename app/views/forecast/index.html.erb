@@ -15,12 +15,12 @@
       <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
         <p class="text-xs font-medium uppercase tracking-wide mb-2" style="color: #8892A4;"><%= t("forecast.index.actual_income") %></p>
         <p class="text-xl font-bold" style="color: #00D4AA;"><%= format_currency(@actual_income_total) %></p>
-        <p class="text-xs mt-1" style="color: #8892A4;"><%= @actual_incomes.count %> <%= @actual_incomes.count == 1 ? t("forecast.index.income_source") : t("forecast.index.income_sources") %></p>
+        <p class="text-xs mt-1" style="color: #8892A4;"><%= link_to incomes_path, class: "hover:opacity-80 transition-opacity", style: "color: #00D4AA;" do %><%= @actual_incomes.count %> <%= @actual_incomes.count == 1 ? t("forecast.index.income_source") : t("forecast.index.income_sources") %><% end %></p>
       </div>
       <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
         <p class="text-xs font-medium uppercase tracking-wide mb-2" style="color: #8892A4;"><%= t("forecast.index.actual_expenses") %></p>
         <p class="text-xl font-bold" style="color: #FF6B6B;"><%= format_currency(@actual_total) %></p>
-        <p class="text-xs mt-1" style="color: #8892A4;"><%= @actual_expenses.count %> <%= t("forecast.index.transactions") %></p>
+        <p class="text-xs mt-1" style="color: #8892A4;"><%= link_to "#{@actual_expenses.count} #{t("forecast.index.transactions")}", expenses_path, class: "hover:opacity-80 transition-opacity", style: "color: #FF6B6B;" %></p>
       </div>
       <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
         <p class="text-xs font-medium uppercase tracking-wide mb-2" style="color: #8892A4;"><%= t("forecast.index.actual_balance") %></p>
@@ -31,12 +31,12 @@
       <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
         <p class="text-xs font-medium uppercase tracking-wide mb-2" style="color: #8892A4;"><%= t("forecast.index.projected_income") %></p>
         <p class="text-xl font-bold" style="color: #00D4AA;"><%= format_currency(@projected_income) %></p>
-        <p class="text-xs mt-1" style="color: #8892A4;"><%= @recurring_incomes.count %> <%= @recurring_incomes.count == 1 ? t("forecast.index.recurring_source") : t("forecast.index.recurring_sources") %></p>
+        <p class="text-xs mt-1" style="color: #8892A4;"><%= link_to incomes_path, class: "hover:opacity-80 transition-opacity", style: "color: #00D4AA;" do %><%= @recurring_incomes.count %> <%= @recurring_incomes.count == 1 ? t("forecast.index.recurring_source") : t("forecast.index.recurring_sources") %><% end %></p>
       </div>
       <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
         <p class="text-xs font-medium uppercase tracking-wide mb-2" style="color: #8892A4;"><%= t("forecast.index.projected_expenses") %></p>
         <p class="text-xl font-bold" style="color: #FF6B6B;"><%= format_currency(@projected_total) %></p>
-        <p class="text-xs mt-1" style="color: #8892A4;"><%= @recurring_expenses.count %> <%= t("forecast.index.recurring") %><% if @installment_expenses.any? %> · <%= @installment_expenses.count %> <%= t("forecast.index.installment") %><% end %></p>
+        <p class="text-xs mt-1" style="color: #8892A4;"><%= link_to expenses_path, class: "hover:opacity-80 transition-opacity", style: "color: #FF6B6B;" do %><%= @recurring_expenses.count %> <%= t("forecast.index.recurring", count: @recurring_expenses.count) %><% if @installment_expenses.any? %> · <%= @installment_expenses.count %> <%= t("forecast.index.installment", count: @installment_expenses.count) %><% end %><% end %></p>
       </div>
       <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
         <p class="text-xs font-medium uppercase tracking-wide mb-2" style="color: #8892A4;"><%= t("forecast.index.projected_balance") %></p>
@@ -53,14 +53,14 @@
     </h2>
     <% if @forecast_chart_data.any? %>
       <%= bar_chart @forecast_chart_data,
+          colors: @forecast_chart_colors,
           library: {
             indexAxis: "y",
             plugins: { legend: { display: false } },
             scales: {
               x: { ticks: { color: "#8892A4" }, grid: { color: "#2A2F45" } },
               y: { ticks: { color: "#8892A4" }, grid: { color: "#2A2F45" } }
-            },
-            datasets: [{ backgroundColor: @forecast_chart_colors }]
+            }
           } %>
     <% else %>
       <%= render "shared/empty_state", message: @is_past_month ? t("forecast.index.no_expenses_month") : t("forecast.index.no_recurring") %>

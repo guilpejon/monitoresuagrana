@@ -5,7 +5,7 @@
   </button>
 
   <%# Month selector with boundaries — absolutely centred so it stays centred on all screen sizes %>
-  <% show_month_selector = controller_name.in?(%w[dashboard expenses incomes forecast]) %>
+  <% show_month_selector = controller_name.in?(%w[expenses incomes forecast]) %>
   <% today_month = Date.current.beginning_of_month %>
   <% min_month = today_month - 24.months %>
   <% max_month = @max_date || today_month + 1.month %>

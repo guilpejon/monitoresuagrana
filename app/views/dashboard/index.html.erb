@@ -2,29 +2,17 @@
 <div class="space-y-6">
 
   <%# Summary Cards %>
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+  <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
     <%# Net Balance %>
     <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
       <div class="flex items-center justify-between mb-3">
         <span class="text-xs font-medium uppercase tracking-wide" style="color: #8892A4;"><%= t("dashboard.net_balance") %></span>
         <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(108,99,255,0.15);">
-          <%= svg_icon "trending-up", css_class: "w-4 h-4", stroke: "#6C63FF" %>
+          <%= svg_icon "bar-chart-2", css_class: "w-4 h-4", stroke: "#6C63FF" %>
         </div>
       </div>
       <p class="text-xl font-bold" style="color: <%= @net_balance >= 0 ? '#00D4AA' : '#FF6B6B' %>;"><%= format_currency(@net_balance) %></p>
-      <p class="text-xs mt-1" style="color: #8892A4;"><%= link_to t("dashboard.see_full_projection"), forecast_path, style: "color: #6C63FF;" %></p>
-    </div>
-
-    <%# Credit Card Bills %>
-    <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
-      <div class="flex items-center justify-between mb-3">
-        <span class="text-xs font-medium uppercase tracking-wide" style="color: #8892A4;"><%= t("dashboard.card_bills") %></span>
-        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(247,183,49,0.15);">
-          <%= svg_icon "credit-card", css_class: "w-4 h-4", stroke: "#F7B731" %>
-        </div>
-      </div>
-      <p class="text-xl font-bold" style="color: #F7B731;"><%= format_currency(@total_card_bills) %></p>
-      <p class="text-xs mt-1" style="color: #8892A4;"><%= t("dashboard.card_count", count: @credit_cards.count) %></p>
+      <p class="text-xs mt-1" style="color: #8892A4;"><%= link_to t("dashboard.see_full_projection"), forecast_path, class: "hover:opacity-80 transition-opacity", style: "color: #6C63FF;" %></p>
     </div>
 
     <%# Bank Accounts %>
@@ -36,11 +24,38 @@
         </div>
       </div>
       <p class="text-xl font-bold" style="color: #6C63FF;"><%= format_currency(@total_bank_balance) %></p>
-      <p class="text-xs mt-1" style="color: #8892A4;"><%= link_to t("dashboard.view_accounts"), bank_accounts_path, style: "color: #6C63FF;" %></p>
+      <p class="text-xs mt-1" style="color: #8892A4;"><%= link_to t("dashboard.view_accounts"), bank_accounts_path, class: "hover:opacity-80 transition-opacity", style: "color: #6C63FF;" %></p>
+    </div>
+
+    <%# Credit Card Bills %>
+    <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-medium uppercase tracking-wide" style="color: #8892A4;"><%= t("dashboard.card_bills") %></span>
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(247,183,49,0.15);">
+          <%= svg_icon "credit-card", css_class: "w-4 h-4", stroke: "#F7B731" %>
+        </div>
+      </div>
+      <p class="text-xl font-bold" style="color: #F7B731;"><%= format_currency(@total_card_bills) %></p>
+      <p class="text-xs mt-1" style="color: #8892A4;"><%= link_to t("dashboard.card_count", count: @credit_cards.count), credit_cards_path, class: "hover:opacity-80 transition-opacity", style: "color: #F7B731;" %></p>
+    </div>
+
+    <%# Investments %>
+    <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-medium uppercase tracking-wide" style="color: #8892A4;"><%= t("dashboard.investments") %></span>
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(0,212,170,0.15);">
+          <%= svg_icon "trending-up", css_class: "w-4 h-4", stroke: "#00D4AA" %>
+        </div>
+      </div>
+      <p class="text-xl font-bold" style="color: #00D4AA;"><%= format_currency(@total_portfolio_value) %></p>
+      <% profit_color = @portfolio_profit_loss >= 0 ? "#00D4AA" : "#FF6B6B" %>
+      <%= link_to investments_path, class: "text-xs mt-1 block hover:opacity-80 transition-opacity", style: "color: #{profit_color};" do %>
+        <%= @portfolio_profit_loss >= 0 ? "+" : "" %><%= format_currency(@portfolio_profit_loss) %> (<%= @portfolio_profit_loss >= 0 ? "+" : "" %><%= @portfolio_profit_loss_percent %>%)
+      <% end %>
     </div>
 
     <%# Possessions %>
-    <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
+    <div class="col-span-2 lg:col-span-1 rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
       <div class="flex items-center justify-between mb-3">
         <span class="text-xs font-medium uppercase tracking-wide" style="color: #8892A4;"><%= t("dashboard.possessions") %></span>
         <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(167,139,250,0.15);">
@@ -48,19 +63,19 @@
         </div>
       </div>
       <p class="text-xl font-bold" style="color: #A78BFA;"><%= format_currency(@total_possessions_value) %></p>
-      <p class="text-xs mt-1" style="color: #8892A4;"><%= link_to t("dashboard.view_possessions"), possessions_path, style: "color: #A78BFA;" %></p>
+      <p class="text-xs mt-1" style="color: #8892A4;"><%= link_to t("dashboard.view_possessions"), possessions_path, class: "hover:opacity-80 transition-opacity", style: "color: #A78BFA;" %></p>
     </div>
   </div>
 
   <%# Charts Row %>
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-    <%# Spending by Category – Donut %>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <%# Wealth Distribution – Donut %>
     <div class="rounded-xl border p-5" style="background-color: #1E2130; border-color: #2A2F45;">
-      <h2 class="text-sm font-semibold mb-4" style="color: #E2E8F0;"><%= t("dashboard.spending_by_category") %></h2>
-      <% if @spending_by_category.any? %>
-        <%= pie_chart @spending_by_category.transform_values(&:to_f),
+      <h2 class="text-sm font-semibold mb-4" style="color: #E2E8F0;"><%= t("dashboard.wealth_distribution") %></h2>
+      <% if @wealth_distribution.any? %>
+        <%= pie_chart @wealth_distribution.transform_keys { |k| t("dashboard.wealth.#{k}") },
             donut: true,
-            colors: @spending_colors,
+            colors: ["#6C63FF", "#00D4AA", "#A78BFA"],
             legend: true,
             library: {
               plugins: {
@@ -71,7 +86,31 @@
               }
             } %>
       <% else %>
-        <%= render "shared/empty_state", message: t("dashboard.no_expenses_month") %>
+        <%= render "shared/empty_state", message: t("dashboard.no_wealth_data") %>
+      <% end %>
+    </div>
+
+    <%# Portfolio Allocation – Donut %>
+    <div class="rounded-xl border p-5" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("dashboard.portfolio_allocation") %></h2>
+        <%= link_to t("dashboard.view_investments"), investments_path, class: "text-xs font-medium hover:opacity-80 transition-opacity", style: "color: #00D4AA;" %>
+      </div>
+      <% if @portfolio_by_type.any? %>
+        <%= pie_chart @portfolio_by_type.transform_keys { |type| t("dashboard.investment_type.#{type}") },
+            donut: true,
+            colors: ["#00D4AA", "#6C63FF", "#F7B731"],
+            legend: true,
+            library: {
+              plugins: {
+                legend: {
+                  position: "bottom",
+                  labels: { color: "#8892A4", font: { size: 12 }, padding: 12 }
+                }
+              }
+            } %>
+      <% else %>
+        <%= render "shared/empty_state", message: t("dashboard.no_investments") %>
       <% end %>
     </div>
 
