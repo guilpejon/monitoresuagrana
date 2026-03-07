@@ -56,7 +56,8 @@
           <%= render "layouts/topbar" %>
 
           <main class="flex-1 overflow-y-auto p-4 md:p-6 pb-24 lg:pb-6">
-            <% if notice %>
+            <%= render "layouts/install_banner" %>
+          <% if notice %>
               <div class="mb-4 px-4 py-3 rounded-lg text-sm font-medium border flex items-center justify-between gap-4" style="background-color: rgba(0,212,170,0.1); border-color: #00D4AA; color: #00D4AA;">
                 <span><%= notice %></span>
                 <button type="button" onclick="this.closest('div').remove()" class="shrink-0 opacity-70 hover:opacity-100 transition-opacity cursor-pointer" aria-label="Dismiss">&times;</button>

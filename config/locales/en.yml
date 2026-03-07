@@ -486,6 +486,17 @@ en:
       language_pt_br: "Português (Brasil)"
       language_es: "Español"
 
+  install_prompt:
+    banner_title: "Install the app"
+    banner_ios_hint: "Tap Share (↑) then \"Add to Home Screen\""
+    banner_android_btn: "Install"
+    dismiss: "Dismiss"
+    settings_title: "Install as App"
+    settings_subtitle: "Add to your home screen for quick access"
+    settings_ios_hint: "Tap the Share button (↑) at the bottom of your browser, then tap \"Add to Home Screen\"."
+    settings_android_btn: "Add to home screen"
+    settings_android_static_hint: "Open your browser menu (⋮) and tap \"Add to Home Screen\"."
+
   shared:
     delete_modal:
       confirm: "Delete"

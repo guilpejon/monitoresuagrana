@@ -124,6 +124,54 @@
     <% end %>
   </div>
 
+  <%# Install as App — mobile only %>
+  <div class="lg:hidden rounded-xl border overflow-hidden" data-controller="install-prompt" data-install-prompt-mode-value="card" style="background-color: #1E2130; border-color: #2A2F45;">
+    <div class="px-5 py-4 border-b" style="border-color: #2A2F45;">
+      <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("install_prompt.settings_title") %></h2>
+      <p class="text-xs mt-0.5" style="color: #8892A4;"><%= t("install_prompt.settings_subtitle") %></p>
+    </div>
+
+    <div class="hidden p-5" data-install-prompt-target="banner">
+      <%# iOS instructions %>
+      <div class="hidden" data-install-prompt-target="iosContent">
+        <div class="flex items-start gap-3">
+          <div class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5" style="background-color: rgba(108,99,255,0.2);">
+            <%= svg_icon "smartphone", css_class: "w-4 h-4", stroke: "#6C63FF" %>
+          </div>
+          <div>
+            <p class="text-sm" style="color: #E2E8F0;"><%= t("install_prompt.settings_ios_hint") %></p>
+          </div>
+        </div>
+      </div>
+
+      <%# Android — native install prompt available %>
+      <div class="hidden" data-install-prompt-target="androidContent">
+        <div class="flex items-center gap-3">
+          <div class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(108,99,255,0.2);">
+            <%= svg_icon "smartphone", css_class: "w-4 h-4", stroke: "#6C63FF" %>
+          </div>
+          <button data-action="click->install-prompt#install"
+                  class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors hover:opacity-90"
+                  style="background-color: #6C63FF; color: white;">
+            <%= t("install_prompt.settings_android_btn") %>
+          </button>
+        </div>
+      </div>
+
+      <%# Android — static fallback (no install prompt available) %>
+      <div class="hidden" data-install-prompt-target="androidStaticContent">
+        <div class="flex items-start gap-3">
+          <div class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5" style="background-color: rgba(108,99,255,0.2);">
+            <%= svg_icon "smartphone", css_class: "w-4 h-4", stroke: "#6C63FF" %>
+          </div>
+          <div>
+            <p class="text-sm" style="color: #E2E8F0;"><%= t("install_prompt.settings_android_static_hint") %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <%# Danger zone %>
   <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
     <div class="px-5 py-4 border-b" style="border-color: #2A2F45;">

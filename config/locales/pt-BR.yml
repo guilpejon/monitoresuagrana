@@ -527,6 +527,17 @@ pt-BR:
       language_pt_br: "Português (Brasil)"
       language_es: "Español"
 
+  install_prompt:
+    banner_title: "Instale o app"
+    banner_ios_hint: "Toque em Compartilhar (↑) e depois em \"Adicionar à Tela de Início\""
+    banner_android_btn: "Instalar"
+    dismiss: "Agora não"
+    settings_title: "Instalar como App"
+    settings_subtitle: "Adicione à sua tela inicial para acesso rápido"
+    settings_ios_hint: "Toque no botão Compartilhar (↑) na parte inferior do seu navegador e depois toque em \"Adicionar à Tela de Início\"."
+    settings_android_btn: "Adicionar à tela inicial"
+    settings_android_static_hint: "Abra o menu do navegador (⋮) e toque em \"Adicionar à tela inicial\"."
+
   shared:
     delete_modal:
       confirm: "Excluir"
