@@ -5,7 +5,11 @@
                      else
                        "standard_delete"
                      end %>
-<div id="expense_<%= expense.id %>" class="flex gap-3 px-4 py-3 hover:bg-white/[0.02] transition-colors" style="<%= case expense.payment_status
+<div id="expense_<%= expense.id %>"
+     data-expense-filter-target="row"
+     data-section="<%= expense.expense_type %>"
+     data-search-text="<%= [expense.description, category_display_name(expense.category), t("expenses.form.#{expense.payment_method}"), expense.payment_status ? t("expenses.payment_statuses.#{expense.payment_status}") : nil].compact.join(' ') %>"
+     class="flex gap-3 px-4 py-3 hover:bg-white/[0.02] transition-colors" style="<%= case expense.payment_status
             when "paid"      then "background-color: rgba(0,212,170,0.06);"
             when "scheduled" then "background-color: rgba(129,140,248,0.06);"
             when "pending"   then "background-color: rgba(255,107,107,0.06);"

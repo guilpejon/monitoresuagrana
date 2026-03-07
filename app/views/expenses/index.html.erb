@@ -1,5 +1,5 @@
 <% provide :title, t('.title') %>
-<div class="space-y-4">
+<div class="space-y-4" data-controller="expense-filter">
   <%# Header %>
   <div class="flex items-center justify-between">
     <div>
@@ -10,8 +10,30 @@
     </div>
     <%= link_to new_expense_path, class: "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors hover:opacity-90", style: "background-color: #6C63FF; color: white;" do %>
       <%= svg_icon "plus", css_class: "w-4 h-4", stroke: "white" %>
-      <%= t("expenses.index.add_expense") %>
+      <span class="hidden sm:inline"><%= t("expenses.index.add_expense") %></span>
+      <span class="sm:hidden"><%= t("expenses.index.add_expense_short") %></span>
     <% end %>
+  </div>
+
+  <%# Search bar %>
+  <div class="relative">
+    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+      <%= svg_icon "search", css_class: "w-4 h-4", stroke: "#8892A4" %>
+    </div>
+    <input type="text"
+           data-expense-filter-target="input"
+           data-action="input->expense-filter#filter"
+           placeholder="<%= t('expenses.index.search_placeholder') %>"
+           class="w-full pl-9 pr-9 py-2.5 rounded-xl text-sm outline-none transition-colors"
+           style="background-color: #1E2130; border: 1px solid #2A2F45; color: #E2E8F0;"
+           autocomplete="off" />
+    <button type="button"
+            data-expense-filter-target="clear"
+            data-action="click->expense-filter#clear"
+            class="absolute inset-y-0 right-0 pr-3 flex items-center transition-colors hover:opacity-70"
+            hidden>
+      <%= svg_icon "x", css_class: "w-4 h-4", stroke: "#8892A4" %>
+    </button>
   </div>
 
   <%# Fixed expenses %>
@@ -25,6 +47,9 @@
         <% @fixed_expenses.each do |expense| %>
           <%= render "expense", expense: expense %>
         <% end %>
+        <div data-expense-filter-target="fixedEmpty" hidden class="flex flex-col items-center justify-center py-10 gap-2">
+          <p class="text-sm" style="color: #8892A4;"><%= t("expenses.index.no_results") %></p>
+        </div>
       </div>
     <% else %>
       <div id="fixed_expenses_list">
@@ -34,13 +59,6 @@
       </div>
     <% end %>
   </div>
-
-  <%# Fixed pagination %>
-  <% if @pagy_fixed.pages > 1 %>
-    <div class="flex justify-center">
-      <%== @pagy_fixed.series_nav %>
-    </div>
-  <% end %>
 
   <%# Variable expenses %>
   <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
@@ -53,6 +71,9 @@
         <% @variable_expenses.each do |expense| %>
           <%= render "expense", expense: expense %>
         <% end %>
+        <div data-expense-filter-target="variableEmpty" hidden class="flex flex-col items-center justify-center py-10 gap-2">
+          <p class="text-sm" style="color: #8892A4;"><%= t("expenses.index.no_results") %></p>
+        </div>
       </div>
     <% else %>
       <div id="variable_expenses_list">
@@ -63,13 +84,6 @@
       </div>
     <% end %>
   </div>
-
-  <%# Variable pagination %>
-  <% if @pagy_variable.pages > 1 %>
-    <div class="flex justify-center">
-      <%== @pagy_variable.series_nav %>
-    </div>
-  <% end %>
 </div>
 
 <div id="expenses_total" class="hidden"></div>

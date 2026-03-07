@@ -8,8 +8,8 @@ class ExpensesController < ApplicationController
       .for_month(@current_date)
       .ordered
 
-    @pagy_fixed, @fixed_expenses = pagy(base.fixed, limit: 100, page_key: "fixed_page")
-    @pagy_variable, @variable_expenses = pagy(base.variable, limit: 100, page_key: "variable_page")
+    @fixed_expenses = base.fixed
+    @variable_expenses = base.variable
 
     @categories = current_user.categories.order(:name)
     @credit_cards = current_user.credit_cards.order(:name)

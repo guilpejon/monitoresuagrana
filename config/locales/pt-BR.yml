@@ -152,6 +152,9 @@ pt-BR:
       variable_expenses: "Variáveis"
       no_fixed_expenses: "Nenhuma despesa fixa este mês"
       no_variable_expenses: "Nenhuma despesa variável este mês"
+      search_placeholder: "Buscar despesas..."
+      no_results: "Nenhuma despesa encontrada"
+      add_expense_short: "Adicionar"
     new:
       title: "Nova Despesa"
       quick_title: "Adicionar Despesa Rápida"

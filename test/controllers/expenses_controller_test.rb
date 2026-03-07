@@ -64,6 +64,49 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
     assert_no_match last_month.description, response.body
   end
 
+  test "GET index renders search input and filter controller" do
+    sign_in @user
+    get expenses_path
+    assert_select "[data-controller='expense-filter']"
+    assert_select "input[data-expense-filter-target='input']"
+    assert_select "button[data-expense-filter-target='clear']"
+  end
+
+  test "GET index renders expense rows with searchable data attributes" do
+    expense = create(:expense, user: @user, category: @category, description: "Supermarket Run", date: Date.current)
+    sign_in @user
+    get expenses_path
+    assert_select "[data-expense-filter-target='row'][data-search-text*='Supermarket Run']"
+  end
+
+  test "GET index expense rows include payment status in search text" do
+    create(:expense, user: @user, category: @category, date: Date.current, payment_status: "paid")
+    sign_in @user
+    get expenses_path
+    assert_select "[data-expense-filter-target='row'][data-search-text*='#{I18n.t("expenses.payment_statuses.paid")}']"
+  end
+
+  test "GET index expense rows with nil payment status do not error" do
+    expense = create(:expense, user: @user, category: @category, date: Date.current, payment_status: nil)
+    sign_in @user
+    get expenses_path
+    assert_response :success
+  end
+
+  test "GET index expense rows include section data attribute" do
+    expense = create(:expense, user: @user, category: @category, description: "Test Expense", date: Date.current)
+    sign_in @user
+    get expenses_path
+    assert_select "[data-expense-filter-target='row'][data-section='#{expense.expense_type}']"
+  end
+
+  test "GET index loads all expenses without pagination limit" do
+    create_list(:expense, 5, user: @user, category: @category, expense_type: "variable", date: Date.current)
+    sign_in @user
+    get expenses_path
+    assert_select "[data-expense-filter-target='row']", minimum: 6
+  end
+
   test "GET new returns success" do
     sign_in @user
     get new_expense_path
