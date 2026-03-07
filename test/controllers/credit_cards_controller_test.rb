@@ -113,4 +113,37 @@ class CreditCardsControllerTest < ActionDispatch::IntegrationTest
     end
     assert_response :not_found
   end
+
+  test "PATCH set_default sets card as user default" do
+    sign_in @user
+    patch set_default_credit_card_path(@credit_card)
+    assert_redirected_to credit_cards_path
+    assert_equal I18n.t("controllers.credit_cards.default_set"), flash[:notice]
+    assert_equal @credit_card.id, @user.reload.default_credit_card_id
+  end
+
+  test "PATCH set_default clears default when card is already the default" do
+    @user.update!(default_credit_card_id: @credit_card.id)
+    sign_in @user
+    patch set_default_credit_card_path(@credit_card)
+    assert_redirected_to credit_cards_path
+    assert_equal I18n.t("controllers.credit_cards.default_cleared"), flash[:notice]
+    assert_nil @user.reload.default_credit_card_id
+  end
+
+  test "cannot set default on other user's credit card" do
+    other_user = create(:user)
+    other_card = create(:credit_card, user: other_user)
+
+    sign_in @user
+    patch set_default_credit_card_path(other_card)
+    assert_response :not_found
+  end
+
+  test "destroying default card clears user default" do
+    @user.update!(default_credit_card_id: @credit_card.id)
+    sign_in @user
+    delete credit_card_path(@credit_card)
+    assert_nil @user.reload.default_credit_card_id
+  end
 end

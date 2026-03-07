@@ -263,6 +263,9 @@ es:
       delete_modal_title: "Eliminar tarjeta"
       no_cards: "Aún no hay tarjetas de crédito"
       add_first: "Agrega tu primera tarjeta"
+      set_default: "Establecer por defecto"
+      unset_default: "Quitar por defecto"
+      default_badge: "Por defecto"
     new:
       title: "Agregar Tarjeta de Crédito"
     edit:
@@ -653,6 +656,8 @@ es:
       created: "Tarjeta de crédito agregada."
       updated: "Tarjeta de crédito actualizada."
       destroyed: "Tarjeta de crédito eliminada."
+      default_set: "Tarjeta de crédito predeterminada establecida."
+      default_cleared: "Tarjeta de crédito predeterminada eliminada."
     bank_accounts:
       created: "Cuenta bancaria agregada."
       updated: "Cuenta bancaria actualizada."

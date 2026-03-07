@@ -263,6 +263,9 @@ pt-BR:
       delete_modal_title: "Remover cartão"
       no_cards: "Nenhum cartão de crédito adicionado"
       add_first: "Adicionar primeiro cartão"
+      set_default: "Definir como padrão"
+      unset_default: "Remover padrão"
+      default_badge: "Padrão"
     new:
       title: "Adicionar Cartão de Crédito"
     edit:
@@ -653,6 +656,8 @@ pt-BR:
       created: "Cartão de crédito adicionado."
       updated: "Cartão de crédito atualizado."
       destroyed: "Cartão de crédito removido."
+      default_set: "Cartão padrão definido."
+      default_cleared: "Cartão padrão removido."
     bank_accounts:
       created: "Conta bancária adicionada."
       updated: "Conta bancária atualizada."

@@ -113,6 +113,14 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "GET new pre-selects default credit card" do
+    card = create(:credit_card, user: @user)
+    @user.update!(default_credit_card_id: card.id)
+    sign_in @user
+    get new_expense_path
+    assert_select "select[name='expense[credit_card_id]'] option[selected][value='#{card.id}']"
+  end
+
   test "GET edit returns success" do
     sign_in @user
     get edit_expense_path(@expense)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_06_025320) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_07_005627) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -136,6 +136,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_06_025320) do
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "currency"
+    t.integer "default_credit_card_id"
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.integer "failed_attempts", default: 0, null: false
@@ -150,6 +151,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_06_025320) do
     t.string "uid"
     t.string "unlock_token"
     t.datetime "updated_at", null: false
+    t.index ["default_credit_card_id"], name: "index_users_on_default_credit_card_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -167,4 +169,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_06_025320) do
   add_foreign_key "investments", "users"
   add_foreign_key "payees", "users"
   add_foreign_key "possessions", "users"
+  add_foreign_key "users", "credit_cards", column: "default_credit_card_id"
 end

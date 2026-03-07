@@ -8,7 +8,7 @@
 <div id="expense_<%= expense.id %>"
      data-expense-filter-target="row"
      data-section="<%= expense.expense_type %>"
-     data-search-text="<%= [expense.description, category_display_name(expense.category), t("expenses.form.#{expense.payment_method}"), expense.payment_status ? t("expenses.payment_statuses.#{expense.payment_status}") : nil].compact.join(' ') %>"
+     data-search-text="<%= [expense.description, category_display_name(expense.category), expense.credit_card ? "#{t("expenses.form.#{expense.payment_method}")} (#{expense.credit_card.name})" : t("expenses.form.#{expense.payment_method}"), expense.payment_status ? t("expenses.payment_statuses.#{expense.payment_status}") : nil].compact.join(' ') %>"
      class="flex gap-3 px-4 py-3 hover:bg-white/[0.02] transition-colors" style="<%= case expense.payment_status
             when "paid"      then "background-color: rgba(0,212,170,0.06);"
             when "scheduled" then "background-color: rgba(129,140,248,0.06);"
@@ -54,10 +54,10 @@
         <span class="text-xs" style="color: #2A2F45;">·</span>
         <span class="text-xs" style="color: #8892A4;"><%= category_display_name(expense.category) %></span>
         <span class="text-xs" style="color: #2A2F45;">·</span>
-        <span class="text-xs" style="color: #8892A4;"><%= t("expenses.form.#{expense.payment_method}") %></span>
         <% if expense.credit_card %>
-          <span class="text-xs hidden sm:inline" style="color: #2A2F45;">·</span>
-          <span class="text-xs hidden sm:inline truncate" style="color: #8892A4;"><%= expense.credit_card.name %></span>
+          <span class="text-xs" style="color: #8892A4;"><%= t("expenses.form.#{expense.payment_method}") %> (<%= expense.credit_card.name %>)</span>
+        <% else %>
+          <span class="text-xs" style="color: #8892A4;"><%= t("expenses.form.#{expense.payment_method}") %></span>
         <% end %>
       </div>
 

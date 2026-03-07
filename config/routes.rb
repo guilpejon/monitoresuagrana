@@ -12,7 +12,11 @@ Rails.application.routes.draw do
     end
   end
   resources :incomes
-  resources :credit_cards
+  resources :credit_cards do
+    member do
+      patch :set_default
+    end
+  end
   resources :investments do
     member do
       post :refresh_price

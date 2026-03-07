@@ -1,5 +1,5 @@
 class CreditCardsController < ApplicationController
-  before_action :set_credit_card, only: %i[edit update destroy]
+  before_action :set_credit_card, only: %i[edit update destroy set_default]
 
   def index
     @credit_cards = current_user.credit_cards.order(:name)
@@ -36,6 +36,16 @@ class CreditCardsController < ApplicationController
   def destroy
     @credit_card.destroy
     redirect_to credit_cards_path, notice: t("controllers.credit_cards.destroyed")
+  end
+
+  def set_default
+    if current_user.default_credit_card_id == @credit_card.id
+      current_user.update!(default_credit_card_id: nil)
+      redirect_to credit_cards_path, notice: t("controllers.credit_cards.default_cleared")
+    else
+      current_user.update!(default_credit_card_id: @credit_card.id)
+      redirect_to credit_cards_path, notice: t("controllers.credit_cards.default_set")
+    end
   end
 
   private

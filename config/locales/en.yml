@@ -222,6 +222,9 @@ en:
       delete_modal_title: "Remove card"
       no_cards: "No credit cards added yet"
       add_first: "Add your first card"
+      set_default: "Set as default"
+      unset_default: "Remove default"
+      default_badge: "Default"
     new:
       title: "Add Credit Card"
     edit:
@@ -612,6 +615,8 @@ en:
       created: "Credit card added."
       updated: "Credit card updated."
       destroyed: "Credit card removed."
+      default_set: "Default credit card set."
+      default_cleared: "Default credit card removed."
     bank_accounts:
       created: "Bank account added."
       updated: "Bank account updated."

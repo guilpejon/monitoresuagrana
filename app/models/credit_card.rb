@@ -2,6 +2,8 @@ class CreditCard < ApplicationRecord
   belongs_to :user
   has_many :expenses, dependent: :nullify
 
+  before_destroy :clear_user_default
+
   BRANDS = %w[visa mastercard amex elo hipercard other].freeze
 
   validates :name, presence: true
@@ -22,5 +24,11 @@ class CreditCard < ApplicationRecord
 
   def color_hex
     color.presence || "#6C63FF"
+  end
+
+  private
+
+  def clear_user_default
+    user.update_column(:default_credit_card_id, nil) if user.default_credit_card_id == id
   end
 end

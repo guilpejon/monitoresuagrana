@@ -125,7 +125,7 @@
     <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;"><%= t("expenses.form.credit_card") %></label>
     <%= f.select :credit_card_id,
         [[t("expenses.form.select_card"), ""]] + credit_cards.map { |c| [c.name, c.id] },
-        { include_blank: false },
+        { include_blank: false, selected: expense.credit_card_id },
         class: "w-full px-3 py-2.5 rounded-lg border text-sm outline-none focus:ring-2 transition-all",
         style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;" %>
   </div>

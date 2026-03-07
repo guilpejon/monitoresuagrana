@@ -11,7 +11,8 @@
   <% if @credit_cards.any? %>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <% @credit_cards.each do |card| %>
-        <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
+        <% is_default = current_user.default_credit_card_id == card.id %>
+        <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: <%= is_default ? '#6C63FF' : '#2A2F45' %>;">
           <%# Card visual %>
           <div class="p-5 relative" style="background: linear-gradient(135deg, <%= card.color_hex %>, <%= card.color_hex %>88);">
             <div class="flex items-start justify-between mb-6">
@@ -19,8 +20,13 @@
                 <p class="text-xs font-medium opacity-80" style="color: white;"><%= t("credit_cards.index.title") %></p>
                 <p class="text-base font-bold mt-0.5" style="color: white;"><%= card.name %></p>
               </div>
-              <div class="opacity-80">
-                <%= svg_icon "credit-card", css_class: "w-7 h-7", stroke: "white" %>
+              <div class="flex items-center gap-2">
+                <% if is_default %>
+                  <span class="text-xs font-semibold px-2 py-0.5 rounded-full" style="background-color: rgba(255,255,255,0.2); color: white;"><%= t("credit_cards.index.default_badge") %></span>
+                <% end %>
+                <div class="opacity-80">
+                  <%= svg_icon "credit-card", css_class: "w-7 h-7", stroke: "white" %>
+                </div>
               </div>
             </div>
             <p class="text-sm font-mono tracking-widest opacity-90" style="color: white;">
@@ -57,7 +63,13 @@
             </div>
 
             <div class="flex gap-2 pt-1">
-              <%= link_to edit_credit_card_path(card), class: "flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors hover:bg-white/5", style: "color: #8892A4; border: 1px solid #2A2F45;" do %>
+              <%= button_to set_default_credit_card_path(card), method: :patch,
+                  class: "flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors hover:bg-white/5",
+                  style: "border: 1px solid #{is_default ? '#6C63FF' : '#2A2F45'}; color: #{is_default ? '#6C63FF' : '#8892A4'}; background: none; cursor: pointer;" do %>
+                <%= svg_icon(is_default ? "star" : "star", css_class: "w-3.5 h-3.5") %>
+                <%= is_default ? t("credit_cards.index.unset_default") : t("credit_cards.index.set_default") %>
+              <% end %>
+              <%= link_to edit_credit_card_path(card), class: "flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors hover:bg-white/5", style: "color: #8892A4; border: 1px solid #2A2F45;" do %>
                 <%= svg_icon "edit", css_class: "w-3.5 h-3.5" %> <%= t("credit_cards.index.edit") %>
               <% end %>
               <%= render "shared/delete_modal_button",
