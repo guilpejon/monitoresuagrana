@@ -47,7 +47,15 @@ class ForecastController < ApplicationController
         .includes(:category, :credit_card)
         .order("categories.name")
 
-      # Projected spending by category (recurring + installments combined)
+      # One-off expenses already recorded this month
+      @oneoff_expenses = current_user.expenses
+        .for_month(@current_date)
+        .where(recurring: false)
+        .where("total_installments IS NULL OR total_installments <= 1")
+        .includes(:category, :credit_card)
+        .order("categories.name")
+
+      # Projected spending by category (recurring + installments + one-offs combined)
       recurring_by_category = @recurring_expenses
         .joins(:category)
         .group("categories.name", "categories.color")
@@ -58,10 +66,17 @@ class ForecastController < ApplicationController
         .group("categories.name", "categories.color")
         .sum(:amount)
 
-      @projected_by_category = recurring_by_category.merge(installment_by_category) { |_key, a, b| a + b }
+      oneoff_by_category = @oneoff_expenses
+        .joins(:category)
+        .group("categories.name", "categories.color")
+        .sum(:amount)
+
+      @projected_by_category = recurring_by_category
+        .merge(installment_by_category) { |_key, a, b| a + b }
+        .merge(oneoff_by_category) { |_key, a, b| a + b }
 
       # Load into memory for in-memory aggregation (avoids extra SQL queries)
-      all_projected = @recurring_expenses.to_a + @installment_expenses.to_a
+      all_projected = @recurring_expenses.to_a + @installment_expenses.to_a + @oneoff_expenses.to_a
       @projected_total = all_projected.sum(&:amount)
 
       # Breakdown by payment method (boleto, credit_card, pix, cash)
