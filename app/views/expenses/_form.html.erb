@@ -47,12 +47,12 @@
       <%= f.hidden_field :payment_method %>
     <% end %>
     <div class="grid grid-cols-4 gap-2 <%= 'pointer-events-none opacity-50' if locked_method %>">
-      <% [[t("expenses.form.cash"), "cash"], [t("expenses.form.pix"), "pix"], [t("expenses.form.boleto"), "boleto"], [t("expenses.form.credit_card"), "credit_card"]].each do |label, value| %>
+      <% [[t("expenses.form.credit_card"), "credit_card"], [t("expenses.form.pix"), "pix"], [t("expenses.form.boleto"), "boleto"], [t("expenses.form.cash"), "cash"]].each do |label, value| %>
         <label class="<%= locked_method ? 'cursor-not-allowed' : 'cursor-pointer' %>">
           <%= f.radio_button :payment_method, value,
               class: "sr-only peer",
               id: "pm_#{value}",
-              checked: (expense.payment_method == value || (expense.payment_method.blank? && value == "cash")),
+              checked: (expense.payment_method == value || (expense.payment_method.blank? && value == "credit_card")),
               disabled: locked_method,
               data: (locked_method ? {} : { action: "change->expense-payment#methodChanged" }) %>
           <div class="flex flex-col items-center gap-1 p-2 rounded-lg border transition-all peer-checked:border-accent text-center"
