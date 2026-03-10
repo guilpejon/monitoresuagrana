@@ -94,6 +94,9 @@ en:
     view_all: "View all"
     no_expenses_month: "No expenses recorded this month"
     no_data_6_months: "No data for the last 6 months"
+    no_data_12_months: "No data for the last 12 months"
+    spending_by_category_6m: "Spending by Category — Last 6 Months"
+    spending_by_category_12m: "Spending by Category — Last 12 Months"
     no_payees_month: "No payees assigned to expenses this month"
     no_recent_transactions: "No recent transactions"
     card_count:

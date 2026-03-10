@@ -140,6 +140,54 @@
     </div>
   </div>
 
+  <%# Spending by Category Row %>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <%# Spending by Category – Last 6 Months (donut) %>
+    <div class="rounded-xl border p-5" style="background-color: #1E2130; border-color: #2A2F45;">
+      <h2 class="text-sm font-semibold mb-4" style="color: #E2E8F0;"><%= t("dashboard.spending_by_category_6m") %></h2>
+      <% if @expenses_by_category_6m.any? %>
+        <%= pie_chart @expenses_by_category_6m.transform_keys { |k| t("category_names.#{k}", default: k) },
+            donut: true,
+            colors: @expenses_by_category_6m_colors,
+            legend: true,
+            library: {
+              plugins: {
+                legend: {
+                  position: "bottom",
+                  labels: { color: "#8892A4", font: { size: 12 }, padding: 12 }
+                }
+              }
+            } %>
+      <% else %>
+        <%= render "shared/empty_state", message: t("dashboard.no_data_6_months") %>
+      <% end %>
+    </div>
+
+    <%# Spending by Category – Last 12 Months (stacked bar) %>
+    <div class="rounded-xl border p-5" style="background-color: #1E2130; border-color: #2A2F45;">
+      <h2 class="text-sm font-semibold mb-4" style="color: #E2E8F0;"><%= t("dashboard.spending_by_category_12m") %></h2>
+      <% if @expenses_by_category_12m.any? %>
+        <%= bar_chart @expenses_by_category_12m.map { |h| { name: t("category_names.#{h[:name]}", default: h[:name]), data: h[:data] } },
+            stacked: true,
+            colors: @expenses_by_category_12m_colors,
+            library: {
+              plugins: {
+                legend: {
+                  position: "bottom",
+                  labels: { color: "#8892A4", font: { size: 12 }, padding: 12 }
+                }
+              },
+              scales: {
+                x: { ticks: { color: "#8892A4" }, grid: { color: "#2A2F45" } },
+                y: { ticks: { color: "#8892A4" }, grid: { color: "#2A2F45" } }
+              }
+            } %>
+      <% else %>
+        <%= render "shared/empty_state", message: t("dashboard.no_data_12_months") %>
+      <% end %>
+    </div>
+  </div>
+
   <%# Recent Transactions %>
   <div class="rounded-xl border p-5" style="background-color: #1E2130; border-color: #2A2F45;">
     <div class="flex items-center justify-between mb-4">

@@ -45,6 +45,36 @@ class DashboardController < ApplicationController
       "possessions" => @total_possessions_value.to_f
     }.reject { |_, v| v <= 0 }
 
+    # Expenses by category – last 6 months (donut)
+    expenses_6m = current_user.expenses
+      .includes(:category)
+      .where(date: 6.months.ago.beginning_of_month..Date.current.end_of_month)
+    sorted_6m = expenses_6m
+      .group_by(&:category)
+      .map { |cat, es| [ cat, es.sum(&:amount).to_f ] }
+      .reject { |_, v| v <= 0 }
+      .sort_by { |_, v| -v }
+    @expenses_by_category_6m = sorted_6m.map { |cat, total| [ cat.name, total ] }.to_h
+    @expenses_by_category_6m_colors = sorted_6m.map { |cat, _| cat.color }
+
+    # Expenses by category – last 12 months (stacked bar by month)
+    expenses_12m = current_user.expenses
+      .includes(:category)
+      .where(date: 12.months.ago.beginning_of_month..Date.current.end_of_month)
+    ordered_months = 11.downto(0).map { |i| (Date.current << i).beginning_of_month }
+    @expenses_by_category_12m = expenses_12m
+      .group_by(&:category)
+      .map do |cat, es|
+        by_month = es.group_by { |e| e.date.beginning_of_month }
+        monthly = ordered_months.each_with_object({}) do |month, result|
+          result[month.strftime("%b %Y")] = (by_month[month] || []).sum(&:amount).to_f
+        end
+        { name: cat.name, color: cat.color, data: monthly, total: es.sum(&:amount).to_f }
+      end
+      .reject { |h| h[:total] <= 0 }
+      .sort_by { |h| -h[:total] }
+    @expenses_by_category_12m_colors = @expenses_by_category_12m.map { |h| h[:color] }
+
     # Recent transactions
     @recent_transactions = current_user.expenses
       .includes(:category)

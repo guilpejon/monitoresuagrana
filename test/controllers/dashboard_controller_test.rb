@@ -50,6 +50,32 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "dashboard loads with category spending data for last 6 months" do
+    other_category = create(:category, user: @user, name: "Transport", color: "#F7B731", icon: "car")
+    create(:expense, user: @user, category: @category, amount: 500, date: 1.month.ago)
+    create(:expense, user: @user, category: other_category, amount: 300, date: 2.months.ago)
+
+    sign_in @user
+    get root_path
+    assert_response :success
+  end
+
+  test "dashboard loads with category spending data for last 12 months" do
+    create(:expense, user: @user, category: @category, amount: 800, date: 10.months.ago)
+
+    sign_in @user
+    get root_path
+    assert_response :success
+  end
+
+  test "dashboard loads correctly with expenses older than 12 months" do
+    create(:expense, user: @user, category: @category, amount: 500, date: 13.months.ago)
+
+    sign_in @user
+    get root_path
+    assert_response :success
+  end
+
   test "dashboard does not expose other users' data" do
     other_user = create(:user)
     other_category = other_user.categories.first

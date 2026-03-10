@@ -135,6 +135,9 @@ pt-BR:
     view_all: "Ver todas"
     no_expenses_month: "Nenhuma despesa registrada este mês"
     no_data_6_months: "Sem dados dos últimos 6 meses"
+    no_data_12_months: "Sem dados dos últimos 12 meses"
+    spending_by_category_6m: "Gastos por Categoria — Últimos 6 Meses"
+    spending_by_category_12m: "Gastos por Categoria — Últimos 12 Meses"
     no_payees_month: "Nenhum beneficiário atribuído às despesas deste mês"
     no_recent_transactions: "Nenhuma transação recente"
     card_count:
