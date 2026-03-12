@@ -119,11 +119,11 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
     assert_select "input[type='radio'][name='expense[payment_method]'][value='credit_card'][checked]"
   end
 
-  test "GET new payment method order is credit_card, pix, boleto, cash" do
+  test "GET new payment method order is credit_card, pix, boleto, cash, debito_automatico" do
     sign_in @user
     get new_expense_path
     values = css_select("input[type='radio'][name='expense[payment_method]']").map { |el| el["value"] }
-    assert_equal %w[credit_card pix boleto cash], values
+    assert_equal %w[credit_card pix boleto cash debito_automatico], values
   end
 
   test "GET new pre-selects default credit card" do

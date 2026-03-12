@@ -184,6 +184,7 @@ pt-BR:
       pix: "PIX"
       boleto: "Boleto"
       credit_card: "Cartão"
+      debito_automatico: "Déb. Auto."
       category: "Categoria"
       payee: "Beneficiário"
       payee_placeholder: "Buscar ou criar beneficiário..."

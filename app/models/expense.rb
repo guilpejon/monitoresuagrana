@@ -5,7 +5,7 @@ class Expense < ApplicationRecord
   belongs_to :payee, optional: true
 
   TYPES = %w[fixed variable].freeze
-  PAYMENT_METHODS = %w[cash pix boleto credit_card].freeze
+  PAYMENT_METHODS = %w[cash pix boleto credit_card debito_automatico].freeze
   PAYMENT_STATUSES = %w[pending scheduled paid].freeze
 
   validates :description, length: { maximum: 255 }, allow_blank: true
@@ -20,6 +20,7 @@ class Expense < ApplicationRecord
   validates :installment_number, numericality: { in: 1..60 }
   validates :payment_status, inclusion: { in: PAYMENT_STATUSES }, allow_nil: true
 
+  before_validation :clear_credit_card_unless_credit_card_method
   before_create :set_default_payment_status
 
   def installment?
@@ -35,7 +36,8 @@ class Expense < ApplicationRecord
   end
 
   def scheduled_payment?
-    (recurring? && payment_method.in?(%w[credit_card pix])) ||
+    payment_method == "debito_automatico" ||
+      (recurring? && payment_method.in?(%w[credit_card pix])) ||
       (installment? && payment_method == "pix")
   end
 
@@ -62,6 +64,10 @@ class Expense < ApplicationRecord
 
   def installment_cannot_be_recurring
     errors.add(:recurring, :invalid) if recurring? && installment?
+  end
+
+  def clear_credit_card_unless_credit_card_method
+    self.credit_card_id = nil unless payment_method == "credit_card"
   end
 
   def set_default_payment_status

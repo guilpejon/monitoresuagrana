@@ -46,8 +46,8 @@
     <% if locked_method %>
       <%= f.hidden_field :payment_method %>
     <% end %>
-    <div class="grid grid-cols-4 gap-2 <%= 'pointer-events-none opacity-50' if locked_method %>">
-      <% [[t("expenses.form.credit_card"), "credit_card"], [t("expenses.form.pix"), "pix"], [t("expenses.form.boleto"), "boleto"], [t("expenses.form.cash"), "cash"]].each do |label, value| %>
+    <div class="grid grid-cols-3 sm:grid-cols-5 gap-2 <%= 'pointer-events-none opacity-50' if locked_method %>">
+      <% [[t("expenses.form.credit_card"), "credit_card"], [t("expenses.form.pix"), "pix"], [t("expenses.form.boleto"), "boleto"], [t("expenses.form.cash"), "cash"], [t("expenses.form.debito_automatico"), "debito_automatico"]].each do |label, value| %>
         <label class="<%= locked_method ? 'cursor-not-allowed' : 'cursor-pointer' %>">
           <%= f.radio_button :payment_method, value,
               class: "sr-only peer",

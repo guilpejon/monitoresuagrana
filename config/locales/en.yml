@@ -143,6 +143,7 @@ en:
       pix: "PIX"
       boleto: "Boleto"
       credit_card: "Card"
+      debito_automatico: "Auto Debit"
       category: "Category"
       payee: "Payee"
       payee_placeholder: "Search or create payee..."

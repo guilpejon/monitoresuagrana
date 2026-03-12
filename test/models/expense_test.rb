@@ -149,11 +149,75 @@ class ExpenseTest < ActiveSupport::TestCase
   end
 
   test "accepts all valid payment methods" do
-    %w[cash pix boleto credit_card].each do |method|
+    %w[cash pix boleto credit_card debito_automatico].each do |method|
       expense = build(:expense, payment_method: method)
       assert expense.valid?, "Expected #{method} to be valid"
     end
   end
+
+  # credit_card_id is cleared for non-credit_card methods
+  test "credit_card_id is cleared when payment method is not credit_card" do
+    user = create(:user)
+    category = user.categories.first
+    credit_card = create(:credit_card, user: user)
+    expense = create(:expense, user: user, category: category, payment_method: "pix", credit_card: credit_card)
+    assert_nil expense.credit_card_id
+  end
+
+  test "credit_card_id is preserved when payment method is credit_card" do
+    user = create(:user)
+    category = user.categories.first
+    credit_card = create(:credit_card, user: user)
+    expense = create(:expense, user: user, category: category, payment_method: "credit_card", credit_card: credit_card)
+    assert_equal credit_card.id, expense.credit_card_id
+  end
+
+  # automatic payment methods
+  test "debito_automatico is valid for fixed expenses" do
+    expense = build(:expense, expense_type: "fixed", payment_method: "debito_automatico")
+    assert expense.valid?
+  end
+
+  test "debito_automatico is valid for variable expenses" do
+    expense = build(:expense, expense_type: "variable", payment_method: "debito_automatico")
+    assert expense.valid?
+  end
+
+  test "debito_automatico can be recurring" do
+    expense = build(:expense, expense_type: "fixed", payment_method: "debito_automatico", recurring: true, recurrence_day: 5)
+    assert expense.valid?
+  end
+
+  test "debito_automatico can have installments" do
+    expense = build(:expense, expense_type: "fixed", payment_method: "debito_automatico", total_installments: 6, installment_number: 1)
+    assert expense.valid?
+  end
+
+  # scheduled_payment? for automatic methods
+  test "scheduled_payment? returns true for debito_automatico" do
+    expense = build(:expense, expense_type: "fixed", payment_method: "debito_automatico")
+    assert expense.scheduled_payment?
+  end
+
+  # set_default_payment_status for automatic methods
+  test "debito_automatico expense gets scheduled status by default" do
+    user = create(:user)
+    category = user.categories.first
+    expense = create(:expense, user: user, category: category, expense_type: "fixed", payment_method: "debito_automatico")
+    assert_equal "scheduled", expense.payment_status
+  end
+
+  # next_payment_status for automatic methods (two-state cycle)
+  test "next_payment_status for debito_automatico: scheduled -> paid" do
+    expense = build(:expense, expense_type: "fixed", payment_method: "debito_automatico", payment_status: "scheduled")
+    assert_equal "paid", expense.next_payment_status
+  end
+
+  test "next_payment_status for debito_automatico: paid -> scheduled" do
+    expense = build(:expense, expense_type: "fixed", payment_method: "debito_automatico", payment_status: "paid")
+    assert_equal "scheduled", expense.next_payment_status
+  end
+
 
   # total_installments
   test "validates total_installments is in 1..60" do
