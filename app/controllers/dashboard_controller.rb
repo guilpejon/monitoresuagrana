@@ -15,11 +15,13 @@ class DashboardController < ApplicationController
       .where(date: 6.months.ago.beginning_of_month..Date.current.end_of_month)
       .group_by_month(:date, format: "%b %Y")
       .sum(:amount)
+      .to_a.reverse.to_h
 
     @monthly_expenses = current_user.expenses
       .where(date: 6.months.ago.beginning_of_month..Date.current.end_of_month)
       .group_by_month(:date, format: "%b %Y")
       .sum(:amount)
+      .to_a.reverse.to_h
 
     # Bank accounts total balance
     @total_bank_balance = current_user.bank_accounts.sum(:balance)
@@ -61,7 +63,7 @@ class DashboardController < ApplicationController
     expenses_12m = current_user.expenses
       .includes(:category)
       .where(date: 12.months.ago.beginning_of_month..Date.current.end_of_month)
-    ordered_months = 11.downto(0).map { |i| (Date.current << i).beginning_of_month }
+    ordered_months = 0.upto(11).map { |i| (Date.current << i).beginning_of_month }
     @expenses_by_category_12m = expenses_12m
       .group_by(&:category)
       .map do |cat, es|
