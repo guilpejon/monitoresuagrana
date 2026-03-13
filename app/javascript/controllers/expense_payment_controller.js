@@ -36,7 +36,7 @@ export default class extends Controller {
     const method = this.selectedMethod()
     const showCreditCard = method === "credit_card"
     const showBankAccount = ["pix", "boleto", "debito_automatico"].includes(method)
-    const showInstallments = ["credit_card", "boleto", "debito_automatico", "pix_automatico"].includes(method)
+    const showInstallments = ["credit_card", "boleto", "debito_automatico", "pix_automatico", "pix"].includes(method)
 
     if (this.hasCreditCardFieldTarget) {
       this.creditCardFieldTarget.style.display = showCreditCard ? "" : "none"
@@ -79,7 +79,7 @@ export default class extends Controller {
       this.updatePerInstallment()
     } else {
       const method = this.selectedMethod()
-      const showInstallments = ["credit_card", "boleto", "debito_automatico", "pix_automatico"].includes(method)
+      const showInstallments = ["credit_card", "boleto", "debito_automatico", "pix_automatico", "pix"].includes(method)
       this.installmentsFieldTarget.style.display = showInstallments ? "" : "none"
     }
   }
@@ -89,7 +89,7 @@ export default class extends Controller {
     if (this.hasRecurringFieldTarget) {
       const installments = parseInt(this.installmentsTarget.value) || 1
       const method = this.selectedMethod()
-      const showInstallments = ["credit_card", "boleto", "debito_automatico", "pix_automatico"].includes(method)
+      const showInstallments = ["credit_card", "boleto", "debito_automatico", "pix_automatico", "pix"].includes(method)
       this.recurringFieldTarget.style.display = (showInstallments && installments > 1) ? "none" : ""
     }
   }

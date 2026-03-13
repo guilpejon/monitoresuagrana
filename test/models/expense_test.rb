@@ -277,9 +277,9 @@ class ExpenseTest < ActiveSupport::TestCase
     assert expense.scheduled_payment?
   end
 
-  test "scheduled_payment? returns true for pix installment" do
+  test "scheduled_payment? returns false for pix installment" do
     expense = build(:expense, payment_method: "pix", total_installments: 3, installment_number: 1)
-    assert expense.scheduled_payment?
+    assert_not expense.scheduled_payment?
   end
 
   test "scheduled_payment? returns false for non-recurring non-installment pix" do
@@ -312,11 +312,11 @@ class ExpenseTest < ActiveSupport::TestCase
     assert_equal "scheduled", expense.payment_status
   end
 
-  test "pix installment expense gets scheduled status by default" do
+  test "pix installment expense gets pending status by default" do
     user = create(:user)
     category = user.categories.first
     expense = create(:expense, user: user, category: category, payment_method: "pix", total_installments: 3, installment_number: 1)
-    assert_equal "scheduled", expense.payment_status
+    assert_equal "pending", expense.payment_status
   end
 
   test "fixed boleto expense gets pending status by default" do
@@ -368,9 +368,9 @@ class ExpenseTest < ActiveSupport::TestCase
     assert_equal "paid", expense.next_payment_status
   end
 
-  test "next_payment_status for pix installment: paid -> scheduled" do
+  test "next_payment_status for pix installment: paid -> pending" do
     expense = build(:expense, payment_method: "pix", total_installments: 3, installment_number: 1, payment_status: "paid")
-    assert_equal "scheduled", expense.next_payment_status
+    assert_equal "pending", expense.next_payment_status
   end
 
   # next_payment_status for boleto (three-state cycle)
@@ -390,9 +390,9 @@ class ExpenseTest < ActiveSupport::TestCase
   end
 
   # scheduled_payment? for bank-debit installments
-  test "scheduled_payment? returns true for boleto installment" do
+  test "scheduled_payment? returns false for boleto installment" do
     expense = build(:expense, payment_method: "boleto", total_installments: 3, installment_number: 1)
-    assert expense.scheduled_payment?
+    assert_not expense.scheduled_payment?
   end
 
   test "scheduled_payment? returns true for debito_automatico installment" do
@@ -405,24 +405,24 @@ class ExpenseTest < ActiveSupport::TestCase
     assert_not expense.scheduled_payment?
   end
 
-  test "boleto installment gets scheduled status by default" do
+  test "boleto installment gets pending status by default" do
     user = create(:user)
     category = user.categories.first
     expense = create(:expense, user: user, category: category, payment_method: "boleto",
                      total_installments: 3, installment_number: 1)
-    assert_equal "scheduled", expense.payment_status
+    assert_equal "pending", expense.payment_status
   end
 
-  test "boleto installment cycles scheduled -> paid (two-state)" do
+  test "boleto installment cycles scheduled -> paid" do
     expense = build(:expense, payment_method: "boleto", total_installments: 3, installment_number: 1,
                     payment_status: "scheduled")
     assert_equal "paid", expense.next_payment_status
   end
 
-  test "boleto installment cycles paid -> scheduled (two-state)" do
+  test "boleto installment cycles paid -> pending" do
     expense = build(:expense, payment_method: "boleto", total_installments: 3, installment_number: 1,
                     payment_status: "paid")
-    assert_equal "scheduled", expense.next_payment_status
+    assert_equal "pending", expense.next_payment_status
   end
 
   # Bank account auto-debit tests

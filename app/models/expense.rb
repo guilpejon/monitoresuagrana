@@ -45,9 +45,7 @@ class Expense < ApplicationRecord
 
   def scheduled_payment?
     payment_method == "debito_automatico" ||
-      (installment? && payment_method.in?(BANK_DEBIT_METHODS)) ||
-      (recurring? && payment_method.in?(%w[credit_card pix])) ||
-      (installment? && payment_method == "pix")
+      (recurring? && payment_method.in?(%w[credit_card pix]))
   end
 
   def next_payment_status
@@ -102,9 +100,9 @@ class Expense < ApplicationRecord
     return if payment_status.present?
     if scheduled_payment?
       self.payment_status = "scheduled"
-    elsif expense_type == "variable"
+    elsif expense_type == "variable" && !installment?
       self.payment_status = "paid"
-    elsif payment_method == "boleto"
+    elsif payment_method.in?(%w[boleto pix])
       self.payment_status = "pending"
     end
   end
