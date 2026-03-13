@@ -10,6 +10,8 @@ pt-BR:
           attributes:
             date:
               variable_future: "não pode ser uma data futura para despesas variáveis"
+            total_installments:
+              fixed_not_allowed: "não são permitidas para despesas fixas"
     attributes:
       expense:
         description: "Descrição"

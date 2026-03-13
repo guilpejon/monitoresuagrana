@@ -48,7 +48,8 @@ export default class extends Controller {
 
     if (this.hasInstallmentsFieldTarget) {
       const isRecurring = this.hasRecurringTarget && this.recurringTarget.checked
-      const show = showInstallments && !isRecurring
+      const isFixed = this.hasExpenseTypeTarget && this.expenseTypeTarget.value === "fixed"
+      const show = showInstallments && !isRecurring && !isFixed
       this.installmentsFieldTarget.style.display = show ? "" : "none"
       if (!show) {
         this.installmentsTarget.value = 1

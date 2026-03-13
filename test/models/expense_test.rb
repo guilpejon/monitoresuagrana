@@ -134,6 +134,22 @@ class ExpenseTest < ActiveSupport::TestCase
     assert expense.valid?
   end
 
+  test "fixed expense cannot have installments" do
+    expense = build(:expense, expense_type: "fixed", total_installments: 3, installment_number: 1)
+    assert_not expense.valid?
+    assert expense.errors[:total_installments].any?
+  end
+
+  test "variable expense can have installments" do
+    expense = build(:expense, expense_type: "variable", total_installments: 3, installment_number: 1)
+    assert expense.valid?
+  end
+
+  test "fixed expense with one installment is valid" do
+    expense = build(:expense, expense_type: "fixed", total_installments: 1, installment_number: 1)
+    assert expense.valid?
+  end
+
   # payment_method default
   test "new expense defaults payment_method to credit_card" do
     user = create(:user)
@@ -189,7 +205,7 @@ class ExpenseTest < ActiveSupport::TestCase
   end
 
   test "debito_automatico can have installments" do
-    expense = build(:expense, expense_type: "fixed", payment_method: "debito_automatico", total_installments: 6, installment_number: 1)
+    expense = build(:expense, expense_type: "variable", payment_method: "debito_automatico", total_installments: 6, installment_number: 1)
     assert expense.valid?
   end
 

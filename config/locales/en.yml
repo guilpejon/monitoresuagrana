@@ -6,6 +6,8 @@ en:
           attributes:
             date:
               variable_future: "cannot be in the future for variable expenses"
+            total_installments:
+              fixed_not_allowed: "are not allowed for fixed expenses"
     attributes:
       expense:
         bank_account_id: "Bank account"

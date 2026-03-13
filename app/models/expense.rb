@@ -17,6 +17,7 @@ class Expense < ApplicationRecord
   validates :recurrence_day, numericality: { in: 1..31 }, allow_nil: true
   validate :recurring_only_allowed_for_fixed
   validate :installment_cannot_be_recurring
+  validate :installments_only_allowed_for_variable
   validate :variable_expense_cannot_be_future_dated
   validates :payment_method, inclusion: { in: PAYMENT_METHODS }
   validates :total_installments, numericality: { in: 1..60 }
@@ -71,6 +72,10 @@ class Expense < ApplicationRecord
 
   def installment_cannot_be_recurring
     errors.add(:recurring, :invalid) if recurring? && installment?
+  end
+
+  def installments_only_allowed_for_variable
+    errors.add(:total_installments, :fixed_not_allowed) if installment? && expense_type == "fixed"
   end
 
   def clear_credit_card_unless_credit_card_method
