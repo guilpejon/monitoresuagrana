@@ -31,7 +31,7 @@
       <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
         <p class="text-xs font-medium uppercase tracking-wide mb-2" style="color: #8892A4;"><%= t("forecast.index.projected_income") %></p>
         <p class="text-xl font-bold" style="color: #00D4AA;"><%= format_currency(@projected_income) %></p>
-        <p class="text-xs mt-1" style="color: #8892A4;"><%= link_to incomes_path, class: "hover:opacity-80 transition-opacity", style: "color: #00D4AA;" do %><%= @recurring_incomes.count %> <%= @recurring_incomes.count == 1 ? t("forecast.index.recurring_source") : t("forecast.index.recurring_sources") %><% end %></p>
+        <p class="text-xs mt-1" style="color: #8892A4;"><%= link_to incomes_path, class: "hover:opacity-80 transition-opacity", style: "color: #00D4AA;" do %><%= @projected_incomes.count %> <%= @projected_incomes.count == 1 ? t("forecast.index.recurring_source") : t("forecast.index.recurring_sources") %><% end %></p>
       </div>
       <div class="rounded-xl border p-4" style="background-color: #1E2130; border-color: #2A2F45;">
         <p class="text-xs font-medium uppercase tracking-wide mb-2" style="color: #8892A4;"><%= t("forecast.index.projected_expenses") %></p>

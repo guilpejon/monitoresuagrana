@@ -62,6 +62,7 @@ class ForecastControllerTest < ActionDispatch::IntegrationTest
 
   test "current month chart includes actual and projected series labels" do
     create(:expense, user: @user, category: @category, date: Date.current, amount: 200)
+    create(:income, user: @user, date: Date.current, amount: 3000, recurring: true)
 
     sign_in @user
     get forecast_path
@@ -83,6 +84,7 @@ class ForecastControllerTest < ActionDispatch::IntegrationTest
 
   test "future month renders monthly spending progress chart with projected data" do
     create(:expense, user: @user, category: @category, recurring: true, amount: 500)
+    create(:income, user: @user, date: 1.month.from_now.beginning_of_month, amount: 3000, recurring: true)
 
     sign_in @user
     get forecast_path, params: { month: 1.month.from_now.strftime("%Y-%m") }
@@ -91,11 +93,27 @@ class ForecastControllerTest < ActionDispatch::IntegrationTest
     assert_match I18n.t("forecast.index.income_line"), response.body
   end
 
-  test "future month with no scheduled expenses omits spending line" do
+  test "future month with no scheduled expenses or income omits both chart lines" do
     sign_in @user
     get forecast_path, params: { month: 1.month.from_now.strftime("%Y-%m") }
     assert_match I18n.t("forecast.index.monthly_spending_trend"), response.body
     assert_no_match /"name":"#{I18n.t("forecast.index.projected_spending")}"/, response.body
+    assert_no_match /"name":"#{I18n.t("forecast.index.income_line")}"/, response.body
+  end
+
+  test "future month with generated recurring income copy shows income line" do
+    create(:income, user: @user, date: 1.month.from_now.beginning_of_month, amount: 3000, recurring: true)
+
+    sign_in @user
+    get forecast_path, params: { month: 1.month.from_now.strftime("%Y-%m") }
     assert_match I18n.t("forecast.index.income_line"), response.body
+  end
+
+  test "income not in the viewed month does not show income line" do
+    create(:income, user: @user, date: 2.months.from_now.beginning_of_month, amount: 3000, recurring: true)
+
+    sign_in @user
+    get forecast_path, params: { month: 1.month.from_now.strftime("%Y-%m") }
+    assert_no_match /"name":"#{I18n.t("forecast.index.income_line")}"/, response.body
   end
 end
