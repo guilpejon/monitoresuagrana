@@ -13,8 +13,6 @@ TYPES = %w[fixed variable].freeze
   validates :date, presence: true
   validates :expense_type, inclusion: { in: TYPES }
   validates :recurrence_day, numericality: { in: 1..31 }, allow_nil: true
-  validate :recurring_only_allowed_for_fixed
-  validate :installment_cannot_be_recurring
   validate :installments_only_allowed_for_variable
   validate :variable_expense_cannot_be_future_dated
   validates :payment_method, inclusion: { in: PAYMENT_METHODS }
@@ -22,6 +20,7 @@ TYPES = %w[fixed variable].freeze
   validates :installment_number, numericality: { in: 1..60 }
   validates :payment_status, inclusion: { in: PAYMENT_STATUSES }, allow_nil: true
 
+  before_validation :normalize_recurring
   before_validation :clear_credit_card_unless_credit_card_method
   before_validation :clear_bank_account_unless_bank_debit_method
   before_create :set_default_payment_status
@@ -68,12 +67,8 @@ TYPES = %w[fixed variable].freeze
 
   private
 
-  def recurring_only_allowed_for_fixed
-    errors.add(:recurring, :invalid) if recurring? && expense_type == "variable"
-  end
-
-  def installment_cannot_be_recurring
-    errors.add(:recurring, :invalid) if recurring? && installment?
+  def normalize_recurring
+    self.recurring = expense_type == "fixed"
   end
 
   def installments_only_allowed_for_variable

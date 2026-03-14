@@ -8,8 +8,6 @@ export default class extends Controller {
     "installments",
     "amount",
     "perInstallmentDisplay",
-    "recurringField",
-    "recurring",
     "expenseType"
   ]
 
@@ -47,22 +45,12 @@ export default class extends Controller {
     }
 
     if (this.hasInstallmentsFieldTarget) {
-      const isRecurring = this.hasRecurringTarget && this.recurringTarget.checked
       const isFixed = this.hasExpenseTypeTarget && this.expenseTypeTarget.value === "fixed"
-      const show = showInstallments && !isRecurring && !isFixed
+      const show = showInstallments && !isFixed
       this.installmentsFieldTarget.style.display = show ? "" : "none"
       if (!show) {
         this.installmentsTarget.value = 1
         this.updatePerInstallment()
-      }
-    }
-
-    if (this.hasRecurringFieldTarget) {
-      const installments = this.hasInstallmentsTarget ? (parseInt(this.installmentsTarget.value) || 1) : 1
-      const isVariable = this.hasExpenseTypeTarget && this.expenseTypeTarget.value === "variable"
-      this.recurringFieldTarget.style.display = (isVariable || (showInstallments && installments > 1)) ? "none" : ""
-      if (isVariable && this.hasRecurringTarget) {
-        this.recurringTarget.checked = false
       }
     }
   }
@@ -71,28 +59,8 @@ export default class extends Controller {
     this.updateVisibility()
   }
 
-  recurringChanged() {
-    if (!this.hasInstallmentsFieldTarget) return
-    const isRecurring = this.recurringTarget.checked
-    if (isRecurring) {
-      this.installmentsFieldTarget.style.display = "none"
-      this.installmentsTarget.value = 1
-      this.updatePerInstallment()
-    } else {
-      const method = this.selectedMethod()
-      const showInstallments = ["credit_card", "boleto", "debito_automatico", "pix_automatico", "pix"].includes(method)
-      this.installmentsFieldTarget.style.display = showInstallments ? "" : "none"
-    }
-  }
-
   installmentsChanged() {
     this.updatePerInstallment()
-    if (this.hasRecurringFieldTarget) {
-      const installments = parseInt(this.installmentsTarget.value) || 1
-      const method = this.selectedMethod()
-      const showInstallments = ["credit_card", "boleto", "debito_automatico", "pix_automatico", "pix"].includes(method)
-      this.recurringFieldTarget.style.display = (showInstallments && installments > 1) ? "none" : ""
-    }
   }
 
   selectedMethod() {

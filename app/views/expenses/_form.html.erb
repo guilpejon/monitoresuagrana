@@ -169,25 +169,6 @@
     </div>
   <% end %>
 
-  <%# Recurring toggle %>
-  <% if locked_installment %>
-    <div class="flex items-center justify-center gap-3 opacity-50">
-      <input type="checkbox" class="w-4 h-4 rounded" disabled>
-      <span class="text-sm" style="color: #8892A4;"><%= t("expenses.form.recurring") %> — <%= t("expenses.form.installment_no_recurring") %></span>
-    </div>
-  <% else %>
-    <% if expense.persisted? && expense.recurring? %>
-      <div class="px-3 py-2.5 rounded-lg border text-sm" style="background-color: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.3);">
-        <span style="color: #F59E0B;">⚠ <%= t("expenses.form.recurring_edit_warning") %></span>
-      </div>
-    <% end %>
-    <div class="flex items-center justify-center gap-3" data-expense-payment-target="recurringField">
-      <%= f.check_box :recurring, class: "w-4 h-4 rounded", style: "accent-color: #6C63FF;",
-          data: { expense_payment_target: "recurring", action: "change->expense-payment#recurringChanged" } %>
-      <label class="text-sm" style="color: #8892A4;"><%= t("expenses.form.recurring") %></label>
-    </div>
-  <% end %>
-
   <%# Submit %>
   <div class="flex gap-3 pt-2">
     <%= f.submit expense.new_record? ? t("expenses.form.add") : t("expenses.form.update"),

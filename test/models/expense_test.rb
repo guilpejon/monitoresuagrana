@@ -112,25 +112,20 @@ class ExpenseTest < ActiveSupport::TestCase
   end
 
   # recurring
-  test "variable expense cannot be recurring" do
+  test "fixed expense is always recurring" do
+    expense = build(:expense, expense_type: "fixed", recurring: false)
+    expense.valid?
+    assert expense.recurring?
+  end
+
+  test "variable expense is always non-recurring" do
     expense = build(:expense, expense_type: "variable", recurring: true)
-    assert_not expense.valid?
-    assert expense.errors[:recurring].any?
+    expense.valid?
+    assert_not expense.recurring?
   end
 
-  test "fixed expense can be recurring" do
-    expense = build(:expense, expense_type: "fixed", recurring: true, recurrence_day: 5)
-    assert expense.valid?
-  end
-
-  test "installment expense cannot be recurring" do
-    expense = build(:expense, expense_type: "fixed", recurring: true, total_installments: 3, installment_number: 1)
-    assert_not expense.valid?
-    assert expense.errors[:recurring].any?
-  end
-
-  test "non-installment fixed expense can be recurring" do
-    expense = build(:expense, expense_type: "fixed", recurring: true, total_installments: 1, installment_number: 1, recurrence_day: 5)
+  test "fixed expense with recurrence_day is valid" do
+    expense = build(:expense, expense_type: "fixed", recurrence_day: 5)
     assert expense.valid?
   end
 
