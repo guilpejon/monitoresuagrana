@@ -7,7 +7,7 @@
 <div class="min-h-screen" style="background-color: #0F1117; color: #E2E8F0; font-family: 'Inter', system-ui, sans-serif;">
 
   <%# Navigation %>
-  <nav class="flex items-center justify-between px-4 sm:px-6 py-4 border-b max-w-7xl mx-auto" style="border-color: #2A2F45;">
+  <nav class="flex items-center justify-between px-6 py-4 border-b max-w-7xl mx-auto" style="border-color: #2A2F45;">
     <div class="flex items-center gap-3 min-w-0">
       <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background-color: #6C63FF;">
         <%= svg_icon "wallet", css_class: "w-5 h-5", stroke: "white" %>
@@ -25,7 +25,7 @@
   </nav>
 
   <%# Hero %>
-  <section class="relative text-center py-24 px-4 max-w-4xl mx-auto overflow-hidden">
+  <section class="relative text-center py-14 sm:py-24 px-6 max-w-4xl mx-auto overflow-hidden">
     <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse at 50% 0%, rgba(108,99,255,0.18) 0%, transparent 65%);"></div>
     <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-8 border" style="background-color: rgba(108,99,255,0.1); border-color: rgba(108,99,255,0.3); color: #A78BFA;">
       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
@@ -49,7 +49,7 @@
   </section>
 
   <%# Dashboard Preview Mockup %>
-  <section class="pb-20 px-4 max-w-6xl mx-auto">
+  <section class="hidden sm:block pb-20 px-6 max-w-6xl mx-auto">
     <div class="relative rounded-2xl overflow-hidden border" style="border-color: #2A2F45; box-shadow: 0 30px 80px rgba(108,99,255,0.18);">
       <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse at 50% 0%, rgba(108,99,255,0.08) 0%, transparent 60%);"></div>
       <svg viewBox="0 0 1000 610" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto" style="background-color: #141824; border-radius: 1rem;">
@@ -220,7 +220,7 @@
   </section>
 
   <%# Stats bar %>
-  <section class="py-14 px-4 max-w-5xl mx-auto">
+  <section class="py-14 px-6 max-w-5xl mx-auto">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
       <div class="py-6 px-4 rounded-2xl border" style="background-color: #1E2130; border-color: #2A2F45;">
         <div class="text-4xl font-bold mb-1" style="color: #6C63FF;">100+</div>
@@ -247,7 +247,7 @@
   </div>
 
   <%# Feature Spotlight 1 — Dashboard %>
-  <section class="py-24 px-4 max-w-6xl mx-auto">
+  <section class="py-10 sm:py-24 px-6 max-w-6xl mx-auto">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
       <div>
         <div class="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-5 border" style="background-color: rgba(108,99,255,0.1); border-color: rgba(108,99,255,0.3); color: #A78BFA;">
@@ -278,7 +278,7 @@
       </div>
 
       <%# Area chart illustration %>
-      <div class="rounded-2xl overflow-hidden border" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="hidden sm:block rounded-2xl overflow-hidden border" style="background-color: #1E2130; border-color: #2A2F45;">
         <svg viewBox="0 0 540 300" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
           <defs>
             <linearGradient id="incomeAreaGrad" x1="0" y1="0" x2="0" y2="1">
@@ -364,11 +364,11 @@
   </section>
 
   <%# Feature Spotlight 2 — Expense Tracking %>
-  <section class="py-24 px-4 max-w-6xl mx-auto">
+  <section class="py-10 sm:py-24 px-6 max-w-6xl mx-auto">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
 
       <%# Expense list illustration %>
-      <div class="rounded-2xl overflow-hidden border order-last lg:order-first" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="hidden sm:block rounded-2xl overflow-hidden border order-last lg:order-first" style="background-color: #1E2130; border-color: #2A2F45;">
         <svg viewBox="0 0 480 360" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
           <!-- Header -->
           <rect width="480" height="52" fill="#171B28"/>
@@ -486,7 +486,7 @@
   </div>
 
   <%# How it works %>
-  <section class="py-16 px-4 max-w-4xl mx-auto">
+  <section class="py-16 px-6 max-w-4xl mx-auto">
     <div class="text-center mb-12">
       <h2 class="text-3xl font-bold mb-3"><%= t("pages.showcase.how_title") %></h2>
       <p style="color: #8892A4;"><%= t("pages.showcase.how_subtitle") %></p>
@@ -511,7 +511,7 @@
   </section>
 
   <%# Features Grid %>
-  <section class="py-16 px-4 max-w-6xl mx-auto">
+  <section class="py-16 px-6 max-w-6xl mx-auto">
     <div class="text-center mb-14">
       <h2 class="text-3xl font-bold mb-3"><%= t("pages.showcase.features_title") %></h2>
       <p style="color: #8892A4;"><%= t("pages.showcase.features_subtitle") %></p>
@@ -602,7 +602,7 @@
   </div>
 
   <%# Feature Spotlight 3 — Forecast %>
-  <section class="py-24 px-4 max-w-6xl mx-auto">
+  <section class="py-10 sm:py-24 px-6 max-w-6xl mx-auto">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
       <div>
         <div class="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-5 border" style="background-color: rgba(96,165,250,0.1); border-color: rgba(96,165,250,0.3); color: #60A5FA;">
@@ -633,7 +633,7 @@
       </div>
 
       <%# Forecast chart illustration %>
-      <div class="rounded-2xl overflow-hidden border" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="hidden sm:block rounded-2xl overflow-hidden border" style="background-color: #1E2130; border-color: #2A2F45;">
         <svg viewBox="0 0 540 300" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
           <defs>
             <linearGradient id="projectionGrad" x1="0" y1="0" x2="0" y2="1">
@@ -744,7 +744,7 @@
   </div>
 
   <%# Final CTA %>
-  <section class="py-20 px-4">
+  <section class="py-20 px-6">
     <div class="max-w-2xl mx-auto rounded-2xl border p-12 text-center" style="background-color: #1E2130; border-color: #2A2F45;">
       <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-6" style="background-color: rgba(108,99,255,0.15);">
         <%= svg_icon "wallet", css_class: "w-7 h-7", stroke: "#6C63FF" %>
