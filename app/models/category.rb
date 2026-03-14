@@ -17,7 +17,7 @@ class Category < ApplicationRecord
   private
 
   def generate_slug
-    self.slug = name.parameterize if name.present? && slug.blank?
+    self.slug = name.parameterize if name.present?
   end
 
   def clear_user_default
