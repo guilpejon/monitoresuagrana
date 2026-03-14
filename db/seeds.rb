@@ -130,6 +130,69 @@ end
   end
 end
 
+# Contas bancárias de exemplo
+puts "Criando contas bancárias..."
+BankAccount.find_or_create_by!(user: user, name: "Nubank Conta") do |b|
+  b.bank_name     = "Nubank"
+  b.account_type  = "checking"
+  b.balance       = 3240.50
+  b.rate_type     = "fixed"
+  b.interest_rate = 0.0
+  b.color         = "#6C63FF"
+end
+
+BankAccount.find_or_create_by!(user: user, name: "Inter Reserva") do |b|
+  b.bank_name      = "Banco Inter"
+  b.account_type   = "savings"
+  b.balance        = 12800.00
+  b.rate_type      = "cdi_percentage"
+  b.cdi_multiplier = 100.0
+  b.color          = "#F7B731"
+end
+
+BankAccount.find_or_create_by!(user: user, name: "Caixa Conta Corrente") do |b|
+  b.bank_name     = "Caixa Econômica Federal"
+  b.account_type  = "checking"
+  b.balance       = 850.00
+  b.rate_type     = "fixed"
+  b.interest_rate = 0.0
+  b.color         = "#00D4AA"
+end
+
+# Bens e patrimônio de exemplo
+puts "Criando bens e patrimônio..."
+Possession.find_or_create_by!(user: user, name: "Honda Civic 2021") do |p|
+  p.possession_type = "vehicle"
+  p.purchase_price  = 115_000.00
+  p.current_value   = 98_000.00
+  p.purchase_date   = Date.new(2021, 6, 15)
+  p.color           = "#4A90D9"
+end
+
+Possession.find_or_create_by!(user: user, name: "MacBook Pro 14\"") do |p|
+  p.possession_type = "electronics"
+  p.purchase_price  = 18_500.00
+  p.current_value   = 14_000.00
+  p.purchase_date   = Date.new(2023, 2, 10)
+  p.color           = "#8E8E93"
+end
+
+Possession.find_or_create_by!(user: user, name: "iPhone 15 Pro") do |p|
+  p.possession_type = "electronics"
+  p.purchase_price  = 9_299.00
+  p.current_value   = 7_500.00
+  p.purchase_date   = Date.new(2023, 11, 20)
+  p.color           = "#00D4AA"
+end
+
+Possession.find_or_create_by!(user: user, name: "Sofá e Estante") do |p|
+  p.possession_type = "furniture"
+  p.purchase_price  = 4_200.00
+  p.current_value   = 3_000.00
+  p.purchase_date   = Date.new(2022, 4, 5)
+  p.color           = "#FF9F43"
+end
+
 # Investimentos de exemplo
 puts "Criando investimentos de exemplo..."
 [
