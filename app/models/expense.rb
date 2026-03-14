@@ -68,6 +68,7 @@ TYPES = %w[fixed variable].freeze
   private
 
   def normalize_recurring
+    return unless new_record?
     self.recurring = expense_type == "fixed"
   end
 

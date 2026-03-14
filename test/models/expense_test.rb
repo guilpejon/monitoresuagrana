@@ -112,16 +112,25 @@ class ExpenseTest < ActiveSupport::TestCase
   end
 
   # recurring
-  test "fixed expense is always recurring" do
+  test "new fixed expense is automatically set to recurring" do
     expense = build(:expense, expense_type: "fixed", recurring: false)
     expense.valid?
     assert expense.recurring?
   end
 
-  test "variable expense is always non-recurring" do
+  test "new variable expense is automatically set to non-recurring" do
     expense = build(:expense, expense_type: "variable", recurring: true)
     expense.valid?
     assert_not expense.recurring?
+  end
+
+  test "existing fixed expense can have recurring turned off" do
+    user = create(:user)
+    category = user.categories.first
+    expense = create(:expense, user: user, category: category, expense_type: "fixed")
+    assert expense.recurring?
+    expense.update!(recurring: false)
+    assert_not expense.reload.recurring?
   end
 
   test "fixed expense with recurrence_day is valid" do
