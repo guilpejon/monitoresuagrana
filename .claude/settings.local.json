@@ -12,7 +12,8 @@
       "Bash(bundle exec:*)",
       "Bash(ls:*)",
       "Bash(bin/rails routes:*)",
-      "Read(//Users/guilpejon/Downloads/**)"
+      "Read(//Users/guilpejon/Downloads/**)",
+      "Bash(bin/rubocop app/controllers/categories_controller.rb 2>&1 | tail -5)"
     ]
   }
 }

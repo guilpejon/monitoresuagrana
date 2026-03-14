@@ -1,5 +1,7 @@
 <% delete_i18n_key = if expense.recurring_source_id.present?
                        "recurring_delete"
+                     elsif expense.credit_card_installment? && expense.installment_number == 1
+                       "cc_installment_delete"
                      elsif expense.installment?
                        "installment_delete"
                      else
@@ -7,17 +9,21 @@
                      end %>
 <div id="expense_<%= expense.id %>"
      data-expense-filter-target="row"
-     data-section="<%= expense.expense_type %>"
+     data-section="<%= expense.installment? ? 'installment' : expense.expense_type %>"
+     data-amount="<%= expense.amount.to_f %>"
      data-search-text="<%= [expense.description, category_display_name(expense.category), (expense.payment_method == "credit_card" && expense.credit_card) ? "#{t("expenses.form.#{expense.payment_method}")} (#{expense.credit_card.name})" : t("expenses.form.#{expense.payment_method}"), expense.payment_status ? t("expenses.payment_statuses.#{expense.payment_status}") : nil].compact.join(' ') %>"
-     class="flex gap-3 px-4 py-3 hover:bg-white/[0.02] transition-colors" style="<%= case expense.payment_status
+     class="flex items-center gap-4 px-3 py-3 transition-colors<%= expense.credit_card_installment? && expense.installment_number > 1 ? ' opacity-60 cursor-default' : ' hover:bg-white/[0.02]' %>" style="<%= case expense.payment_status
             when "paid"      then "background-color: rgba(0,212,170,0.06);"
             when "scheduled" then "background-color: rgba(129,140,248,0.06);"
             when "pending"   then "background-color: rgba(255,107,107,0.06);"
             end %>">
-  <%# Category icon %>
-  <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style="background-color: <%= expense.category.color %>22;">
-    <%= svg_icon expense.category.icon, css_class: "w-4 h-4", stroke: expense.category.color %>
-  </div>
+  <%# Category icon + name %>
+  <%= link_to category_path(expense.category), class: "flex flex-col items-center gap-1 flex-shrink-0 w-9 sm:w-14 group" do %>
+    <div class="w-9 h-9 rounded-lg flex items-center justify-center transition-opacity group-hover:opacity-75" style="background-color: <%= expense.category.color %>22;">
+      <%= svg_icon expense.category.icon, css_class: "w-4 h-4", stroke: expense.category.color %>
+    </div>
+    <span class="hidden sm:block text-center whitespace-nowrap transition-colors group-hover:text-white/70" style="font-size: 10px; line-height: 1.2; color: #8892A4;" title="<%= category_display_name(expense.category) %>"><%= category_display_name(expense.category).split(' ').first %></span>
+  <% end %>
 
   <%# Content %>
   <div class="flex-1 min-w-0">
@@ -25,7 +31,7 @@
     <div class="flex items-start justify-between gap-2">
       <div class="flex items-center gap-2 min-w-0">
         <p class="text-sm font-medium truncate" style="color: #E2E8F0;"><%= expense.description %></p>
-        <% if expense.payment_method == "boleto" || expense.scheduled_payment? %>
+        <% if expense.payment_method.in?(%w[boleto pix]) || expense.scheduled_payment? %>
           <span class="hidden sm:inline-flex"><%= render "expenses/payment_status_badge", expense: expense %></span>
         <% end %>
       </div>
@@ -40,7 +46,7 @@
     </div>
 
     <%# Mobile-only: payment status badge on its own row %>
-    <% if expense.payment_method == "boleto" || expense.scheduled_payment? %>
+    <% if expense.payment_method.in?(%w[boleto pix]) || expense.scheduled_payment? %>
       <div class="sm:hidden mt-1">
         <%= render "expenses/payment_status_badge", expense: expense %>
       </div>
@@ -51,9 +57,7 @@
       <%# Meta info: plain text + category badge %>
       <div class="flex items-center gap-1.5 flex-wrap min-w-0">
         <span class="text-xs" style="color: #8892A4;"><%= "#{expense.date.day} #{t('date.month_names')[expense.date.month]}" %></span>
-        <span class="text-xs" style="color: #2A2F45;">·</span>
-        <span class="text-xs" style="color: #8892A4;"><%= category_display_name(expense.category) %></span>
-        <span class="text-xs" style="color: #2A2F45;">·</span>
+        <span class="inline-block w-1 h-1 rounded-full flex-shrink-0" style="background-color: #4A5568;"></span>
         <% if expense.payment_method == "credit_card" && expense.credit_card %>
           <span class="text-xs" style="color: #8892A4;"><%= t("expenses.form.#{expense.payment_method}") %> (<%= expense.credit_card.name %>)</span>
         <% else %>
@@ -63,8 +67,9 @@
 
       <%# Actions: edit + delete %>
       <% edit_locked = (expense.recurring? || expense.installment?) && expense.date < Date.current.beginning_of_month %>
+      <% cc_installment_locked = expense.credit_card_installment? && expense.installment_number > 1 %>
       <div class="flex items-center gap-1 flex-shrink-0">
-        <% if edit_locked %>
+        <% if edit_locked || cc_installment_locked %>
           <span class="p-1.5 rounded-lg opacity-30 cursor-not-allowed" style="color: #8892A4;" title="<%= t('expenses.expense.edit_locked') %>">
             <%= svg_icon "edit", css_class: "w-3.5 h-3.5" %>
           </span>
@@ -73,13 +78,15 @@
             <%= svg_icon "edit", css_class: "w-3.5 h-3.5" %>
           <% end %>
         <% end %>
-        <%= render "shared/delete_modal_button",
-            path: expense_path(expense),
-            title: t("expenses.expense.#{delete_i18n_key}.title"),
-            question: t("expenses.expense.#{delete_i18n_key}.question"),
-            confirm_label: t("expenses.expense.#{delete_i18n_key}.confirm"),
-            cancel_label: t("shared.delete_modal.cancel"),
-            following_label: delete_i18n_key != "standard_delete" ? t("expenses.expense.#{delete_i18n_key}.this_and_following") : nil %>
+        <% unless expense.credit_card_installment? && expense.installment_number > 1 %>
+          <%= render "shared/delete_modal_button",
+              path: expense_path(expense),
+              title: t("expenses.expense.#{delete_i18n_key}.title"),
+              question: t("expenses.expense.#{delete_i18n_key}.question"),
+              confirm_label: t("expenses.expense.#{delete_i18n_key}.confirm"),
+              cancel_label: t("shared.delete_modal.cancel"),
+              following_label: (delete_i18n_key != "standard_delete" && delete_i18n_key != "cc_installment_delete") ? t("expenses.expense.#{delete_i18n_key}.this_and_following") : nil %>
+        <% end %>
       </div>
     </div>
   </div>

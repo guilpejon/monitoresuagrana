@@ -7,7 +7,7 @@
 <div class="min-h-screen" style="background-color: #0F1117; color: #E2E8F0; font-family: 'Inter', system-ui, sans-serif;">
 
   <%# Navigation %>
-  <nav class="flex items-center justify-between px-4 sm:px-6 py-4 border-b max-w-7xl mx-auto" style="border-color: #2A2F45;">
+  <nav class="flex items-center justify-between px-6 py-4 border-b max-w-7xl mx-auto" style="border-color: #2A2F45;">
     <div class="flex items-center gap-3 min-w-0">
       <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background-color: #6C63FF;">
         <%= svg_icon "wallet", css_class: "w-5 h-5", stroke: "white" %>
@@ -25,7 +25,7 @@
   </nav>
 
   <%# Hero %>
-  <section class="relative text-center py-24 px-4 max-w-4xl mx-auto overflow-hidden">
+  <section class="relative text-center py-14 sm:py-24 px-6 max-w-4xl mx-auto overflow-hidden">
     <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse at 50% 0%, rgba(108,99,255,0.18) 0%, transparent 65%);"></div>
     <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-8 border" style="background-color: rgba(108,99,255,0.1); border-color: rgba(108,99,255,0.3); color: #A78BFA;">
       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
@@ -48,8 +48,445 @@
     </div>
   </section>
 
+  <%# Dashboard Preview Mockup %>
+  <section class="hidden sm:block pb-20 px-6 max-w-6xl mx-auto">
+    <div class="relative rounded-2xl overflow-hidden border" style="border-color: #2A2F45; box-shadow: 0 30px 80px rgba(108,99,255,0.18);">
+      <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse at 50% 0%, rgba(108,99,255,0.08) 0%, transparent 60%);"></div>
+      <svg viewBox="0 0 1000 610" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto" style="background-color: #141824; border-radius: 1rem;">
+        <defs>
+          <linearGradient id="incomeBarGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#6C63FF" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#6C63FF" stop-opacity="0.5"/>
+          </linearGradient>
+          <linearGradient id="expBarGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FF6B6B" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#FF6B6B" stop-opacity="0.5"/>
+          </linearGradient>
+          <linearGradient id="forecastGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#6C63FF" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#6C63FF" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Browser chrome -->
+        <rect width="1000" height="44" fill="#0F1117"/>
+        <circle cx="20" cy="22" r="5" fill="#FF6B6B" opacity="0.5"/>
+        <circle cx="38" cy="22" r="5" fill="#F7B731" opacity="0.5"/>
+        <circle cx="56" cy="22" r="5" fill="#00D4AA" opacity="0.5"/>
+        <rect x="360" y="11" width="280" height="22" rx="5" fill="#1E2130"/>
+        <text x="500" y="26" fill="#8892A4" font-size="10" font-family="system-ui, sans-serif" text-anchor="middle">monitoresuagrana.com.br</text>
+
+        <!-- Page header -->
+        <text x="24" y="74" fill="#E2E8F0" font-size="15" font-weight="bold" font-family="system-ui, sans-serif">March 2026</text>
+        <text x="24" y="90" fill="#8892A4" font-size="10" font-family="system-ui, sans-serif">Financial Overview</text>
+
+        <!-- Stat cards (4 cards, full width) -->
+        <!-- Card 1: Net Balance -->
+        <rect x="16" y="104" width="226" height="82" rx="10" fill="#1E2130" stroke="#2A2F45" stroke-width="1"/>
+        <text x="30" y="126" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">NET BALANCE</text>
+        <text x="30" y="152" fill="#E2E8F0" font-size="20" font-weight="bold" font-family="system-ui, sans-serif">$4,280</text>
+        <text x="30" y="170" fill="#00D4AA" font-size="9" font-family="system-ui, sans-serif">▲ +12% this month</text>
+
+        <!-- Card 2: Income -->
+        <rect x="254" y="104" width="226" height="82" rx="10" fill="#1E2130" stroke="#2A2F45" stroke-width="1"/>
+        <text x="268" y="126" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">INCOME</text>
+        <text x="268" y="152" fill="#00D4AA" font-size="20" font-weight="bold" font-family="system-ui, sans-serif">$8,500</text>
+        <text x="268" y="170" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">Salary + freelance</text>
+
+        <!-- Card 3: Expenses -->
+        <rect x="492" y="104" width="226" height="82" rx="10" fill="#1E2130" stroke="#2A2F45" stroke-width="1"/>
+        <text x="506" y="126" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">EXPENSES</text>
+        <text x="506" y="152" fill="#FF6B6B" font-size="20" font-weight="bold" font-family="system-ui, sans-serif">$4,220</text>
+        <text x="506" y="170" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">8 categories</text>
+
+        <!-- Card 4: Investments -->
+        <rect x="730" y="104" width="254" height="82" rx="10" fill="#1E2130" stroke="#2A2F45" stroke-width="1"/>
+        <text x="744" y="126" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">INVESTMENTS</text>
+        <text x="744" y="152" fill="#34D399" font-size="20" font-weight="bold" font-family="system-ui, sans-serif">$42,100</text>
+        <text x="744" y="170" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">Portfolio value</text>
+
+        <!-- Chart panel (left) -->
+        <rect x="16" y="200" width="570" height="230" rx="10" fill="#1E2130" stroke="#2A2F45" stroke-width="1"/>
+        <text x="30" y="222" fill="#E2E8F0" font-size="12" font-weight="600" font-family="system-ui, sans-serif">Cash Flow</text>
+        <!-- Legend -->
+        <rect x="116" y="213" width="8" height="8" rx="2" fill="#6C63FF"/>
+        <text x="128" y="221" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">Income</text>
+        <rect x="178" y="213" width="8" height="8" rx="2" fill="#FF6B6B"/>
+        <text x="190" y="221" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">Expenses</text>
+
+        <!-- Grid lines -->
+        <line x1="50" y1="235" x2="550" y2="235" stroke="#2A2F45" stroke-width="0.5"/>
+        <line x1="50" y1="270" x2="550" y2="270" stroke="#2A2F45" stroke-width="0.5"/>
+        <line x1="50" y1="305" x2="550" y2="305" stroke="#2A2F45" stroke-width="0.5"/>
+        <line x1="50" y1="340" x2="550" y2="340" stroke="#2A2F45" stroke-width="0.5"/>
+        <line x1="50" y1="375" x2="550" y2="375" stroke="#2A2F45" stroke-width="0.5"/>
+        <!-- Baseline -->
+        <line x1="50" y1="405" x2="550" y2="405" stroke="#2A2F45" stroke-width="1"/>
+
+        <!-- Bar chart: pairs for Oct-Mar, group width=76, gap=10 -->
+        <!-- Oct: x=65 -->
+        <rect x="65"  y="333" width="28" height="72" rx="3" fill="url(#incomeBarGrad)"/>
+        <rect x="97"  y="358" width="22" height="47" rx="3" fill="url(#expBarGrad)"/>
+        <text x="87"  y="418" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">Oct</text>
+
+        <!-- Nov: x=148 -->
+        <rect x="148" y="318" width="28" height="87" rx="3" fill="url(#incomeBarGrad)"/>
+        <rect x="180" y="352" width="22" height="53" rx="3" fill="url(#expBarGrad)"/>
+        <text x="170" y="418" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">Nov</text>
+
+        <!-- Dec: x=231 -->
+        <rect x="231" y="305" width="28" height="100" rx="3" fill="url(#incomeBarGrad)"/>
+        <rect x="263" y="348" width="22" height="57" rx="3" fill="url(#expBarGrad)"/>
+        <text x="253" y="418" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">Dec</text>
+
+        <!-- Jan: x=314 -->
+        <rect x="314" y="295" width="28" height="110" rx="3" fill="url(#incomeBarGrad)"/>
+        <rect x="346" y="345" width="22" height="60" rx="3" fill="url(#expBarGrad)"/>
+        <text x="336" y="418" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">Jan</text>
+
+        <!-- Feb: x=397 -->
+        <rect x="397" y="283" width="28" height="122" rx="3" fill="url(#incomeBarGrad)"/>
+        <rect x="429" y="342" width="22" height="63" rx="3" fill="url(#expBarGrad)"/>
+        <text x="419" y="418" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">Feb</text>
+
+        <!-- Mar (current month — brighter) -->
+        <rect x="480" y="270" width="28" height="135" rx="3" fill="#6C63FF"/>
+        <rect x="512" y="340" width="22" height="65" rx="3" fill="#FF6B6B"/>
+        <text x="502" y="418" fill="#E2E8F0" font-size="9" font-weight="600" font-family="system-ui, sans-serif" text-anchor="middle">Mar</text>
+
+        <!-- Expenses panel (right) -->
+        <rect x="600" y="200" width="384" height="230" rx="10" fill="#1E2130" stroke="#2A2F45" stroke-width="1"/>
+        <text x="616" y="222" fill="#E2E8F0" font-size="12" font-weight="600" font-family="system-ui, sans-serif">Top Expenses</text>
+        <text x="962" y="222" fill="#8892A4" font-size="10" font-family="system-ui, sans-serif" text-anchor="end">March</text>
+
+        <!-- Expense rows -->
+        <circle cx="628" cy="248" r="6" fill="#FF6B6B"/>
+        <text x="642" y="252" fill="#E2E8F0" font-size="11" font-family="system-ui, sans-serif">Housing</text>
+        <text x="962" y="252" fill="#E2E8F0" font-size="11" font-weight="600" font-family="system-ui, sans-serif" text-anchor="end">$1,200</text>
+        <rect x="616" y="260" width="346" height="1" fill="#2A2F45"/>
+        <rect x="616" y="260" width="195" height="1" fill="#FF6B6B" opacity="0.5"/>
+
+        <circle cx="628" cy="279" r="6" fill="#F7B731"/>
+        <text x="642" y="283" fill="#E2E8F0" font-size="11" font-family="system-ui, sans-serif">Food &amp; Dining</text>
+        <text x="962" y="283" fill="#E2E8F0" font-size="11" font-weight="600" font-family="system-ui, sans-serif" text-anchor="end">$680</text>
+        <rect x="616" y="291" width="346" height="1" fill="#2A2F45"/>
+        <rect x="616" y="291" width="110" height="1" fill="#F7B731" opacity="0.5"/>
+
+        <circle cx="628" cy="310" r="6" fill="#6C63FF"/>
+        <text x="642" y="314" fill="#E2E8F0" font-size="11" font-family="system-ui, sans-serif">Transport</text>
+        <text x="962" y="314" fill="#E2E8F0" font-size="11" font-weight="600" font-family="system-ui, sans-serif" text-anchor="end">$420</text>
+        <rect x="616" y="322" width="346" height="1" fill="#2A2F45"/>
+        <rect x="616" y="322" width="68" height="1" fill="#6C63FF" opacity="0.5"/>
+
+        <circle cx="628" cy="341" r="6" fill="#60A5FA"/>
+        <text x="642" y="345" fill="#E2E8F0" font-size="11" font-family="system-ui, sans-serif">Subscriptions</text>
+        <text x="962" y="345" fill="#E2E8F0" font-size="11" font-weight="600" font-family="system-ui, sans-serif" text-anchor="end">$230</text>
+        <rect x="616" y="353" width="346" height="1" fill="#2A2F45"/>
+        <rect x="616" y="353" width="37" height="1" fill="#60A5FA" opacity="0.5"/>
+
+        <circle cx="628" cy="372" r="6" fill="#34D399"/>
+        <text x="642" y="376" fill="#E2E8F0" font-size="11" font-family="system-ui, sans-serif">Health</text>
+        <text x="962" y="376" fill="#E2E8F0" font-size="11" font-weight="600" font-family="system-ui, sans-serif" text-anchor="end">$180</text>
+        <rect x="616" y="384" width="346" height="1" fill="#2A2F45"/>
+        <rect x="616" y="384" width="29" height="1" fill="#34D399" opacity="0.5"/>
+
+        <!-- Total row -->
+        <text x="616" y="415" fill="#8892A4" font-size="10" font-family="system-ui, sans-serif">Total this month</text>
+        <text x="962" y="415" fill="#E2E8F0" font-size="12" font-weight="bold" font-family="system-ui, sans-serif" text-anchor="end">$4,220</text>
+
+        <!-- Forecast strip -->
+        <rect x="16" y="444" width="968" height="150" rx="10" fill="#1E2130" stroke="#2A2F45" stroke-width="1"/>
+        <text x="30" y="464" fill="#8892A4" font-size="10" font-family="system-ui, sans-serif">6-MONTH FORECAST</text>
+
+        <!-- Forecast line with gradient area -->
+        <path d="M 140,530 C 200,526 230,523 290,520 C 350,517 380,514 440,511 C 500,507 530,505 590,504 C 650,500 680,498 740,497 C 800,495 840,493 900,492 L 900,558 L 140,558 Z" fill="url(#forecastGrad)"/>
+        <path d="M 140,530 C 200,526 230,523 290,520 C 350,517 380,514 440,511 C 500,507 530,505 590,504 C 650,500 680,498 740,497 C 800,495 840,493 900,492" fill="none" stroke="#6C63FF" stroke-width="2" stroke-dasharray="5,3"/>
+
+        <!-- Today marker -->
+        <line x1="290" y1="470" x2="290" y2="558" stroke="#6C63FF" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.6"/>
+        <circle cx="290" cy="520" r="4" fill="#6C63FF"/>
+        <rect x="260" y="470" width="58" height="16" rx="4" fill="#6C63FF" opacity="0.15"/>
+        <text x="289" y="481" fill="#6C63FF" font-size="8" font-family="system-ui, sans-serif" text-anchor="middle">Today</text>
+
+        <!-- Month labels on forecast -->
+        <text x="140" y="572" fill="#8892A4" font-size="8" font-family="system-ui, sans-serif" text-anchor="middle">Jan</text>
+        <text x="290" y="572" fill="#E2E8F0" font-size="8" font-family="system-ui, sans-serif" text-anchor="middle">Mar</text>
+        <text x="440" y="572" fill="#8892A4" font-size="8" font-family="system-ui, sans-serif" text-anchor="middle">May</text>
+        <text x="590" y="572" fill="#8892A4" font-size="8" font-family="system-ui, sans-serif" text-anchor="middle">Jul</text>
+        <text x="740" y="572" fill="#8892A4" font-size="8" font-family="system-ui, sans-serif" text-anchor="middle">Sep</text>
+        <text x="900" y="572" fill="#8892A4" font-size="8" font-family="system-ui, sans-serif" text-anchor="middle">Nov</text>
+      </svg>
+    </div>
+  </section>
+
+  <%# Stats bar %>
+  <section class="py-14 px-6 max-w-5xl mx-auto">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div class="py-6 px-4 rounded-2xl border" style="background-color: #1E2130; border-color: #2A2F45;">
+        <div class="text-4xl font-bold mb-1" style="color: #6C63FF;">100+</div>
+        <div class="text-sm" style="color: #8892A4;"><%= t("pages.showcase.stat1_label") %></div>
+      </div>
+      <div class="py-6 px-4 rounded-2xl border" style="background-color: #1E2130; border-color: #2A2F45;">
+        <div class="text-4xl font-bold mb-1" style="color: #00D4AA;">6</div>
+        <div class="text-sm" style="color: #8892A4;"><%= t("pages.showcase.stat2_label") %></div>
+      </div>
+      <div class="py-6 px-4 rounded-2xl border" style="background-color: #1E2130; border-color: #2A2F45;">
+        <div class="text-4xl font-bold mb-1" style="color: #F7B731;">3</div>
+        <div class="text-sm" style="color: #8892A4;"><%= t("pages.showcase.stat3_label") %></div>
+      </div>
+      <div class="py-6 px-4 rounded-2xl border" style="background-color: #1E2130; border-color: #2A2F45;">
+        <div class="text-4xl font-bold mb-1" style="color: #FF6B6B;">&#8734;</div>
+        <div class="text-sm" style="color: #8892A4;"><%= t("pages.showcase.stat4_label") %></div>
+      </div>
+    </div>
+  </section>
+
+  <%# Divider %>
+  <div class="max-w-6xl mx-auto px-4">
+    <hr style="border-color: #2A2F45;">
+  </div>
+
+  <%# Feature Spotlight 1 — Dashboard %>
+  <section class="py-10 sm:py-24 px-6 max-w-6xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+      <div>
+        <div class="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-5 border" style="background-color: rgba(108,99,255,0.1); border-color: rgba(108,99,255,0.3); color: #A78BFA;">
+          <%= t("pages.showcase.spotlight1_badge") %>
+        </div>
+        <h2 class="text-4xl font-bold mb-5 leading-snug"><%= t("pages.showcase.spotlight1_title") %></h2>
+        <p class="text-lg mb-8 leading-relaxed" style="color: #8892A4;"><%= t("pages.showcase.spotlight1_desc") %></p>
+        <ul class="space-y-4">
+          <li class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background-color: rgba(108,99,255,0.15);">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#6C63FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span style="color: #C4CADB;"><%= t("pages.showcase.spotlight1_point1") %></span>
+          </li>
+          <li class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background-color: rgba(108,99,255,0.15);">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#6C63FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span style="color: #C4CADB;"><%= t("pages.showcase.spotlight1_point2") %></span>
+          </li>
+          <li class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background-color: rgba(108,99,255,0.15);">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#6C63FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span style="color: #C4CADB;"><%= t("pages.showcase.spotlight1_point3") %></span>
+          </li>
+        </ul>
+      </div>
+
+      <%# Area chart illustration %>
+      <div class="hidden sm:block rounded-2xl overflow-hidden border" style="background-color: #1E2130; border-color: #2A2F45;">
+        <svg viewBox="0 0 540 300" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
+          <defs>
+            <linearGradient id="incomeAreaGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#00D4AA" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#00D4AA" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="expenseAreaGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FF6B6B" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#FF6B6B" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Panel header -->
+          <text x="24" y="30" fill="#E2E8F0" font-size="13" font-weight="600" font-family="system-ui, sans-serif">Monthly Overview</text>
+          <rect x="24" y="40" width="8" height="8" rx="2" fill="#00D4AA"/>
+          <text x="36" y="48" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">Income</text>
+          <rect x="90" y="40" width="8" height="8" rx="2" fill="#FF6B6B"/>
+          <text x="102" y="48" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">Expenses</text>
+
+          <!-- Grid -->
+          <line x1="50" y1="62"  x2="516" y2="62"  stroke="#2A2F45" stroke-width="0.5"/>
+          <line x1="50" y1="107" x2="516" y2="107" stroke="#2A2F45" stroke-width="0.5"/>
+          <line x1="50" y1="152" x2="516" y2="152" stroke="#2A2F45" stroke-width="0.5"/>
+          <line x1="50" y1="197" x2="516" y2="197" stroke="#2A2F45" stroke-width="0.5"/>
+          <line x1="50" y1="242" x2="516" y2="242" stroke="#2A2F45" stroke-width="1"/>
+
+          <!-- Y-axis labels -->
+          <text x="44" y="66"  fill="#8892A4" font-size="8" font-family="system-ui, sans-serif" text-anchor="end">$9k</text>
+          <text x="44" y="111" fill="#8892A4" font-size="8" font-family="system-ui, sans-serif" text-anchor="end">$7k</text>
+          <text x="44" y="156" fill="#8892A4" font-size="8" font-family="system-ui, sans-serif" text-anchor="end">$5k</text>
+          <text x="44" y="201" fill="#8892A4" font-size="8" font-family="system-ui, sans-serif" text-anchor="end">$3k</text>
+
+          <!-- Income area + line -->
+          <!-- Points: Oct(50,176) Nov(143,160) Dec(236,147) Jan(329,136) Feb(422,125) Mar(515,115) -->
+          <path d="M 50,176 C 96,168 120,160 143,160 C 166,160 189,147 236,147 C 283,147 306,136 329,136 C 352,136 375,125 422,125 C 455,125 482,115 515,115 L 515,242 L 50,242 Z" fill="url(#incomeAreaGrad)"/>
+          <path d="M 50,176 C 96,168 120,160 143,160 C 166,160 189,147 236,147 C 283,147 306,136 329,136 C 352,136 375,125 422,125 C 455,125 482,115 515,115" fill="none" stroke="#00D4AA" stroke-width="2" stroke-linecap="round"/>
+
+          <!-- Data point circles on income line -->
+          <circle cx="50"  cy="176" r="3.5" fill="#00D4AA"/>
+          <circle cx="143" cy="160" r="3.5" fill="#00D4AA"/>
+          <circle cx="236" cy="147" r="3.5" fill="#00D4AA"/>
+          <circle cx="329" cy="136" r="3.5" fill="#00D4AA"/>
+          <circle cx="422" cy="125" r="3.5" fill="#00D4AA"/>
+          <circle cx="515" cy="115" r="3.5" fill="#00D4AA"/>
+
+          <!-- Expense area + line -->
+          <!-- Points: Oct(50,220) Nov(143,216) Dec(236,213) Jan(329,210) Feb(422,208) Mar(515,210) -->
+          <path d="M 50,220 C 96,218 120,216 143,216 C 166,216 189,213 236,213 C 283,213 306,210 329,210 C 352,210 375,208 422,208 C 455,208 482,210 515,210 L 515,242 L 50,242 Z" fill="url(#expenseAreaGrad)"/>
+          <path d="M 50,220 C 96,218 120,216 143,216 C 166,216 189,213 236,213 C 283,213 306,210 329,210 C 352,210 375,208 422,208 C 455,208 482,210 515,210" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round"/>
+
+          <!-- Data point circles on expense line -->
+          <circle cx="50"  cy="220" r="3.5" fill="#FF6B6B"/>
+          <circle cx="143" cy="216" r="3.5" fill="#FF6B6B"/>
+          <circle cx="236" cy="213" r="3.5" fill="#FF6B6B"/>
+          <circle cx="329" cy="210" r="3.5" fill="#FF6B6B"/>
+          <circle cx="422" cy="208" r="3.5" fill="#FF6B6B"/>
+          <circle cx="515" cy="210" r="3.5" fill="#FF6B6B"/>
+
+          <!-- Tooltip on Mar -->
+          <rect x="458" y="84" width="78" height="40" rx="6" fill="#252A3D" stroke="#2A2F45" stroke-width="1"/>
+          <text x="497" y="100" fill="#8892A4" font-size="8" font-family="system-ui, sans-serif" text-anchor="middle">Mar 2026</text>
+          <text x="467" y="115" fill="#00D4AA" font-size="9" font-family="system-ui, sans-serif">$8,500</text>
+          <text x="506" y="115" fill="#FF6B6B" font-size="9" font-family="system-ui, sans-serif">$4,220</text>
+          <line x1="515" y1="115" x2="515" y2="242" stroke="#6C63FF" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>
+
+          <!-- X axis labels -->
+          <text x="50"  y="258" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">Oct</text>
+          <text x="143" y="258" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">Nov</text>
+          <text x="236" y="258" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">Dec</text>
+          <text x="329" y="258" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">Jan</text>
+          <text x="422" y="258" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">Feb</text>
+          <text x="515" y="258" fill="#E2E8F0" font-size="9" font-weight="600" font-family="system-ui, sans-serif" text-anchor="middle">Mar</text>
+
+          <!-- Bottom summary row -->
+          <rect x="0" y="268" width="540" height="32" fill="#171B28"/>
+          <text x="24" y="288" fill="#8892A4" font-size="10" font-family="system-ui, sans-serif">Net this month:</text>
+          <text x="150" y="288" fill="#00D4AA" font-size="11" font-weight="bold" font-family="system-ui, sans-serif">+$4,280</text>
+          <text x="290" y="288" fill="#8892A4" font-size="10" font-family="system-ui, sans-serif">YTD savings:</text>
+          <text x="390" y="288" fill="#E2E8F0" font-size="11" font-weight="bold" font-family="system-ui, sans-serif">$18,640</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <%# Feature Spotlight 2 — Expense Tracking %>
+  <section class="py-10 sm:py-24 px-6 max-w-6xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+
+      <%# Expense list illustration %>
+      <div class="hidden sm:block rounded-2xl overflow-hidden border order-last lg:order-first" style="background-color: #1E2130; border-color: #2A2F45;">
+        <svg viewBox="0 0 480 360" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
+          <!-- Header -->
+          <rect width="480" height="52" fill="#171B28"/>
+          <text x="20" y="22" fill="#E2E8F0" font-size="13" font-weight="600" font-family="system-ui, sans-serif">Expenses</text>
+          <text x="20" y="38" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">March 2026</text>
+          <rect x="360" y="14" width="100" height="24" rx="6" fill="rgba(108,99,255,0.15)" stroke="rgba(108,99,255,0.3)" stroke-width="1"/>
+          <text x="410" y="30" fill="#A78BFA" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">+ Add expense</text>
+
+          <!-- Row 1: Rent -->
+          <rect x="0" y="52" width="480" height="56" fill="#1E2130"/>
+          <circle cx="36" cy="80" r="10" fill="rgba(255,107,107,0.15)"/>
+          <circle cx="36" cy="80" r="5" fill="#FF6B6B"/>
+          <text x="56" y="75" fill="#E2E8F0" font-size="12" font-family="system-ui, sans-serif">Rent</text>
+          <rect x="56" y="80" width="45" height="14" rx="3" fill="rgba(255,107,107,0.15)"/>
+          <text x="79" y="91" fill="#FF6B6B" font-size="8" font-family="system-ui, sans-serif" text-anchor="middle">Housing</text>
+          <text x="340" y="76" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">Mar 1 · Fixed</text>
+          <text x="460" y="76" fill="#FF6B6B" font-size="13" font-weight="600" font-family="system-ui, sans-serif" text-anchor="end">−$1,200</text>
+          <rect x="56" y="98" width="180" height="3" rx="1.5" fill="#2A2F45"/>
+          <rect x="56" y="98" width="140" height="3" rx="1.5" fill="#FF6B6B" opacity="0.5"/>
+          <line x1="0" y1="108" x2="480" y2="108" stroke="#2A2F45" stroke-width="0.5"/>
+
+          <!-- Row 2: Groceries -->
+          <rect x="0" y="108" width="480" height="56" fill="#1E2130"/>
+          <circle cx="36" cy="136" r="10" fill="rgba(247,183,49,0.15)"/>
+          <circle cx="36" cy="136" r="5" fill="#F7B731"/>
+          <text x="56" y="131" fill="#E2E8F0" font-size="12" font-family="system-ui, sans-serif">Groceries</text>
+          <rect x="56" y="136" width="35" height="14" rx="3" fill="rgba(247,183,49,0.15)"/>
+          <text x="74" y="147" fill="#F7B731" font-size="8" font-family="system-ui, sans-serif" text-anchor="middle">Food</text>
+          <text x="340" y="132" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">Mar 5 · Variable</text>
+          <text x="460" y="132" fill="#FF6B6B" font-size="13" font-weight="600" font-family="system-ui, sans-serif" text-anchor="end">−$320</text>
+          <rect x="56" y="154" width="180" height="3" rx="1.5" fill="#2A2F45"/>
+          <rect x="56" y="154" width="60" height="3" rx="1.5" fill="#F7B731" opacity="0.5"/>
+          <line x1="0" y1="164" x2="480" y2="164" stroke="#2A2F45" stroke-width="0.5"/>
+
+          <!-- Row 3: Gym (installment badge) -->
+          <rect x="0" y="164" width="480" height="56" fill="#1E2130"/>
+          <circle cx="36" cy="192" r="10" fill="rgba(108,99,255,0.15)"/>
+          <circle cx="36" cy="192" r="5" fill="#6C63FF"/>
+          <text x="56" y="187" fill="#E2E8F0" font-size="12" font-family="system-ui, sans-serif">Gym membership</text>
+          <rect x="56" y="192" width="38" height="14" rx="3" fill="rgba(108,99,255,0.15)"/>
+          <text x="75" y="203" fill="#A78BFA" font-size="8" font-family="system-ui, sans-serif" text-anchor="middle">Health</text>
+          <rect x="200" y="192" width="40" height="14" rx="3" fill="rgba(96,165,250,0.15)"/>
+          <text x="220" y="203" fill="#60A5FA" font-size="8" font-family="system-ui, sans-serif" text-anchor="middle">3/12</text>
+          <text x="340" y="188" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">Mar 7 · Fixed</text>
+          <text x="460" y="188" fill="#FF6B6B" font-size="13" font-weight="600" font-family="system-ui, sans-serif" text-anchor="end">−$89</text>
+          <rect x="56" y="210" width="180" height="3" rx="1.5" fill="#2A2F45"/>
+          <rect x="56" y="210" width="25" height="3" rx="1.5" fill="#6C63FF" opacity="0.5"/>
+          <line x1="0" y1="220" x2="480" y2="220" stroke="#2A2F45" stroke-width="0.5"/>
+
+          <!-- Row 4: Streaming -->
+          <rect x="0" y="220" width="480" height="56" fill="#1E2130"/>
+          <circle cx="36" cy="248" r="10" fill="rgba(96,165,250,0.15)"/>
+          <circle cx="36" cy="248" r="5" fill="#60A5FA"/>
+          <text x="56" y="243" fill="#E2E8F0" font-size="12" font-family="system-ui, sans-serif">Netflix, Spotify</text>
+          <rect x="56" y="248" width="72" height="14" rx="3" fill="rgba(96,165,250,0.15)"/>
+          <text x="92" y="259" fill="#60A5FA" font-size="8" font-family="system-ui, sans-serif" text-anchor="middle">Subscriptions</text>
+          <text x="340" y="244" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">Mar 10 · Fixed</text>
+          <text x="460" y="244" fill="#FF6B6B" font-size="13" font-weight="600" font-family="system-ui, sans-serif" text-anchor="end">−$48</text>
+          <rect x="56" y="266" width="180" height="3" rx="1.5" fill="#2A2F45"/>
+          <rect x="56" y="266" width="9" height="3" rx="1.5" fill="#60A5FA" opacity="0.5"/>
+          <line x1="0" y1="276" x2="480" y2="276" stroke="#2A2F45" stroke-width="0.5"/>
+
+          <!-- Row 5: Bus pass -->
+          <rect x="0" y="276" width="480" height="56" fill="#1E2130"/>
+          <circle cx="36" cy="304" r="10" fill="rgba(52,211,153,0.15)"/>
+          <circle cx="36" cy="304" r="5" fill="#34D399"/>
+          <text x="56" y="299" fill="#E2E8F0" font-size="12" font-family="system-ui, sans-serif">Bus pass</text>
+          <rect x="56" y="304" width="56" height="14" rx="3" fill="rgba(52,211,153,0.15)"/>
+          <text x="84" y="315" fill="#34D399" font-size="8" font-family="system-ui, sans-serif" text-anchor="middle">Transport</text>
+          <text x="340" y="300" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">Mar 12 · Fixed</text>
+          <text x="460" y="300" fill="#FF6B6B" font-size="13" font-weight="600" font-family="system-ui, sans-serif" text-anchor="end">−$65</text>
+          <rect x="56" y="322" width="180" height="3" rx="1.5" fill="#2A2F45"/>
+          <rect x="56" y="322" width="12" height="3" rx="1.5" fill="#34D399" opacity="0.5"/>
+
+          <!-- Footer total -->
+          <rect width="480" height="28" y="332" fill="#171B28"/>
+          <text x="20" y="350" fill="#8892A4" font-size="10" font-family="system-ui, sans-serif">5 transactions · March total</text>
+          <text x="460" y="350" fill="#E2E8F0" font-size="12" font-weight="bold" font-family="system-ui, sans-serif" text-anchor="end">$1,722</text>
+        </svg>
+      </div>
+
+      <div>
+        <div class="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-5 border" style="background-color: rgba(255,107,107,0.1); border-color: rgba(255,107,107,0.3); color: #FF6B6B;">
+          <%= t("pages.showcase.spotlight2_badge") %>
+        </div>
+        <h2 class="text-4xl font-bold mb-5 leading-snug"><%= t("pages.showcase.spotlight2_title") %></h2>
+        <p class="text-lg mb-8 leading-relaxed" style="color: #8892A4;"><%= t("pages.showcase.spotlight2_desc") %></p>
+        <ul class="space-y-4">
+          <li class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background-color: rgba(255,107,107,0.12);">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#FF6B6B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span style="color: #C4CADB;"><%= t("pages.showcase.spotlight2_point1") %></span>
+          </li>
+          <li class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background-color: rgba(255,107,107,0.12);">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#FF6B6B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span style="color: #C4CADB;"><%= t("pages.showcase.spotlight2_point2") %></span>
+          </li>
+          <li class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background-color: rgba(255,107,107,0.12);">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#FF6B6B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span style="color: #C4CADB;"><%= t("pages.showcase.spotlight2_point3") %></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <%# Divider %>
+  <div class="max-w-6xl mx-auto px-4">
+    <hr style="border-color: #2A2F45;">
+  </div>
+
   <%# How it works %>
-  <section class="py-16 px-4 max-w-4xl mx-auto">
+  <section class="py-16 px-6 max-w-4xl mx-auto">
     <div class="text-center mb-12">
       <h2 class="text-3xl font-bold mb-3"><%= t("pages.showcase.how_title") %></h2>
       <p style="color: #8892A4;"><%= t("pages.showcase.how_subtitle") %></p>
@@ -74,7 +511,7 @@
   </section>
 
   <%# Features Grid %>
-  <section class="py-16 px-4 max-w-6xl mx-auto">
+  <section class="py-16 px-6 max-w-6xl mx-auto">
     <div class="text-center mb-14">
       <h2 class="text-3xl font-bold mb-3"><%= t("pages.showcase.features_title") %></h2>
       <p style="color: #8892A4;"><%= t("pages.showcase.features_subtitle") %></p>
@@ -164,8 +601,150 @@
     <hr style="border-color: #2A2F45;">
   </div>
 
+  <%# Feature Spotlight 3 — Forecast %>
+  <section class="py-10 sm:py-24 px-6 max-w-6xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+      <div>
+        <div class="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-5 border" style="background-color: rgba(96,165,250,0.1); border-color: rgba(96,165,250,0.3); color: #60A5FA;">
+          <%= t("pages.showcase.spotlight3_badge") %>
+        </div>
+        <h2 class="text-4xl font-bold mb-5 leading-snug"><%= t("pages.showcase.spotlight3_title") %></h2>
+        <p class="text-lg mb-8 leading-relaxed" style="color: #8892A4;"><%= t("pages.showcase.spotlight3_desc") %></p>
+        <ul class="space-y-4">
+          <li class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background-color: rgba(96,165,250,0.12);">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#60A5FA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span style="color: #C4CADB;"><%= t("pages.showcase.spotlight3_point1") %></span>
+          </li>
+          <li class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background-color: rgba(96,165,250,0.12);">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#60A5FA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span style="color: #C4CADB;"><%= t("pages.showcase.spotlight3_point2") %></span>
+          </li>
+          <li class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style="background-color: rgba(96,165,250,0.12);">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#60A5FA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span style="color: #C4CADB;"><%= t("pages.showcase.spotlight3_point3") %></span>
+          </li>
+        </ul>
+      </div>
+
+      <%# Forecast chart illustration %>
+      <div class="hidden sm:block rounded-2xl overflow-hidden border" style="background-color: #1E2130; border-color: #2A2F45;">
+        <svg viewBox="0 0 540 300" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
+          <defs>
+            <linearGradient id="projectionGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#6C63FF" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#6C63FF" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="pastGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#00D4AA" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="#00D4AA" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Header -->
+          <text x="24" y="28" fill="#E2E8F0" font-size="13" font-weight="600" font-family="system-ui, sans-serif">Balance Forecast</text>
+          <rect x="390" y="15" width="126" height="20" rx="4" fill="rgba(96,165,250,0.1)" stroke="rgba(96,165,250,0.2)" stroke-width="1"/>
+          <text x="453" y="28" fill="#60A5FA" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">Jan → Dec 2026</text>
+
+          <!-- Grid -->
+          <line x1="50" y1="48"  x2="516" y2="48"  stroke="#2A2F45" stroke-width="0.5"/>
+          <line x1="50" y1="88"  x2="516" y2="88"  stroke="#2A2F45" stroke-width="0.5"/>
+          <line x1="50" y1="128" x2="516" y2="128" stroke="#2A2F45" stroke-width="0.5"/>
+          <line x1="50" y1="168" x2="516" y2="168" stroke="#2A2F45" stroke-width="0.5"/>
+          <line x1="50" y1="208" x2="516" y2="208" stroke="#2A2F45" stroke-width="0.5"/>
+          <line x1="50" y1="242" x2="516" y2="242" stroke="#2A2F45" stroke-width="1"/>
+
+          <!-- Y-axis labels -->
+          <text x="44" y="52"  fill="#8892A4" font-size="8" font-family="system-ui, sans-serif" text-anchor="end">$12k</text>
+          <text x="44" y="92"  fill="#8892A4" font-size="8" font-family="system-ui, sans-serif" text-anchor="end">$9k</text>
+          <text x="44" y="132" fill="#8892A4" font-size="8" font-family="system-ui, sans-serif" text-anchor="end">$6k</text>
+          <text x="44" y="172" fill="#8892A4" font-size="8" font-family="system-ui, sans-serif" text-anchor="end">$3k</text>
+          <text x="44" y="212" fill="#8892A4" font-size="8" font-family="system-ui, sans-serif" text-anchor="end">$0</text>
+
+          <!--
+            9 months: Jan(x=50), Feb(x=108), Mar(x=166), Apr(x=224), May(x=282), Jun(x=340), Jul(x=398), Aug(x=456), Sep(x=514)
+            Balance: $4,000→$4,280→$4,500 (solid past), then projection to $8,200 by Sep
+            y = 242 - (val/14000)*194
+            Jan $4000 → 242 - 55.4 = 187
+            Feb $4280 → 242 - 59.3 = 183
+            Mar $4500 → 242 - 62.4 = 180  ← today
+            Apr $5100 → 242 - 70.7 = 171
+            May $5800 → 242 - 80.4 = 162
+            Jun $6600 → 242 - 91.5 = 151
+            Jul $7200 → 242 - 99.8 = 142
+            Aug $7750 → 242 - 107.4 = 135
+            Sep $8200 → 242 - 113.6 = 128
+          -->
+
+          <!-- Past area fill -->
+          <path d="M 50,187 C 79,185 93,183 108,183 C 137,183 151,180 166,180 L 166,242 L 50,242 Z" fill="url(#pastGrad)"/>
+
+          <!-- Past solid line -->
+          <path d="M 50,187 C 79,185 93,183 108,183 C 137,183 151,180 166,180" fill="none" stroke="#00D4AA" stroke-width="2.5" stroke-linecap="round"/>
+
+          <!-- Today vertical marker -->
+          <line x1="166" y1="48" x2="166" y2="242" stroke="#6C63FF" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+          <rect x="138" y="48" width="56" height="16" rx="4" fill="#6C63FF" opacity="0.15"/>
+          <text x="166" y="59" fill="#A78BFA" font-size="8" font-family="system-ui, sans-serif" text-anchor="middle">Today · Mar</text>
+
+          <!-- Projection area fill -->
+          <path d="M 166,180 C 195,176 209,171 224,171 C 253,171 267,162 282,162 C 311,162 325,151 340,151 C 369,151 383,142 398,142 C 427,142 441,135 456,135 C 485,135 499,128 514,128 L 514,242 L 166,242 Z" fill="url(#projectionGrad)"/>
+
+          <!-- Projection dashed line -->
+          <path d="M 166,180 C 195,176 209,171 224,171 C 253,171 267,162 282,162 C 311,162 325,151 340,151 C 369,151 383,142 398,142 C 427,142 441,135 456,135 C 485,135 499,128 514,128" fill="none" stroke="#6C63FF" stroke-width="2.5" stroke-dasharray="6,4" stroke-linecap="round"/>
+
+          <!-- Data points: past -->
+          <circle cx="50"  cy="187" r="4" fill="#00D4AA"/>
+          <circle cx="108" cy="183" r="4" fill="#00D4AA"/>
+          <circle cx="166" cy="180" r="5" fill="#6C63FF" stroke="#1E2130" stroke-width="2"/>
+
+          <!-- Data points: projection -->
+          <circle cx="224" cy="171" r="3.5" fill="#6C63FF" opacity="0.7"/>
+          <circle cx="282" cy="162" r="3.5" fill="#6C63FF" opacity="0.7"/>
+          <circle cx="340" cy="151" r="3.5" fill="#6C63FF" opacity="0.7"/>
+          <circle cx="398" cy="142" r="3.5" fill="#6C63FF" opacity="0.7"/>
+          <circle cx="456" cy="135" r="3.5" fill="#6C63FF" opacity="0.7"/>
+          <circle cx="514" cy="128" r="3.5" fill="#6C63FF" opacity="0.7"/>
+
+          <!-- Sep annotation bubble -->
+          <rect x="430" y="100" width="90" height="32" rx="6" fill="#252A3D" stroke="#2A2F45" stroke-width="1"/>
+          <text x="475" y="115" fill="#8892A4" font-size="8" font-family="system-ui, sans-serif" text-anchor="middle">Sep projection</text>
+          <text x="475" y="127" fill="#6C63FF" font-size="11" font-weight="bold" font-family="system-ui, sans-serif" text-anchor="middle">+$3,720</text>
+          <line x1="514" y1="128" x2="514" y2="132" stroke="#6C63FF" stroke-width="1" opacity="0.5"/>
+
+          <!-- X-axis labels -->
+          <text x="50"  y="256" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">Jan</text>
+          <text x="108" y="256" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">Feb</text>
+          <text x="166" y="256" fill="#E2E8F0" font-size="9" font-weight="600" font-family="system-ui, sans-serif" text-anchor="middle">Mar</text>
+          <text x="224" y="256" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">Apr</text>
+          <text x="282" y="256" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">May</text>
+          <text x="340" y="256" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">Jun</text>
+          <text x="398" y="256" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">Jul</text>
+          <text x="456" y="256" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">Aug</text>
+          <text x="514" y="256" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif" text-anchor="middle">Sep</text>
+
+          <!-- Legend -->
+          <line x1="24" y1="276" x2="44" y2="276" stroke="#00D4AA" stroke-width="2"/>
+          <text x="48" y="280" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">Actual</text>
+          <line x1="100" y1="276" x2="120" y2="276" stroke="#6C63FF" stroke-width="2" stroke-dasharray="5,3"/>
+          <text x="124" y="280" fill="#8892A4" font-size="9" font-family="system-ui, sans-serif">Projected</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <%# Divider %>
+  <div class="max-w-6xl mx-auto px-4">
+    <hr style="border-color: #2A2F45;">
+  </div>
+
   <%# Final CTA %>
-  <section class="py-20 px-4">
+  <section class="py-20 px-6">
     <div class="max-w-2xl mx-auto rounded-2xl border p-12 text-center" style="background-color: #1E2130; border-color: #2A2F45;">
       <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-6" style="background-color: rgba(108,99,255,0.15);">
         <%= svg_icon "wallet", css_class: "w-7 h-7", stroke: "#6C63FF" %>

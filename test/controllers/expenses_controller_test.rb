@@ -528,9 +528,9 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
 
   test "DELETE destroy with delete_following removes recurring future expenses" do
     template = create(:expense, user: @user, category: @category, expense_type: "fixed", recurring: true, date: 2.months.ago)
-    future1 = create(:expense, user: @user, category: @category, recurring_source_id: template.id, date: 1.month.from_now)
-    future2 = create(:expense, user: @user, category: @category, recurring_source_id: template.id, date: 2.months.from_now)
-    past = create(:expense, user: @user, category: @category, recurring_source_id: template.id, date: 1.month.ago)
+    future1 = create(:expense, user: @user, category: @category, expense_type: "fixed", recurring_source_id: template.id, date: 1.month.from_now)
+    future2 = create(:expense, user: @user, category: @category, expense_type: "fixed", recurring_source_id: template.id, date: 2.months.from_now)
+    past = create(:expense, user: @user, category: @category, expense_type: "fixed", recurring_source_id: template.id, date: 1.month.ago)
 
     sign_in @user
     delete expense_path(future1), params: { delete_following: "1" }
@@ -618,9 +618,9 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
 
   test "DELETE destroy single installment renumbers remaining" do
     group_id = SecureRandom.uuid
-    inst1 = create(:expense, user: @user, category: @category, installment_group_id: group_id, installment_number: 1, total_installments: 3)
-    inst2 = create(:expense, user: @user, category: @category, installment_group_id: group_id, installment_number: 2, total_installments: 3)
-    inst3 = create(:expense, user: @user, category: @category, installment_group_id: group_id, installment_number: 3, total_installments: 3)
+    inst1 = create(:expense, user: @user, category: @category, payment_method: "boleto", installment_group_id: group_id, installment_number: 1, total_installments: 3)
+    inst2 = create(:expense, user: @user, category: @category, payment_method: "boleto", installment_group_id: group_id, installment_number: 2, total_installments: 3)
+    inst3 = create(:expense, user: @user, category: @category, payment_method: "boleto", installment_group_id: group_id, installment_number: 3, total_installments: 3)
 
     sign_in @user
     delete expense_path(inst1)
@@ -628,5 +628,233 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 1, inst2.reload.installment_number
     assert_equal 2, inst3.reload.installment_number
     assert_equal 2, inst2.reload.total_installments
+  end
+
+  # Bank account auto-debit via update_status
+  test "PATCH update_status to paid decrements linked bank account balance" do
+    bank_account = create(:bank_account, user: @user, balance: 1000.00)
+    expense = create(:expense, user: @user, category: @category, amount: 150.00,
+                     payment_method: "pix", bank_account: bank_account, payment_status: "scheduled")
+    sign_in @user
+    patch update_status_expense_path(expense)
+    assert_in_delta 850.00, bank_account.reload.balance, 0.01
+  end
+
+  test "PATCH update_status from paid restores linked bank account balance" do
+    bank_account = create(:bank_account, user: @user, balance: 1000.00)
+    expense = create(:expense, user: @user, category: @category, amount: 150.00,
+                     payment_method: "pix", bank_account: bank_account, payment_status: "paid")
+    sign_in @user
+    patch update_status_expense_path(expense)
+    assert_in_delta 1000.00, bank_account.reload.balance, 0.01
+  end
+
+  test "DELETE destroy paid expense with bank account restores balance" do
+    bank_account = create(:bank_account, user: @user, balance: 1000.00)
+    expense = create(:expense, user: @user, category: @category, amount: 150.00,
+                     payment_method: "pix", bank_account: bank_account, payment_status: "paid")
+    sign_in @user
+    delete expense_path(expense), headers: { "Accept" => "text/vnd.turbo-stream.html" }
+    assert_in_delta 1000.00, bank_account.reload.balance, 0.01
+  end
+
+  # bank_account_id propagation to future recurring instances
+  test "PATCH update propagates bank_account_id to future recurring instances" do
+    bank_account = create(:bank_account, user: @user, balance: 1000.00)
+    template = create(:expense, user: @user, category: @category, expense_type: "fixed",
+                      payment_method: "pix", recurring: true, recurrence_day: 5)
+    future1 = create(:expense, user: @user, category: @category, expense_type: "fixed",
+                     payment_method: "pix", recurring: true, recurring_source_id: template.id,
+                     date: 1.month.from_now.change(day: 5))
+    future2 = create(:expense, user: @user, category: @category, expense_type: "fixed",
+                     payment_method: "pix", recurring: true, recurring_source_id: template.id,
+                     date: 2.months.from_now.change(day: 5))
+
+    sign_in @user
+    patch expense_path(template), params: {
+      expense: { bank_account_id: bank_account.id, payment_method: "pix",
+                 amount: template.amount, date: template.date,
+                 expense_type: "fixed", category_id: @category.id, recurring: "1" }
+    }
+
+    assert_equal bank_account.id, future1.reload.bank_account_id
+    assert_equal bank_account.id, future2.reload.bank_account_id
+  end
+
+  # bank_account_id propagation to all installments in the group
+  test "PATCH update propagates bank_account_id to all installments in the group" do
+    bank_account = create(:bank_account, user: @user, balance: 1000.00)
+    group_id = SecureRandom.uuid
+    inst1 = create(:expense, user: @user, category: @category, payment_method: "boleto",
+                   installment_group_id: group_id, installment_number: 1, total_installments: 3)
+    inst2 = create(:expense, user: @user, category: @category, payment_method: "boleto",
+                   installment_group_id: group_id, installment_number: 2, total_installments: 3)
+    inst3 = create(:expense, user: @user, category: @category, payment_method: "boleto",
+                   installment_group_id: group_id, installment_number: 3, total_installments: 3)
+
+    sign_in @user
+    patch expense_path(inst1), params: {
+      expense: { bank_account_id: bank_account.id, payment_method: "boleto",
+                 amount: inst1.amount, date: inst1.date, expense_type: inst1.expense_type,
+                 category_id: @category.id, total_installments: 3,
+                 installment_number: 1, installment_group_id: group_id }
+    }
+
+    assert_equal bank_account.id, inst2.reload.bank_account_id
+    assert_equal bank_account.id, inst3.reload.bank_account_id
+  end
+
+  # installment sub-section
+  test "GET index renders installment sub-section when installment expenses exist" do
+    group_id = SecureRandom.uuid
+    create(:expense, user: @user, category: @category, description: "Laptop 1/3",
+           expense_type: "variable", date: Date.current,
+           installment_group_id: group_id, installment_number: 1, total_installments: 3)
+
+    sign_in @user
+    get expenses_path
+
+    assert_response :success
+    assert_select "#installment_expenses_list"
+    assert_select "[data-section='installment']"
+  end
+
+  test "GET index installment expenses appear in installment list not variable list" do
+    group_id = SecureRandom.uuid
+    installment = create(:expense, user: @user, category: @category, description: "Phone 1/6",
+                         expense_type: "variable", date: Date.current,
+                         installment_group_id: group_id, installment_number: 1, total_installments: 6)
+
+    sign_in @user
+    get expenses_path
+
+    assert_response :success
+    # installment_expenses_list must contain the expense row
+    assert_select "#installment_expenses_list #expense_#{installment.id}"
+    # variable_expenses_list should not contain it
+    assert_select "#variable_expenses_list #expense_#{installment.id}", count: 0
+  end
+
+  # CC installment special treatment
+  test "GET edit blocks CC installment number > 1 regardless of date" do
+    group_id = SecureRandom.uuid
+    cc_installment = create(:expense, user: @user, category: @category,
+                            payment_method: "credit_card", total_installments: 3,
+                            installment_number: 2, installment_group_id: group_id,
+                            date: Date.current)
+    sign_in @user
+    get edit_expense_path(cc_installment)
+    assert_redirected_to expenses_path
+    assert_equal I18n.t("controllers.expenses.edit_locked"), flash[:alert]
+  end
+
+  test "GET edit allows CC installment number 1 (original purchase)" do
+    group_id = SecureRandom.uuid
+    cc_installment_1 = create(:expense, user: @user, category: @category,
+                              payment_method: "credit_card", total_installments: 3,
+                              installment_number: 1, installment_group_id: group_id,
+                              date: Date.current)
+    sign_in @user
+    get edit_expense_path(cc_installment_1)
+    assert_response :success
+  end
+
+  test "DELETE destroy CC installment 1 deletes all group installments without delete_following param" do
+    group_id = SecureRandom.uuid
+    create(:expense, user: @user, category: @category, payment_method: "credit_card",
+           total_installments: 3, installment_number: 1, installment_group_id: group_id, date: Date.current)
+    create(:expense, user: @user, category: @category, payment_method: "credit_card",
+           total_installments: 3, installment_number: 2, installment_group_id: group_id, date: 1.month.from_now)
+    create(:expense, user: @user, category: @category, payment_method: "credit_card",
+           total_installments: 3, installment_number: 3, installment_group_id: group_id, date: 2.months.from_now)
+    first_installment = @user.expenses.find_by(installment_group_id: group_id, installment_number: 1)
+
+    sign_in @user
+    assert_difference "Expense.count", -3 do
+      delete expense_path(first_installment)
+    end
+    assert_redirected_to expenses_path
+  end
+
+  test "POST create CC installments are created with nil payment_status" do
+    sign_in @user
+    post expenses_path, params: {
+      expense: {
+        description: "Phone", amount: 300, date: Date.current,
+        expense_type: "variable", category_id: @category.id,
+        payment_method: "credit_card", total_installments: 3,
+        installment_number: 1
+      }
+    }
+    installments = @user.expenses.where(total_installments: 3).order(:installment_number)
+    assert_equal 3, installments.count
+    installments.each { |e| assert_nil e.payment_status }
+  end
+
+  test "GET index regular variable expenses do not appear in installment sub-section" do
+    regular = create(:expense, user: @user, category: @category, description: "Coffee Shop",
+                     expense_type: "variable", date: Date.current)
+
+    sign_in @user
+    get expenses_path
+
+    assert_response :success
+    # regular expense must NOT have installment section data attribute
+    assert_select "#expense_#{regular.id}[data-section='installment']", count: 0
+    assert_select "#expense_#{regular.id}[data-section='variable']"
+  end
+
+  test "GET index installment expenses section is a separate top-level section from variable other" do
+    group_id = SecureRandom.uuid
+    create(:expense, user: @user, category: @category, description: "Laptop 1/3",
+           expense_type: "variable", date: Date.current,
+           installment_group_id: group_id, installment_number: 1, total_installments: 3)
+    create(:expense, user: @user, category: @category, description: "Coffee",
+           expense_type: "variable", date: Date.current)
+
+    sign_in @user
+    get expenses_path
+
+    # Both sections exist independently
+    assert_select "#installment_expenses_list"
+    assert_select "#variable_expenses_list"
+    # installment section header uses installment_expenses key
+    assert_match I18n.t("expenses.index.installment_expenses"), response.body
+    # variable other section header uses variable_other key
+    assert_match I18n.t("expenses.index.variable_other"), response.body
+    # fixed section still present
+    assert_match I18n.t("expenses.index.fixed_expenses"), response.body
+  end
+
+  test "GET index variable regular expenses are ordered most recent first" do
+    older = create(:expense, user: @user, category: @category, description: "Older Expense",
+                   expense_type: "variable", date: Date.current - 5.days)
+    newer = create(:expense, user: @user, category: @category, description: "Newer Expense",
+                   expense_type: "variable", date: Date.current)
+
+    sign_in @user
+    get expenses_path
+
+    newer_pos = response.body.index("Newer Expense")
+    older_pos = response.body.index("Older Expense")
+    assert newer_pos < older_pos, "Newer expense should appear before older expense"
+  end
+
+  test "GET index variable installment expenses are ordered most recent first" do
+    group1 = SecureRandom.uuid
+    group2 = SecureRandom.uuid
+    older_inst = create(:expense, user: @user, category: @category, description: "Old TV 1/3",
+                        expense_type: "variable", date: Date.current - 5.days,
+                        installment_group_id: group1, installment_number: 1, total_installments: 3)
+    newer_inst = create(:expense, user: @user, category: @category, description: "New Phone 1/3",
+                        expense_type: "variable", date: Date.current,
+                        installment_group_id: group2, installment_number: 1, total_installments: 3)
+
+    sign_in @user
+    get expenses_path
+
+    newer_pos = response.body.index("New Phone 1/3")
+    older_pos = response.body.index("Old TV 1/3")
+    assert newer_pos < older_pos, "Newer installment should appear before older installment"
   end
 end

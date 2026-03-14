@@ -27,7 +27,7 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "dashboard loads with multiple expense categories" do
-    other_category = create(:category, user: @user, name: "Transport", color: "#F7B731", icon: "car")
+    other_category = create(:category, user: @user, name: "CustomDashCat", color: "#F7B731", icon: "car")
     create(:expense, user: @user, category: @category, amount: 500, date: Date.current)
     create(:expense, user: @user, category: other_category, amount: 300, date: Date.current)
 
@@ -51,7 +51,7 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "dashboard loads with category spending data for last 6 months" do
-    other_category = create(:category, user: @user, name: "Transport", color: "#F7B731", icon: "car")
+    other_category = create(:category, user: @user, name: "CustomDashCat", color: "#F7B731", icon: "car")
     create(:expense, user: @user, category: @category, amount: 500, date: 1.month.ago)
     create(:expense, user: @user, category: other_category, amount: 300, date: 2.months.ago)
 

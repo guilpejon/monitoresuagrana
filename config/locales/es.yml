@@ -4,6 +4,14 @@ es:
     description: "Controla tus ingresos, gastos e inversiones en un solo lugar."
 
   activerecord:
+    errors:
+      models:
+        expense:
+          attributes:
+            date:
+              variable_future: "no puede ser una fecha futura para gastos variables"
+            total_installments:
+              fixed_not_allowed: "no están permitidas para gastos fijos"
     attributes:
       expense:
         description: "Descripción"
@@ -17,6 +25,7 @@ es:
         total_installments: "Cuotas"
         installment_number: "Número de cuota"
         payment_status: "Estado del pago"
+        bank_account_id: "Cuenta bancaria"
       income:
         description: "Descripción"
         amount: "Importe"
@@ -38,8 +47,6 @@ es:
       category:
         name: "Nombre"
         color: "Color"
-      payee:
-        name: "Nombre"
       possession:
         name: "Nombre"
         possession_type: "Tipo"
@@ -97,7 +104,6 @@ es:
       possessions: "Patrimonio"
       forecast: "Proyección"
       categories: "Categorías"
-      payees: "Beneficiarios"
       settings: "Configuración"
       sign_out: "Cerrar sesión"
       section_overview: "Resumen"
@@ -130,7 +136,6 @@ es:
     cash_flow: "Flujo de Caja — Últimos 6 Meses"
     income_label: "Ingresos"
     expenses_label: "Gastos"
-    spending_by_payee: "Gastos por Beneficiario"
     recent_transactions: "Transacciones Recientes"
     view_all: "Ver todas"
     no_expenses_month: "Sin gastos registrados este mes"
@@ -138,7 +143,6 @@ es:
     no_data_12_months: "Sin datos de los últimos 12 meses"
     spending_by_category_6m: "Gastos por Categoría — Últimos 6 Meses"
     spending_by_category_12m: "Gastos por Categoría — Últimos 12 Meses"
-    no_payees_month: "Ningún beneficiario asignado a gastos este mes"
     no_recent_transactions: "Sin transacciones recientes"
     card_count:
       one: "1 tarjeta"
@@ -169,6 +173,8 @@ es:
       variable_expenses: "Variables"
       no_fixed_expenses: "Sin gastos fijos este mes"
       no_variable_expenses: "Sin gastos variables este mes"
+      installment_expenses: "Variables - Cuotas"
+      variable_other: "Variables - Otros"
       search_placeholder: "Buscar gastos..."
       no_results: "Ningún gasto coincide con tu búsqueda"
       add_expense_short: "Agregar"
@@ -186,8 +192,6 @@ es:
       credit_card: "Tarjeta"
       debito_automatico: "Déb. Auto."
       category: "Categoría"
-      payee: "Beneficiario"
-      payee_placeholder: "Buscar o crear beneficiario..."
       description: "Descripción"
       description_placeholder: "¿En qué gastaste?"
       date: "Fecha"
@@ -195,6 +199,8 @@ es:
       variable: "Variable"
       fixed: "Fijo"
       select_card: "— Seleccionar Tarjeta —"
+      bank_account: "Cuenta Bancaria"
+      no_bank_account: "Sin cuenta"
       installments: "Cuotas"
       per_installment: "Por cuota:"
       installment_label: "Cuota"
@@ -224,6 +230,10 @@ es:
         question: "¿Deseas eliminar solo esta cuota o esta y todas las restantes?"
         confirm: "Eliminar solo esta"
         this_and_following: "Eliminar esta y las restantes"
+      cc_installment_delete:
+        title: "Eliminar cuotas de tarjeta"
+        question: "Esto eliminará todas las cuotas de este grupo. Esta acción no se puede deshacer."
+        confirm: "Eliminar todas las cuotas"
     payment_statuses:
       pending: "No programado"
       scheduled: "Programado"
@@ -411,6 +421,37 @@ es:
       delete_confirm: "¿Eliminar esta categoría? Los gastos perderán su categoría."
       delete_modal_title: "Eliminar categoría"
       no_categories: "Aún no hay categorías"
+      set_default: "Establecer por defecto"
+      unset_default: "Quitar por defecto"
+      default_badge: "Por defecto"
+    show:
+      title: "Resumen de gastos"
+      total_spent: "Total en el Período"
+      transactions: "Transacciones"
+      avg_per_month: "Promedio / Mes"
+      avg_per_week: "Promedio / Semana"
+      proj_per_month: "Proyección / Mes"
+      proj_per_week: "Proyección / Semana"
+      spending_in: "Gastos — %{period}"
+      expense_list: "Gastos"
+      no_expenses: "Sin gastos en este período"
+      back: "Volver"
+      timeframe_current_month: "Este mes"
+      timeframe_last_month: "Último mes"
+      timeframe_3m: "Últimos 3 meses"
+      timeframe_6m: "Últimos 6 meses"
+      timeframe_1y: "Último año"
+      timeframe_all: "Todo el período"
+      timeframe_custom: "Período personalizado"
+      custom_from: "Desde"
+      custom_to: "Hasta"
+      custom_apply: "Aplicar"
+      popup_title: "Seleccionar Período"
+      quick_presets: "Períodos rápidos"
+      custom_range: "Rango personalizado"
+      chart_group_day: "por día"
+      chart_group_week: "por semana"
+      chart_group_month: "por mes"
     new:
       title: "Nueva Categoría"
     edit:
@@ -420,26 +461,9 @@ es:
       name_placeholder: "ej. Suscripciones"
       color: "Color *"
       icon: "Ícono"
+      set_as_default: "Establecer como categoría por defecto"
       add: "Crear Categoría"
       update: "Actualizar Categoría"
-      cancel: "Cancelar"
-
-  payees:
-    index:
-      title: "Beneficiarios"
-      new: "Nuevo Beneficiario"
-      delete_confirm: "¿Eliminar este beneficiario?"
-      delete_modal_title: "Eliminar beneficiario"
-      no_payees: "Aún no hay beneficiarios"
-    new:
-      title: "Nuevo Beneficiario"
-    edit:
-      title: "Editar Beneficiario"
-    form:
-      name: "Nombre *"
-      name_placeholder: "ej. Amazon, Netflix, Propietario"
-      add: "Crear Beneficiario"
-      update: "Actualizar Beneficiario"
       cancel: "Cancelar"
 
   possessions:
@@ -523,6 +547,11 @@ es:
       actual_by_category: "Gastos Reales por Categoría"
       all_expenses: "Todos los Gastos"
       no_expenses_month: "Sin gastos registrados este mes"
+      monthly_spending_trend: "Progreso de Gastos del Mes"
+      actual_spending: "Realizado"
+      projected_spending: "Proyectado"
+      income_line: "Ingresos"
+      day_of_month: "Día"
 
   settings:
     edit:
@@ -637,8 +666,8 @@ es:
       possessions_desc: "Registra y sigue el valor de bienes como inmuebles, vehículos y electrónica."
       forecast_title: "Proyección"
       forecast_desc: "Ve proyecciones futuras basadas en gastos recurrentes y en cuotas."
-      categories_title: "Categorías & Beneficiarios"
-      categories_desc: "Organiza tus gastos con categorías y beneficiarios personalizados."
+      categories_title: "Categorías"
+      categories_desc: "Organiza tus gastos con categorías personalizadas."
       trust_free: "Gratis para siempre"
       trust_no_card: "Sin tarjeta de crédito"
       trust_private: "Tus datos son tuyos"
@@ -658,6 +687,28 @@ es:
       cta_benefit1: "Visión financiera completa"
       cta_benefit2: "Actualización automática de precios"
       cta_benefit3: "Gratis, para siempre"
+      stat1_label: "Categorías de gastos"
+      stat2_label: "Módulos financieros"
+      stat3_label: "Idiomas soportados"
+      stat4_label: "Transacciones a registrar"
+      spotlight1_badge: "Panel Inteligente"
+      spotlight1_title: "Tu panorama financiero completo en una vista"
+      spotlight1_desc: "Ve ingresos, gastos, inversiones y patrimonio de un vistazo. Los gráficos revelan patrones para que tomes decisiones más inteligentes cada mes."
+      spotlight1_point1: "Comparativa de ingresos vs gastos"
+      spotlight1_point2: "Desglose de gastos por categoría"
+      spotlight1_point3: "Gráficos de flujo de caja mensual"
+      spotlight2_badge: "Control de Gastos"
+      spotlight2_title: "Registra cada compra, mantén el control"
+      spotlight2_desc: "Desde el café diario hasta las suscripciones anuales — captura todo con categorías, métodos de pago y cuotas. Los gastos recurrentes se agregan solos."
+      spotlight2_point1: "Tipos de gasto: fijo y variable"
+      spotlight2_point2: "División en cuotas con tarjeta de crédito"
+      spotlight2_point3: "Transacciones recurrentes automáticas"
+      spotlight3_badge: "Proyección Financiera"
+      spotlight3_title: "Sabe lo que viene antes de que llegue"
+      spotlight3_desc: "Nuestro motor de proyección usa tus gastos recurrentes y cuotas para proyectar tu saldo meses adelante. Planifica con confianza, sin sorpresas."
+      spotlight3_point1: "Proyecciones de saldo a varios meses"
+      spotlight3_point2: "Vista previa de cuotas y recurrencias"
+      spotlight3_point3: "Línea de tiempo de gastos futuros"
 
   # Flash messages
   controllers:
@@ -696,10 +747,8 @@ es:
       created: "Categoría creada."
       updated: "Categoría actualizada."
       destroyed: "Categoría eliminada."
-    payees:
-      created: "Beneficiario creado."
-      updated: "Beneficiario actualizado."
-      destroyed: "Beneficiario eliminado."
+      default_set: "Categoría por defecto establecida."
+      default_cleared: "Categoría por defecto eliminada."
     possessions:
       created: "Bien agregado."
       updated: "Bien actualizado."

@@ -49,4 +49,53 @@ class ForecastControllerTest < ActionDispatch::IntegrationTest
     get forecast_path, params: { month: past.strftime("%Y-%m") }
     assert_response :success
   end
+
+  test "current month renders monthly spending progress chart" do
+    create(:expense, user: @user, category: @category, date: Date.current, amount: 150)
+    create(:expense, user: @user, category: @category, recurring: true, amount: 500)
+
+    sign_in @user
+    get forecast_path
+    assert_response :success
+    assert_match I18n.t("forecast.index.monthly_spending_trend"), response.body
+  end
+
+  test "current month chart includes actual and projected series labels" do
+    create(:expense, user: @user, category: @category, date: Date.current, amount: 200)
+
+    sign_in @user
+    get forecast_path
+    assert_match I18n.t("forecast.index.actual_spending"), response.body
+    assert_match I18n.t("forecast.index.income_line"), response.body
+  end
+
+  test "past month renders monthly spending progress chart with actual data" do
+    past = 1.month.ago.beginning_of_month
+    create(:expense, user: @user, category: @category, date: past, amount: 300)
+    create(:income, user: @user, date: past, amount: 2000)
+
+    sign_in @user
+    get forecast_path, params: { month: past.strftime("%Y-%m") }
+    assert_match I18n.t("forecast.index.monthly_spending_trend"), response.body
+    assert_match I18n.t("forecast.index.actual_spending"), response.body
+    assert_match I18n.t("forecast.index.income_line"), response.body
+  end
+
+  test "future month renders monthly spending progress chart with projected data" do
+    create(:expense, user: @user, category: @category, recurring: true, amount: 500)
+
+    sign_in @user
+    get forecast_path, params: { month: 1.month.from_now.strftime("%Y-%m") }
+    assert_match I18n.t("forecast.index.monthly_spending_trend"), response.body
+    assert_match I18n.t("forecast.index.projected_spending"), response.body
+    assert_match I18n.t("forecast.index.income_line"), response.body
+  end
+
+  test "future month with no scheduled expenses omits spending line" do
+    sign_in @user
+    get forecast_path, params: { month: 1.month.from_now.strftime("%Y-%m") }
+    assert_match I18n.t("forecast.index.monthly_spending_trend"), response.body
+    assert_no_match /"name":"#{I18n.t("forecast.index.projected_spending")}"/, response.body
+    assert_match I18n.t("forecast.index.income_line"), response.body
+  end
 end

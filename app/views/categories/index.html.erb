@@ -10,32 +10,41 @@
 
   <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
     <% if @categories.any? %>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 divide-y sm:divide-y-0 gap-0" style="border-color: #2A2F45;">
-        <% @categories.each do |cat| %>
-          <div class="flex items-center justify-between gap-3 px-4 py-3 border-b hover:bg-white/[0.02] transition-colors" style="border-color: #2A2F45;">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: <%= cat.color %>22;">
-                <%= svg_icon cat.icon, css_class: "w-4 h-4", stroke: cat.color %>
-              </div>
-              <div>
+      <% @categories.each_with_index do |cat, i| %>
+        <% is_default = current_user.default_category_id == cat.id %>
+        <div class="flex items-center justify-between gap-3 px-4 py-3 hover:bg-white/[0.02] transition-colors <%= i < @categories.size - 1 ? 'border-b' : '' %>" style="border-color: #2A2F45; <%= is_default ? 'background-color: rgba(108,99,255,0.04);' : '' %>">
+          <%= link_to category_path(cat), class: "flex items-center gap-3 min-w-0 flex-1 min-h-0" do %>
+            <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: <%= cat.color %>22;">
+              <%= svg_icon cat.icon, css_class: "w-4 h-4", stroke: cat.color %>
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
                 <p class="text-sm font-medium" style="color: #E2E8F0;"><%= category_display_name(cat) %></p>
-                <p class="text-xs font-mono" style="color: #8892A4;"><%= cat.color %></p>
+                <% if is_default %>
+                  <span class="text-xs font-semibold px-1.5 py-0.5 rounded-full flex-shrink-0" style="background-color: #6C63FF22; color: #6C63FF; border: 1px solid #6C63FF44;"><%= t("categories.index.default_badge") %></span>
+                <% end %>
               </div>
             </div>
-            <div class="flex items-center gap-1">
-              <%= link_to edit_category_path(cat), class: "p-1.5 rounded-lg hover:bg-white/5 transition-colors", style: "color: #8892A4;" do %>
-                <%= svg_icon "edit", css_class: "w-3.5 h-3.5" %>
-              <% end %>
-              <%= render "shared/delete_modal_button",
-                  path: category_path(cat),
-                  title: t("categories.index.delete_modal_title"),
-                  question: t("categories.index.delete_confirm"),
-                  confirm_label: t("shared.delete_modal.confirm"),
-                  cancel_label: t("shared.delete_modal.cancel") %>
-            </div>
+          <% end %>
+          <div class="flex items-center gap-1.5 flex-shrink-0">
+            <%= button_to set_default_category_path(cat), method: :patch,
+                class: "flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium transition-colors hover:bg-white/5",
+                style: "border: 1px solid #{is_default ? '#6C63FF' : '#2A2F45'}; color: #{is_default ? '#6C63FF' : '#8892A4'}; background: none; cursor: pointer;" do %>
+              <%= svg_icon "star", css_class: "w-3 h-3" %>
+              <span class="hidden sm:inline"><%= is_default ? t("categories.index.unset_default") : t("categories.index.set_default") %></span>
+            <% end %>
+            <%= link_to edit_category_path(cat), class: "p-1.5 rounded-lg hover:bg-white/5 transition-colors", style: "color: #8892A4;" do %>
+              <%= svg_icon "edit", css_class: "w-3.5 h-3.5" %>
+            <% end %>
+            <%= render "shared/delete_modal_button",
+                path: category_path(cat),
+                title: t("categories.index.delete_modal_title"),
+                question: t("categories.index.delete_confirm"),
+                confirm_label: t("shared.delete_modal.confirm"),
+                cancel_label: t("shared.delete_modal.cancel") %>
           </div>
-        <% end %>
-      </div>
+        </div>
+      <% end %>
     <% else %>
       <div class="flex flex-col items-center justify-center py-16 gap-3">
         <%= svg_icon "tag", css_class: "w-12 h-12 opacity-20", stroke: "#8892A4" %>

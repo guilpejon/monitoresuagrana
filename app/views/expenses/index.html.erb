@@ -1,11 +1,11 @@
 <% provide :title, t('.title') %>
-<div class="space-y-4" data-controller="expense-filter">
+<div class="space-y-4" data-controller="expense-filter" data-currency="<%= current_user.currency || 'BRL' %>">
   <%# Header %>
   <div class="flex items-center justify-between">
     <div>
       <h1 class="text-xl font-bold" style="color: #E2E8F0;"><%= t("expenses.index.title") %></h1>
       <p class="text-sm mt-0.5" style="color: #8892A4;">
-        <%= t("expenses.index.total") %> <span class="font-semibold" style="color: #FF6B6B;" id="expenses-total-amount"><%= format_currency(@total) %></span>
+        <%= t("expenses.index.total") %> <span class="font-semibold" style="color: #FF6B6B;" id="expenses-total-amount" data-expense-filter-target="grandTotal"><%= format_currency(@total) %></span>
       </p>
     </div>
     <%= link_to new_expense_path, class: "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors hover:opacity-90", style: "background-color: #6C63FF; color: white;" do %>
@@ -40,7 +40,7 @@
   <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
     <div class="px-4 py-3 border-b flex items-center justify-between" style="border-color: #2A2F45;">
       <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.fixed_expenses") %></h2>
-      <span class="text-sm font-semibold" style="color: #FF6B6B;"><%= format_currency(@fixed_total) %></span>
+      <span class="text-sm font-semibold" style="color: #FF6B6B;" data-expense-filter-target="fixedTotal"><%= format_currency(@fixed_total) %></span>
     </div>
     <% if @fixed_expenses.any? %>
       <div id="fixed_expenses_list" class="divide-y" style="border-color: #2A2F45;">
@@ -60,15 +60,33 @@
     <% end %>
   </div>
 
-  <%# Variable expenses %>
+  <%# Installment expenses %>
+  <% if @variable_installment_expenses.any? %>
+    <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
+      <div class="px-4 py-3 border-b flex items-center justify-between" style="border-color: #2A2F45;">
+        <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.installment_expenses") %></h2>
+        <span class="text-sm font-semibold" style="color: #FF6B6B;" data-expense-filter-target="installmentTotal"><%= format_currency(@variable_installment_total) %></span>
+      </div>
+      <div id="installment_expenses_list" class="divide-y" style="border-color: #2A2F45;">
+        <% @variable_installment_expenses.each do |expense| %>
+          <%= render "expense", expense: expense %>
+        <% end %>
+        <div data-expense-filter-target="installmentEmpty" hidden class="flex flex-col items-center justify-center py-10 gap-2">
+          <p class="text-sm" style="color: #8892A4;"><%= t("expenses.index.no_results") %></p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Variable other expenses %>
   <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
     <div class="px-4 py-3 border-b flex items-center justify-between" style="border-color: #2A2F45;">
-      <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.variable_expenses") %></h2>
-      <span class="text-sm font-semibold" style="color: #FF6B6B;"><%= format_currency(@variable_total) %></span>
+      <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.variable_other") %></h2>
+      <span class="text-sm font-semibold" style="color: #FF6B6B;" data-expense-filter-target="regularTotal"><%= format_currency(@variable_regular_total) %></span>
     </div>
-    <% if @variable_expenses.any? %>
+    <% if @variable_regular_expenses.any? %>
       <div id="variable_expenses_list" class="divide-y" style="border-color: #2A2F45;">
-        <% @variable_expenses.each do |expense| %>
+        <% @variable_regular_expenses.each do |expense| %>
           <%= render "expense", expense: expense %>
         <% end %>
         <div data-expense-filter-target="variableEmpty" hidden class="flex flex-col items-center justify-center py-10 gap-2">

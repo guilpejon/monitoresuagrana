@@ -36,7 +36,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/themes/dark.css">
+    <%= stylesheet_link_tag "flatpickr-dark" %>
     <script src="<%= asset_path('chart.umd.js') %>"></script>
     <%= javascript_importmap_tags %>
     <script>if(localStorage.getItem('values-hidden')==='true'){document.documentElement.classList.add('values-hidden')}</script>

@@ -36,10 +36,10 @@ class User < ApplicationRecord
   has_many :categories, dependent: :destroy
   has_many :credit_cards, dependent: :destroy
   belongs_to :default_credit_card, class_name: "CreditCard", optional: true
+  belongs_to :default_category, class_name: "Category", optional: true
   has_many :investments, dependent: :destroy
   has_many :bank_accounts, dependent: :destroy
-  has_many :payees, dependent: :destroy
-  has_many :possessions, dependent: :destroy
+has_many :possessions, dependent: :destroy
 
   after_create :create_default_categories
 

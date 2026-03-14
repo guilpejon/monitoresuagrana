@@ -7,7 +7,7 @@
 
   <div>
     <label class="block text-xs font-medium mb-1.5" style="color: #8892A4;"><%= t("categories.form.name") %></label>
-    <%= f.text_field :name, class: "w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-all", style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;", placeholder: t("categories.form.name_placeholder"), autofocus: true %>
+    <%= f.text_field :name, class: "w-full px-3 py-2.5 rounded-lg border text-sm outline-none transition-all", style: "background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;", placeholder: t("categories.form.name_placeholder"), autofocus: true, maxlength: 20 %>
   </div>
 
   <div>
@@ -39,6 +39,12 @@
     <% if category.errors[:icon].any? %>
       <p class="mt-1.5 text-xs" style="color: #FF6B6B;"><%= category.errors[:icon].first %></p>
     <% end %>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <%= check_box_tag :set_as_default, "1", current_user.default_category_id == category.id,
+        class: "w-4 h-4 rounded", style: "accent-color: #6C63FF;" %>
+    <label class="text-sm" style="color: #8892A4;"><%= t("categories.form.set_as_default") %></label>
   </div>
 
   <div class="flex gap-3 pt-2">

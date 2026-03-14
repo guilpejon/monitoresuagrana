@@ -14,8 +14,7 @@ Rails.application.configure do
     # for Tailwind inline styles used throughout views.
     policy.script_src  :self, :unsafe_inline
     policy.style_src   :self, :unsafe_inline,
-                       "https://fonts.googleapis.com",
-                       "https://cdn.jsdelivr.net"
+                       "https://fonts.googleapis.com"
     policy.connect_src :self
     # Prevent this app from being embedded in iframes (clickjacking protection)
     policy.frame_ancestors :none

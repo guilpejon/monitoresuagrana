@@ -1,4 +1,17 @@
 en:
+  activerecord:
+    errors:
+      models:
+        expense:
+          attributes:
+            date:
+              variable_future: "cannot be in the future for variable expenses"
+            total_installments:
+              fixed_not_allowed: "are not allowed for fixed expenses"
+    attributes:
+      expense:
+        bank_account_id: "Bank account"
+
   app:
     name: "Monitore sua Grana"
     description: "Track your income, expenses, and investments all in one place."
@@ -56,7 +69,6 @@ en:
       possessions: "Possessions"
       forecast: "Forecast"
       categories: "Categories"
-      payees: "Payees"
       settings: "Settings"
       sign_out: "Sign out"
       section_overview: "Overview"
@@ -89,7 +101,6 @@ en:
     cash_flow: "Cash Flow — Last 6 Months"
     income_label: "Income"
     expenses_label: "Expenses"
-    spending_by_payee: "Spending by Payee"
     recent_transactions: "Recent Transactions"
     view_all: "View all"
     no_expenses_month: "No expenses recorded this month"
@@ -97,7 +108,6 @@ en:
     no_data_12_months: "No data for the last 12 months"
     spending_by_category_6m: "Spending by Category — Last 6 Months"
     spending_by_category_12m: "Spending by Category — Last 12 Months"
-    no_payees_month: "No payees assigned to expenses this month"
     no_recent_transactions: "No recent transactions"
     card_count:
       one: "1 card"
@@ -128,6 +138,8 @@ en:
       variable_expenses: "Variable"
       no_fixed_expenses: "No fixed expenses this month"
       no_variable_expenses: "No variable expenses this month"
+      installment_expenses: "Variable - Installments"
+      variable_other: "Variable - Other"
       search_placeholder: "Search expenses..."
       no_results: "No expenses match your search"
       add_expense_short: "Add"
@@ -145,8 +157,6 @@ en:
       credit_card: "Card"
       debito_automatico: "Auto Debit"
       category: "Category"
-      payee: "Payee"
-      payee_placeholder: "Search or create payee..."
       description: "Description"
       description_placeholder: "What did you spend on?"
       date: "Date"
@@ -154,6 +164,8 @@ en:
       variable: "Variable"
       fixed: "Fixed"
       select_card: "— Select Card —"
+      bank_account: "Bank Account"
+      no_bank_account: "No account"
       installments: "Installments"
       per_installment: "Per installment:"
       installment_label: "Installment"
@@ -183,6 +195,10 @@ en:
         question: "Do you want to delete only this installment or this and all remaining ones?"
         confirm: "Delete only this"
         this_and_following: "Delete this and remaining"
+      cc_installment_delete:
+        title: "Delete credit card installments"
+        question: "This will delete all installments in this group. This action cannot be undone."
+        confirm: "Delete all installments"
     payment_statuses:
       pending: "Not Scheduled"
       scheduled: "Scheduled"
@@ -370,6 +386,37 @@ en:
       delete_confirm: "Delete this category? Expenses will lose their category."
       delete_modal_title: "Delete category"
       no_categories: "No categories yet"
+      set_default: "Set as default"
+      unset_default: "Remove default"
+      default_badge: "Default"
+    show:
+      title: "Spending overview"
+      total_spent: "Total in Period"
+      transactions: "Transactions"
+      avg_per_month: "Avg / Month"
+      avg_per_week: "Avg / Week"
+      proj_per_month: "Projection / Month"
+      proj_per_week: "Projection / Week"
+      spending_in: "Spending — %{period}"
+      expense_list: "Expenses"
+      no_expenses: "No expenses in this period"
+      back: "Back"
+      timeframe_current_month: "This month"
+      timeframe_last_month: "Last month"
+      timeframe_3m: "Last 3 months"
+      timeframe_6m: "Last 6 months"
+      timeframe_1y: "Last year"
+      timeframe_all: "All time"
+      timeframe_custom: "Custom period"
+      custom_from: "From"
+      custom_to: "To"
+      custom_apply: "Apply"
+      popup_title: "Select Period"
+      quick_presets: "Quick presets"
+      custom_range: "Custom range"
+      chart_group_day: "by day"
+      chart_group_week: "by week"
+      chart_group_month: "by month"
     new:
       title: "New Category"
     edit:
@@ -379,26 +426,9 @@ en:
       name_placeholder: "e.g. Subscriptions"
       color: "Color *"
       icon: "Icon"
+      set_as_default: "Set as default category"
       add: "Create Category"
       update: "Update Category"
-      cancel: "Cancel"
-
-  payees:
-    index:
-      title: "Payees"
-      new: "New Payee"
-      delete_confirm: "Delete this payee?"
-      delete_modal_title: "Delete payee"
-      no_payees: "No payees yet"
-    new:
-      title: "New Payee"
-    edit:
-      title: "Edit Payee"
-    form:
-      name: "Name *"
-      name_placeholder: "e.g. Amazon, Netflix, Landlord"
-      add: "Create Payee"
-      update: "Update Payee"
       cancel: "Cancel"
 
   possessions:
@@ -482,6 +512,11 @@ en:
       actual_by_category: "Actual Spending by Category"
       all_expenses: "All Expenses"
       no_expenses_month: "No expenses recorded this month"
+      monthly_spending_trend: "Monthly Spending Progress"
+      actual_spending: "Actual"
+      projected_spending: "Projected"
+      income_line: "Income"
+      day_of_month: "Day"
 
   settings:
     edit:
@@ -596,8 +631,8 @@ en:
       possessions_desc: "Register and track the value of assets like real estate, vehicles, and electronics."
       forecast_title: "Forecast"
       forecast_desc: "See future projections based on recurring and installment expenses."
-      categories_title: "Categories & Payees"
-      categories_desc: "Organize your spending with custom categories and payees."
+      categories_title: "Categories"
+      categories_desc: "Organize your spending with custom categories."
       trust_free: "Free forever"
       trust_no_card: "No credit card required"
       trust_private: "Your data stays yours"
@@ -617,6 +652,28 @@ en:
       cta_benefit1: "Full financial overview"
       cta_benefit2: "Automatic price updates"
       cta_benefit3: "Free, forever"
+      stat1_label: "Expense categories"
+      stat2_label: "Financial modules"
+      stat3_label: "Supported languages"
+      stat4_label: "Transactions to track"
+      spotlight1_badge: "Smart Dashboard"
+      spotlight1_title: "Your complete financial picture in one view"
+      spotlight1_desc: "See income, expenses, investments, and net worth at a glance. Charts and summaries reveal patterns so you can make smarter decisions every month."
+      spotlight1_point1: "Income vs expense comparison"
+      spotlight1_point2: "Spending by category breakdown"
+      spotlight1_point3: "Monthly cash flow charts"
+      spotlight2_badge: "Expense Tracking"
+      spotlight2_title: "Log every purchase, stay in control"
+      spotlight2_desc: "From daily coffee to annual subscriptions — capture it all with categories, payment methods, and installment support. Recurring expenses enter themselves."
+      spotlight2_point1: "Fixed and variable expense types"
+      spotlight2_point2: "Credit card installment splitting"
+      spotlight2_point3: "Auto-recurring transactions"
+      spotlight3_badge: "Financial Forecast"
+      spotlight3_title: "Know what's coming before it arrives"
+      spotlight3_desc: "Our forecast engine uses your recurring expenses and installment schedules to project your balance months ahead. Plan with confidence, not guesswork."
+      spotlight3_point1: "Multi-month balance projections"
+      spotlight3_point2: "Installment and recurring previews"
+      spotlight3_point3: "Future spending timeline"
 
   # Flash messages
   controllers:
@@ -655,10 +712,8 @@ en:
       created: "Category created."
       updated: "Category updated."
       destroyed: "Category deleted."
-    payees:
-      created: "Payee created."
-      updated: "Payee updated."
-      destroyed: "Payee deleted."
+      default_set: "Default category set."
+      default_cleared: "Default category removed."
     possessions:
       created: "Possession added."
       updated: "Possession updated."

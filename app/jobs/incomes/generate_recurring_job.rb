@@ -6,16 +6,18 @@ module Incomes
       templates = template_id ? Income.where(id: template_id, recurring: true, recurring_source_id: nil) : Income.where(recurring: true, recurring_source_id: nil)
 
       templates.each do |template|
+        reference = Income.where(recurring_source_id: template.id).order(date: :desc).first || template
+
         12.times do |i|
-          target = template.date >> i
+          target = Date.today >> i
           next if already_generated?(template, target)
 
-          day = [ template.date.day, target.end_of_month.day ].min
+          day = [ reference.date.day, target.end_of_month.day ].min
           template.user.incomes.create!(
-            description: template.description,
-            amount: template.amount,
+            description: reference.description,
+            amount: reference.amount,
             date: Date.new(target.year, target.month, day),
-            income_type: template.income_type,
+            income_type: reference.income_type,
             recurring: true,
             recurring_source_id: template.id
           )

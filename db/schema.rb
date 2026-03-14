@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_09_235533) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_13_235000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -35,8 +35,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_235533) do
     t.datetime "created_at", null: false
     t.string "icon"
     t.string "name", null: false
+    t.string "slug"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.index ["user_id", "slug"], name: "index_categories_on_user_id_and_slug", unique: true
     t.index ["user_id"], name: "index_categories_on_user_id"
   end
 
@@ -56,6 +58,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_235533) do
 
   create_table "expenses", force: :cascade do |t|
     t.decimal "amount", precision: 10, scale: 2, null: false
+    t.bigint "bank_account_id"
     t.bigint "category_id", null: false
     t.datetime "created_at", null: false
     t.bigint "credit_card_id"
@@ -64,7 +67,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_235533) do
     t.string "expense_type", default: "variable", null: false
     t.string "installment_group_id"
     t.integer "installment_number", default: 1, null: false
-    t.bigint "payee_id"
     t.string "payment_method", default: "credit_card", null: false
     t.string "payment_status"
     t.integer "recurrence_day"
@@ -73,9 +75,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_235533) do
     t.integer "total_installments", default: 1, null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.index ["bank_account_id"], name: "index_expenses_on_bank_account_id"
     t.index ["category_id"], name: "index_expenses_on_category_id"
     t.index ["credit_card_id"], name: "index_expenses_on_credit_card_id"
-    t.index ["payee_id"], name: "index_expenses_on_payee_id"
     t.index ["recurring_source_id"], name: "index_expenses_on_recurring_source_id"
     t.index ["user_id"], name: "index_expenses_on_user_id"
   end
@@ -110,14 +112,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_235533) do
     t.index ["user_id"], name: "index_investments_on_user_id"
   end
 
-  create_table "payees", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.string "name", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
-    t.index ["user_id"], name: "index_payees_on_user_id"
-  end
-
   create_table "possessions", force: :cascade do |t|
     t.string "color", default: "#6C63FF"
     t.datetime "created_at", null: false
@@ -136,6 +130,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_235533) do
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "currency"
+    t.integer "default_category_id"
     t.integer "default_credit_card_id"
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -151,6 +146,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_235533) do
     t.string "uid"
     t.string "unlock_token"
     t.datetime "updated_at", null: false
+    t.index ["default_category_id"], name: "index_users_on_default_category_id"
     t.index ["default_credit_card_id"], name: "index_users_on_default_credit_card_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
@@ -161,13 +157,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_235533) do
   add_foreign_key "bank_accounts", "users"
   add_foreign_key "categories", "users"
   add_foreign_key "credit_cards", "users"
+  add_foreign_key "expenses", "bank_accounts"
   add_foreign_key "expenses", "categories"
   add_foreign_key "expenses", "credit_cards"
-  add_foreign_key "expenses", "payees"
   add_foreign_key "expenses", "users"
   add_foreign_key "incomes", "users"
   add_foreign_key "investments", "users"
-  add_foreign_key "payees", "users"
   add_foreign_key "possessions", "users"
+  add_foreign_key "users", "categories", column: "default_category_id"
   add_foreign_key "users", "credit_cards", column: "default_credit_card_id"
 end

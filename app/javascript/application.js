@@ -57,6 +57,28 @@ ChartJS.register({
   }
 })
 
+// Add gradient fills under lines for charts inside a [data-gradient-lines] element
+ChartJS.register({
+  id: 'lineGradientFill',
+  beforeDraw(chart) {
+    const wrapper = chart.canvas?.closest('[data-gradient-lines]')
+    if (!wrapper) return
+    if (chart.config.type !== 'line') return
+
+    const ctx = chart.ctx
+    const { top, bottom } = chart.chartArea
+
+    chart.data.datasets.forEach((dataset) => {
+      dataset.fill = 'origin'
+      const baseColor = dataset.borderColor || '#6C63FF'
+      const gradient = ctx.createLinearGradient(0, top, 0, bottom)
+      gradient.addColorStop(0, baseColor + '55')
+      gradient.addColorStop(1, baseColor + '00')
+      dataset.backgroundColor = gradient
+    })
+  }
+})
+
 // Hide chart values (ticks + tooltips) when privacy mode is on
 // Only hides the currency/value axis — category names and dates are preserved
 ChartJS.register({
