@@ -703,4 +703,48 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
     assert_equal bank_account.id, inst2.reload.bank_account_id
     assert_equal bank_account.id, inst3.reload.bank_account_id
   end
+
+  # installment sub-section
+  test "GET index renders installment sub-section when installment expenses exist" do
+    group_id = SecureRandom.uuid
+    create(:expense, user: @user, category: @category, description: "Laptop 1/3",
+           expense_type: "variable", date: Date.current,
+           installment_group_id: group_id, installment_number: 1, total_installments: 3)
+
+    sign_in @user
+    get expenses_path
+
+    assert_response :success
+    assert_select "#installment_expenses_list"
+    assert_select "[data-section='installment']"
+  end
+
+  test "GET index installment expenses appear in installment list not variable list" do
+    group_id = SecureRandom.uuid
+    installment = create(:expense, user: @user, category: @category, description: "Phone 1/6",
+                         expense_type: "variable", date: Date.current,
+                         installment_group_id: group_id, installment_number: 1, total_installments: 6)
+
+    sign_in @user
+    get expenses_path
+
+    assert_response :success
+    # installment_expenses_list must contain the expense row
+    assert_select "#installment_expenses_list #expense_#{installment.id}"
+    # variable_expenses_list should not contain it
+    assert_select "#variable_expenses_list #expense_#{installment.id}", count: 0
+  end
+
+  test "GET index regular variable expenses do not appear in installment sub-section" do
+    regular = create(:expense, user: @user, category: @category, description: "Coffee Shop",
+                     expense_type: "variable", date: Date.current)
+
+    sign_in @user
+    get expenses_path
+
+    assert_response :success
+    # regular expense must NOT have installment section data attribute
+    assert_select "#expense_#{regular.id}[data-section='installment']", count: 0
+    assert_select "#expense_#{regular.id}[data-section='variable']"
+  end
 end

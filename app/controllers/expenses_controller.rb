@@ -10,6 +10,9 @@ class ExpensesController < ApplicationController
 
     @fixed_expenses = base.fixed
     @variable_expenses = base.variable
+    @variable_regular_expenses = @variable_expenses.reject(&:installment?)
+    @variable_installment_expenses = @variable_expenses.select(&:installment?)
+    @variable_installment_total = @variable_installment_expenses.sum(&:amount)
 
     @categories = current_user.categories.order(:name)
     @credit_cards = current_user.credit_cards.order(:name)

@@ -66,16 +66,41 @@
       <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.variable_expenses") %></h2>
       <span class="text-sm font-semibold" style="color: #FF6B6B;"><%= format_currency(@variable_total) %></span>
     </div>
-    <% if @variable_expenses.any? %>
-      <div id="variable_expenses_list" class="divide-y" style="border-color: #2A2F45;">
-        <% @variable_expenses.each do |expense| %>
-          <%= render "expense", expense: expense %>
-        <% end %>
-        <div data-expense-filter-target="variableEmpty" hidden class="flex flex-col items-center justify-center py-10 gap-2">
-          <p class="text-sm" style="color: #8892A4;"><%= t("expenses.index.no_results") %></p>
+    <%# Installment expenses sub-section %>
+    <% if @variable_installment_expenses.any? %>
+      <div style="border-color: #2A2F45;">
+        <div class="px-4 py-2.5 border-b flex items-center justify-between" style="border-color: #2A2F45; background-color: rgba(108,99,255,0.05);">
+          <h3 class="text-xs font-semibold uppercase tracking-wide" style="color: #8892A4;"><%= t("expenses.index.installment_expenses") %></h3>
+          <span class="text-xs font-semibold" style="color: #FF6B6B;"><%= format_currency(@variable_installment_total) %></span>
+        </div>
+        <div id="installment_expenses_list" class="divide-y" style="border-color: #2A2F45;">
+          <% @variable_installment_expenses.each do |expense| %>
+            <%= render "expense", expense: expense %>
+          <% end %>
+          <div data-expense-filter-target="installmentEmpty" hidden class="flex flex-col items-center justify-center py-10 gap-2">
+            <p class="text-sm" style="color: #8892A4;"><%= t("expenses.index.no_results") %></p>
+          </div>
         </div>
       </div>
-    <% else %>
+    <% end %>
+
+    <% if @variable_regular_expenses.any? %>
+      <div class="border-t" style="border-color: #2A2F45;">
+        <% if @variable_installment_expenses.any? %>
+          <div class="px-4 py-2.5 border-b flex items-center justify-between" style="border-color: #2A2F45; background-color: rgba(108,99,255,0.05);">
+            <h3 class="text-xs font-semibold uppercase tracking-wide" style="color: #8892A4;"><%= t("expenses.index.variable_other") %></h3>
+          </div>
+        <% end %>
+        <div id="variable_expenses_list" class="divide-y" style="border-color: #2A2F45;">
+          <% @variable_regular_expenses.each do |expense| %>
+            <%= render "expense", expense: expense %>
+          <% end %>
+          <div data-expense-filter-target="variableEmpty" hidden class="flex flex-col items-center justify-center py-10 gap-2">
+            <p class="text-sm" style="color: #8892A4;"><%= t("expenses.index.no_results") %></p>
+          </div>
+        </div>
+      </div>
+    <% elsif @variable_installment_expenses.empty? %>
       <div id="variable_expenses_list">
         <div class="flex flex-col items-center justify-center py-10 gap-2">
           <p class="text-sm" style="color: #8892A4;"><%= t("expenses.index.no_variable_expenses") %></p>

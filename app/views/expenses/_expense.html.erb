@@ -7,7 +7,7 @@
                      end %>
 <div id="expense_<%= expense.id %>"
      data-expense-filter-target="row"
-     data-section="<%= expense.expense_type %>"
+     data-section="<%= expense.installment? ? 'installment' : expense.expense_type %>"
      data-search-text="<%= [expense.description, category_display_name(expense.category), (expense.payment_method == "credit_card" && expense.credit_card) ? "#{t("expenses.form.#{expense.payment_method}")} (#{expense.credit_card.name})" : t("expenses.form.#{expense.payment_method}"), expense.payment_status ? t("expenses.payment_statuses.#{expense.payment_status}") : nil].compact.join(' ') %>"
      class="flex items-center gap-4 px-3 py-3 hover:bg-white/[0.02] transition-colors" style="<%= case expense.payment_status
             when "paid"      then "background-color: rgba(0,212,170,0.06);"

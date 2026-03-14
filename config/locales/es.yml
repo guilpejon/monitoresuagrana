@@ -173,6 +173,8 @@ es:
       variable_expenses: "Variables"
       no_fixed_expenses: "Sin gastos fijos este mes"
       no_variable_expenses: "Sin gastos variables este mes"
+      installment_expenses: "Cuotas"
+      variable_other: "Otros"
       search_placeholder: "Buscar gastos..."
       no_results: "Ningún gasto coincide con tu búsqueda"
       add_expense_short: "Agregar"

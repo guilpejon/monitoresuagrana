@@ -138,6 +138,8 @@ en:
       variable_expenses: "Variable"
       no_fixed_expenses: "No fixed expenses this month"
       no_variable_expenses: "No variable expenses this month"
+      installment_expenses: "Installments"
+      variable_other: "Other"
       search_placeholder: "Search expenses..."
       no_results: "No expenses match your search"
       add_expense_short: "Add"

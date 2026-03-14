@@ -173,6 +173,8 @@ pt-BR:
       variable_expenses: "Variáveis"
       no_fixed_expenses: "Nenhuma despesa fixa este mês"
       no_variable_expenses: "Nenhuma despesa variável este mês"
+      installment_expenses: "Parcelamentos"
+      variable_other: "Outros"
       search_placeholder: "Buscar despesas..."
       no_results: "Nenhuma despesa encontrada"
       add_expense_short: "Adicionar"
