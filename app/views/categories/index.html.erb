@@ -13,7 +13,7 @@
       <% @categories.each_with_index do |cat, i| %>
         <% is_default = current_user.default_category_id == cat.id %>
         <div class="flex items-center justify-between gap-3 px-4 py-3 hover:bg-white/[0.02] transition-colors <%= i < @categories.size - 1 ? 'border-b' : '' %>" style="border-color: #2A2F45; <%= is_default ? 'background-color: rgba(108,99,255,0.04);' : '' %>">
-          <div class="flex items-center gap-3 min-w-0">
+          <%= link_to category_path(cat), class: "flex items-center gap-3 min-w-0 flex-1 min-h-0" do %>
             <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: <%= cat.color %>22;">
               <%= svg_icon cat.icon, css_class: "w-4 h-4", stroke: cat.color %>
             </div>
@@ -24,9 +24,8 @@
                   <span class="text-xs font-semibold px-1.5 py-0.5 rounded-full flex-shrink-0" style="background-color: #6C63FF22; color: #6C63FF; border: 1px solid #6C63FF44;"><%= t("categories.index.default_badge") %></span>
                 <% end %>
               </div>
-              <p class="text-xs font-mono" style="color: #8892A4;"><%= cat.color %></p>
             </div>
-          </div>
+          <% end %>
           <div class="flex items-center gap-1.5 flex-shrink-0">
             <%= button_to set_default_category_path(cat), method: :patch,
                 class: "flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium transition-colors hover:bg-white/5",

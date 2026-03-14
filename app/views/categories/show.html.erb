@@ -1,0 +1,237 @@
+<% provide :title, @category.name %>
+<div class="space-y-5">
+  <%# Header %>
+  <div class="flex items-center gap-4">
+    <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style="background-color: <%= @category.color %>22;">
+      <%= svg_icon @category.icon, css_class: "w-5 h-5", stroke: @category.color %>
+    </div>
+    <div class="flex-1 min-w-0">
+      <h1 class="text-xl font-bold" style="color: #E2E8F0;"><%= category_display_name(@category) %></h1>
+      <p class="text-sm" style="color: #8892A4;"><%= t("categories.show.title") %></p>
+    </div>
+    <%= link_to categories_path, class: "flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg border transition-colors hover:bg-white/5", style: "color: #8892A4; border-color: #2A2F45;" do %>
+      <%= svg_icon "arrow-left", css_class: "w-3.5 h-3.5" %>
+      <%= t("categories.show.back") %>
+    <% end %>
+  </div>
+
+  <%# Filter button + popup %>
+  <div data-controller="category-filter"
+       data-category-filter-url-value="<%= category_path(@category) %>"
+       data-category-filter-start-date-value="<%= @custom_start.to_s %>"
+       data-category-filter-end-date-value="<%= @custom_end.to_s %>">
+
+    <%# Trigger button — shows the active period %>
+    <button data-action="click->category-filter#openPopup"
+            class="flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-colors hover:bg-white/5"
+            style="background-color: #1E2130; border-color: #2A2F45; color: #E2E8F0;">
+      <%= svg_icon "calendar", css_class: "w-4 h-4 flex-shrink-0", stroke: "#6C63FF" %>
+      <span><%= @period_label %></span>
+      <%= svg_icon "chevron-down", css_class: "w-3.5 h-3.5 flex-shrink-0", stroke: "#8892A4" %>
+    </button>
+
+    <%# Hidden inputs updated by the Stimulus calendar %>
+    <input type="hidden" data-category-filter-target="startInput" value="<%= @custom_start.to_s %>">
+    <input type="hidden" data-category-filter-target="endInput"   value="<%= @custom_end.to_s %>">
+
+    <%# Popup overlay — click backdrop to close %>
+    <div data-category-filter-target="popup"
+         data-action="click->category-filter#closeOnBackdrop"
+         class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-6"
+         style="background-color: rgba(0,0,0,0.75);">
+
+      <%#
+        Modal card uses flex-col so we can pin a sticky header and (on mobile)
+        a sticky footer Apply button, with only the middle section scrolling.
+        No overflow:hidden — that would clip the inline flatpickr calendar.
+      %>
+      <div class="w-full sm:w-auto rounded-t-2xl sm:rounded-2xl border flex flex-col"
+           style="background-color: #1E2130; border-color: #2A2F45; max-height: 88vh;">
+
+        <%# ── Sticky header ─────────────────────────────────────────────── %>
+        <div class="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b"
+             style="border-color: #2A2F45;">
+          <h3 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("categories.show.popup_title") %></h3>
+          <button data-action="click->category-filter#closePopup"
+                  class="p-1.5 rounded-lg hover:bg-white/5 transition-colors" style="color: #8892A4;">
+            <%= svg_icon "x", css_class: "w-4 h-4" %>
+          </button>
+        </div>
+
+        <%# ── Scrollable body ───────────────────────────────────────────── %>
+        <div class="flex-1 overflow-y-auto min-h-0">
+
+          <%# ══ MOBILE layout (< sm) ══════════════════════════════════════
+              Presets as full-width tappable rows, then native date inputs.
+              Native OS date picker = best touch UX; no flatpickr on mobile. %>
+          <div class="sm:hidden">
+
+            <%# Quick presets %>
+            <div class="p-4 border-b" style="border-color: #2A2F45;">
+              <p class="text-xs font-semibold mb-3" style="color: #8892A4;"><%= t("categories.show.quick_presets") %></p>
+              <div class="flex flex-col gap-1.5">
+                <% [["current_month", t("categories.show.timeframe_current_month")], ["last_month", t("categories.show.timeframe_last_month")], ["3m", t("categories.show.timeframe_3m")], ["6m", t("categories.show.timeframe_6m")], ["1y", t("categories.show.timeframe_1y")], ["all", t("categories.show.timeframe_all")]].each do |tf, label| %>
+                  <%
+                    is_active    = @timeframe == tf
+                    active_style = "background-color: rgba(108,99,255,0.14); color: #6C63FF; border: 1px solid rgba(108,99,255,0.35);"
+                    idle_style   = "color: #E2E8F0; border: 1px solid #2A2F45;"
+                  %>
+                  <button data-action="click->category-filter#selectPreset"
+                          data-timeframe="<%= tf %>"
+                          class="flex items-center justify-between w-full px-4 py-3 rounded-xl text-sm font-medium"
+                          style="<%= is_active ? active_style : idle_style %>">
+                    <span><%= label %></span>
+                    <% if is_active %>
+                      <%= svg_icon "check", css_class: "w-4 h-4", stroke: "#6C63FF" %>
+                    <% end %>
+                  </button>
+                <% end %>
+              </div>
+            </div>
+
+            <%# Custom range — two native date inputs %>
+            <div class="p-4">
+              <p class="text-xs font-semibold mb-3" style="color: #8892A4;"><%= t("categories.show.custom_range") %></p>
+              <div class="flex flex-col gap-3">
+                <div class="flex flex-col gap-1">
+                  <label class="text-xs font-medium" style="color: #8892A4;"><%= t("categories.show.custom_from") %></label>
+                  <input type="date"
+                         data-category-filter-target="mobileStartInput"
+                         data-action="change->category-filter#syncMobileDate"
+                         value="<%= @custom_start.to_s %>"
+                         class="px-3 py-2.5 rounded-xl text-sm border w-full"
+                         style="background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;">
+                </div>
+                <div class="flex flex-col gap-1">
+                  <label class="text-xs font-medium" style="color: #8892A4;"><%= t("categories.show.custom_to") %></label>
+                  <input type="date"
+                         data-category-filter-target="mobileEndInput"
+                         data-action="change->category-filter#syncMobileDate"
+                         value="<%= @custom_end.to_s %>"
+                         class="px-3 py-2.5 rounded-xl text-sm border w-full"
+                         style="background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0;">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <%# ══ DESKTOP layout (sm+) ══════════════════════════════════════
+              Presets column on the left, inline flatpickr calendar on the right. %>
+          <div class="hidden sm:flex flex-row">
+
+            <%# Presets column %>
+            <div class="flex flex-col gap-1 p-4 border-r flex-shrink-0 w-44"
+                 style="border-color: #2A2F45;">
+              <p class="text-xs font-semibold mb-1" style="color: #8892A4;"><%= t("categories.show.quick_presets") %></p>
+              <% [["current_month", t("categories.show.timeframe_current_month")], ["last_month", t("categories.show.timeframe_last_month")], ["3m", t("categories.show.timeframe_3m")], ["6m", t("categories.show.timeframe_6m")], ["1y", t("categories.show.timeframe_1y")], ["all", t("categories.show.timeframe_all")]].each do |tf, label| %>
+                <%
+                  is_active    = @timeframe == tf
+                  active_style = "background-color: rgba(108,99,255,0.14); color: #6C63FF; border: 1px solid rgba(108,99,255,0.35);"
+                  idle_style   = "color: #8892A4; border: 1px solid transparent;"
+                %>
+                <button data-action="click->category-filter#selectPreset"
+                        data-timeframe="<%= tf %>"
+                        class="text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/5 w-full"
+                        style="<%= is_active ? active_style : idle_style %>">
+                  <%= label %>
+                </button>
+              <% end %>
+            </div>
+
+            <%# Calendar + date display + Apply %>
+            <div class="p-4 flex flex-col gap-3">
+              <%# Selected range display %>
+              <div class="flex items-center gap-2">
+                <div class="flex-1 px-3 py-2 rounded-lg" style="background-color: #0F1117; min-width: 110px;">
+                  <p class="text-xs" style="color: #8892A4;"><%= t("categories.show.custom_from") %></p>
+                  <p data-category-filter-target="startDisplay" class="text-sm font-medium" style="color: #E2E8F0;"><%= @custom_start.presence || "—" %></p>
+                </div>
+                <span style="color: #8892A4;">→</span>
+                <div class="flex-1 px-3 py-2 rounded-lg" style="background-color: #0F1117; min-width: 110px;">
+                  <p class="text-xs" style="color: #8892A4;"><%= t("categories.show.custom_to") %></p>
+                  <p data-category-filter-target="endDisplay" class="text-sm font-medium" style="color: #E2E8F0;"><%= @custom_end.presence || "—" %></p>
+                </div>
+              </div>
+
+              <%# flatpickr inline target — lazy-inited on first openPopup() %>
+              <input type="text" data-category-filter-target="calendar" style="display:none; position:absolute;">
+
+              <div class="flex justify-end">
+                <button data-action="click->category-filter#apply"
+                        class="px-6 py-1.5 rounded-lg text-sm font-semibold transition-colors hover:opacity-90"
+                        style="background-color: #6C63FF; color: white;">
+                  <%= t("categories.show.custom_apply") %>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <%# ── Mobile-only sticky footer ─────────────────────────────────── %>
+        <div class="sm:hidden flex-shrink-0 px-4 py-3 border-t" style="border-color: #2A2F45;">
+          <button data-action="click->category-filter#apply"
+                  class="w-full py-3 rounded-xl text-sm font-semibold transition-colors hover:opacity-90"
+                  style="background-color: #6C63FF; color: white;">
+            <%= t("categories.show.custom_apply") %>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <%# Summary cards %>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="rounded-xl p-4 border" style="background-color: #1E2130; border-color: #2A2F45;">
+      <p class="text-xs font-medium mb-1" style="color: #8892A4;"><%= t("categories.show.total_spent") %></p>
+      <p class="text-2xl font-bold" style="color: #FF6B6B;"><%= number_to_currency(@total_spent, unit: "R$ ", separator: ",", delimiter: ".") %></p>
+    </div>
+    <div class="rounded-xl p-4 border" style="background-color: #1E2130; border-color: #2A2F45;">
+      <p class="text-xs font-medium mb-1" style="color: #8892A4;"><%= t("categories.show.transactions") %></p>
+      <p class="text-2xl font-bold" style="color: #6C63FF;"><%= @expense_count %></p>
+    </div>
+    <div class="rounded-xl p-4 border" style="background-color: #1E2130; border-color: #2A2F45;">
+      <p class="text-xs font-medium mb-1" style="color: #8892A4;"><%= t("categories.show.#{@avg_per_month_projection ? 'proj_per_month' : 'avg_per_month'}") %></p>
+      <p class="text-2xl font-bold" style="color: #E2E8F0;"><%= number_to_currency(@avg_per_month, unit: "R$ ", separator: ",", delimiter: ".") %></p>
+    </div>
+    <div class="rounded-xl p-4 border" style="background-color: #1E2130; border-color: #2A2F45;">
+      <p class="text-xs font-medium mb-1" style="color: #8892A4;"><%= t("categories.show.#{@avg_per_week_projection ? 'proj_per_week' : 'avg_per_week'}") %></p>
+      <p class="text-2xl font-bold" style="color: #E2E8F0;"><%= number_to_currency(@avg_per_week, unit: "R$ ", separator: ",", delimiter: ".") %></p>
+    </div>
+  </div>
+
+  <%# Expense list %>
+  <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
+    <div class="px-4 py-3 border-b" style="border-color: #2A2F45;">
+      <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("categories.show.expense_list") %></h2>
+    </div>
+    <% if @expenses.any? %>
+      <% @expenses.each_with_index do |expense, i| %>
+        <div class="flex items-center justify-between gap-3 px-4 py-3 <%= i < @expenses.size - 1 ? 'border-b' : '' %>" style="border-color: #2A2F45;">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="flex-shrink-0 text-center">
+              <p class="text-xs font-bold leading-none" style="color: #6C63FF;"><%= expense.date.strftime("%d") %></p>
+              <p class="text-xs leading-none mt-0.5" style="color: #8892A4;"><%= expense.date.strftime("%b") %></p>
+            </div>
+            <div class="flex items-center gap-2 min-w-0">
+              <p class="text-sm truncate" style="color: #E2E8F0;">
+                <%= expense.description.presence || "—" %>
+              </p>
+              <% if expense.payment_method == "credit_card" && expense.credit_card %>
+                <span class="text-xs px-2 py-0.5 rounded-full flex-shrink-0" style="background-color: #2A2F45; color: #8892A4;"><%= expense.credit_card.name %></span>
+              <% elsif expense.payment_method.present? %>
+                <span class="text-xs px-2 py-0.5 rounded-full flex-shrink-0" style="background-color: #2A2F45; color: #8892A4;"><%= t("expenses.form.#{expense.payment_method}", default: expense.payment_method.humanize) %></span>
+              <% end %>
+            </div>
+          </div>
+          <div class="flex items-center flex-shrink-0">
+            <p class="text-sm font-semibold" style="color: #FF6B6B;"><%= number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".") %></p>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <%= render "shared/empty_state", message: t("categories.show.no_expenses") %>
+    <% end %>
+  </div>
+</div>

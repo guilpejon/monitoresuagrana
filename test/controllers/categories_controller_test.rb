@@ -23,6 +23,74 @@ class CategoriesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "GET show returns success" do
+    sign_in @user
+    get category_path(@category)
+    assert_response :success
+  end
+
+  test "GET show uses slug in URL" do
+    sign_in @user
+    get "/categories/#{@category.slug}"
+    assert_response :success
+  end
+
+  test "GET show defaults to 6m timeframe" do
+    sign_in @user
+    get category_path(@category)
+    assert_response :success
+  end
+
+  test "GET show filters by 6m timeframe" do
+    sign_in @user
+    get category_path(@category, timeframe: "6m")
+    assert_response :success
+  end
+
+  test "GET show filters by 1y timeframe" do
+    sign_in @user
+    get category_path(@category, timeframe: "1y")
+    assert_response :success
+  end
+
+  test "GET show with all timeframe" do
+    sign_in @user
+    get category_path(@category, timeframe: "all")
+    assert_response :success
+  end
+
+  test "GET show ignores unknown timeframe and defaults to 6m" do
+    sign_in @user
+    get category_path(@category, timeframe: "invalid")
+    assert_response :success
+  end
+
+  test "GET show with custom timeframe and date range" do
+    sign_in @user
+    get category_path(@category, timeframe: "custom", start_date: "2026-01-01", end_date: "2026-03-31")
+    assert_response :success
+  end
+
+  test "GET show with custom timeframe and no dates returns results" do
+    sign_in @user
+    get category_path(@category, timeframe: "custom")
+    assert_response :success
+  end
+
+  test "cannot access another user's category show page" do
+    other_user = create(:user)
+    other_category = other_user.categories.create!(name: "UniqueCatGHI", color: "#FF5733", icon: "tag")
+
+    sign_in @user
+    get category_path(other_category)
+    assert_response :not_found
+  end
+
+  test "show redirects unauthenticated users" do
+    get category_path(@category)
+    assert_redirected_to new_user_session_path
+  end
+
   test "GET edit returns success" do
     sign_in @user
     get edit_category_path(@category)
@@ -79,7 +147,7 @@ class CategoriesControllerTest < ActionDispatch::IntegrationTest
 
   test "cannot access other user's category" do
     other_user = create(:user)
-    other_category = other_user.categories.first
+    other_category = other_user.categories.create!(name: "UniqueCatXYZ", color: "#FF5733", icon: "tag")
 
     sign_in @user
     get edit_category_path(other_category)
@@ -88,7 +156,7 @@ class CategoriesControllerTest < ActionDispatch::IntegrationTest
 
   test "cannot update other user's category" do
     other_user = create(:user)
-    other_category = other_user.categories.first
+    other_category = other_user.categories.create!(name: "UniqueCatABC", color: "#FF5733", icon: "tag")
 
     sign_in @user
     patch category_path(other_category), params: { category: { name: "Hacked" } }
@@ -97,7 +165,7 @@ class CategoriesControllerTest < ActionDispatch::IntegrationTest
 
   test "cannot delete other user's category" do
     other_user = create(:user)
-    other_category = other_user.categories.first
+    other_category = other_user.categories.create!(name: "UniqueCatDEF", color: "#FF5733", icon: "tag")
 
     sign_in @user
     delete category_path(other_category)
@@ -123,7 +191,7 @@ class CategoriesControllerTest < ActionDispatch::IntegrationTest
 
   test "cannot set default on other user's category" do
     other_user = create(:user)
-    other_category = other_user.categories.first
+    other_category = other_user.categories.create!(name: "UniqueCatJKL", color: "#FF5733", icon: "tag")
 
     sign_in @user
     patch set_default_category_path(other_category)

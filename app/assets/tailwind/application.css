@@ -39,9 +39,9 @@
 /* Flatpickr theme overrides */
 .flatpickr-calendar {
   background: #1E2130 !important;
-  border: 1px solid #2A2F45 !important;
+  border: none !important;
   border-radius: 12px !important;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+  box-shadow: none !important;
   z-index: 9999 !important;
 }
 .flatpickr-calendar.arrowTop:before,
