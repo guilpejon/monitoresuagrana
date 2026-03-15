@@ -57,7 +57,7 @@ gem "groupdate"
 gem "money-rails", "~> 3.0"
 
 # Pagination
-gem "pagy", "43.3.1"
+gem "pagy", "43.3.3"
 
 # HTTP client for investment price APIs
 gem "httparty"
