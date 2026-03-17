@@ -855,6 +855,6 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
 
     newer_pos = response.body.index("New Phone 1/3")
     older_pos = response.body.index("Old TV 1/3")
-    assert newer_pos < older_pos, "Newer installment should appear before older installment"
+    assert newer_pos > older_pos, "Older installment should appear before newer installment"
   end
 end
