@@ -11,10 +11,11 @@ servers:
 
 # Kamal proxy configuration
 # Cloudflare tunnel handles SSL — no Let's Encrypt needed.
+deploy_timeout: 90
+
 proxy:
   ssl: false
   host: monitoresuagrana.com.br,www.monitoresuagrana.com.br
-  deploy_timeout: 90
   healthcheck:
     path: /up
     interval: 3
