@@ -9,6 +9,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+
     services:
       postgres:
         image: postgres
@@ -41,6 +44,9 @@ jobs:
   scan_ruby:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -57,9 +63,12 @@ jobs:
       - name: Scan for known security vulnerabilities in gems used
         run: bin/bundler-audit
         continue-on-error: true
-      
+
   scan_js:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout code
@@ -76,6 +85,10 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
     env:
       RUBOCOP_CACHE_ROOT: tmp/rubocop
     steps:
@@ -99,4 +112,3 @@ jobs:
 
       - name: Lint code for consistent style
         run: bin/rubocop -f github
-

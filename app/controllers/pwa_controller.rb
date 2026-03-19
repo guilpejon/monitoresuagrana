@@ -1,5 +1,4 @@
-class PwaController < ActionController::Base
-  skip_forgery_protection
+class PwaController < ApplicationController
 
   def service_worker
     render template: "pwa/service-worker", layout: false, content_type: "text/javascript"
