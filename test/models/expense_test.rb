@@ -661,4 +661,51 @@ class ExpenseTest < ActiveSupport::TestCase
     assert_not expense.valid?
     assert expense.errors[:date].any?
   end
+
+  # auto_paid_boleto_or_pix?
+  test "auto_paid_boleto_or_pix? returns true for non-recurring non-installment variable boleto" do
+    expense = build(:expense, expense_type: "variable", payment_method: "boleto", recurring: false, total_installments: 1)
+    assert expense.auto_paid_boleto_or_pix?
+  end
+
+  test "auto_paid_boleto_or_pix? returns true for non-recurring non-installment variable pix" do
+    expense = build(:expense, expense_type: "variable", payment_method: "pix", recurring: false, total_installments: 1)
+    assert expense.auto_paid_boleto_or_pix?
+  end
+
+  test "auto_paid_boleto_or_pix? returns false for boleto installment" do
+    expense = build(:expense, expense_type: "variable", payment_method: "boleto", total_installments: 3, installment_number: 1)
+    assert_not expense.auto_paid_boleto_or_pix?
+  end
+
+  test "auto_paid_boleto_or_pix? returns false for pix installment" do
+    expense = build(:expense, expense_type: "variable", payment_method: "pix", total_installments: 3, installment_number: 1)
+    assert_not expense.auto_paid_boleto_or_pix?
+  end
+
+  test "auto_paid_boleto_or_pix? returns false for fixed boleto" do
+    expense = build(:expense, expense_type: "fixed", payment_method: "boleto", recurring: true)
+    assert_not expense.auto_paid_boleto_or_pix?
+  end
+
+  test "auto_paid_boleto_or_pix? returns false for variable cash" do
+    expense = build(:expense, expense_type: "variable", payment_method: "cash", recurring: false, total_installments: 1)
+    assert_not expense.auto_paid_boleto_or_pix?
+  end
+
+  test "non-recurring non-installment variable boleto is auto-set to paid on create" do
+    user = create(:user)
+    category = user.categories.first
+    expense = create(:expense, user: user, category: category, expense_type: "variable",
+                     payment_method: "boleto", total_installments: 1, date: Date.current)
+    assert_equal "paid", expense.payment_status
+  end
+
+  test "non-recurring non-installment variable pix is auto-set to paid on create" do
+    user = create(:user)
+    category = user.categories.first
+    expense = create(:expense, user: user, category: category, expense_type: "variable",
+                     payment_method: "pix", total_installments: 1, date: Date.current)
+    assert_equal "paid", expense.payment_status
+  end
 end

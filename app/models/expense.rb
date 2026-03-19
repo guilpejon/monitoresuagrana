@@ -50,6 +50,10 @@ TYPES = %w[fixed variable].freeze
     payment_method == "credit_card" && installment?
   end
 
+  def auto_paid_boleto_or_pix?
+    expense_type == "variable" && !installment? && !recurring? && payment_method.in?(%w[boleto pix])
+  end
+
   def next_payment_status
     if scheduled_payment?
       payment_status == "scheduled" ? "paid" : "scheduled"
