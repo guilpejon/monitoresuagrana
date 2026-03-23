@@ -39,7 +39,15 @@
   <%# Fixed expenses %>
   <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
     <div class="px-4 py-3 border-b flex items-center justify-between" style="border-color: #2A2F45;">
-      <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.fixed_expenses") %></h2>
+      <div class="flex items-center gap-1.5">
+        <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.fixed_expenses") %></h2>
+        <span class="relative group flex items-center">
+          <%= svg_icon "help-circle", css_class: "w-3.5 h-3.5 cursor-help", stroke: "#4A5568" %>
+          <span class="absolute left-0 top-full mt-1 w-56 p-2.5 rounded-lg text-xs pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-10 leading-relaxed" style="background-color: #2A2F45; color: #94A3B8; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
+            <%= t("expenses.index.fixed_expenses_tooltip") %>
+          </span>
+        </span>
+      </div>
       <span class="text-sm font-semibold" style="color: #FF6B6B;" data-expense-filter-target="fixedTotal"><%= format_currency(@fixed_total) %></span>
     </div>
     <% if @fixed_expenses.any? %>
@@ -63,7 +71,15 @@
   <%# Installment expenses (manual) %>
   <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
     <div class="px-4 py-3 border-b flex items-center justify-between" style="border-color: #2A2F45;">
-      <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.installment_expenses") %></h2>
+      <div class="flex items-center gap-1.5">
+        <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.installment_expenses") %></h2>
+        <span class="relative group flex items-center">
+          <%= svg_icon "help-circle", css_class: "w-3.5 h-3.5 cursor-help", stroke: "#4A5568" %>
+          <span class="absolute left-0 top-full mt-1 w-56 p-2.5 rounded-lg text-xs pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-10 leading-relaxed" style="background-color: #2A2F45; color: #94A3B8; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
+            <%= t("expenses.index.installment_expenses_tooltip") %>
+          </span>
+        </span>
+      </div>
       <span class="text-sm font-semibold" style="color: #FF6B6B;" data-expense-filter-target="installmentTotal"><%= format_currency(@variable_installment_total) %></span>
     </div>
     <% if @variable_installment_expenses.any? %>
@@ -87,7 +103,15 @@
   <%# Credit card installment expenses %>
   <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
     <div class="px-4 py-3 border-b flex items-center justify-between" style="border-color: #2A2F45;">
-      <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.credit_card_installment_expenses") %></h2>
+      <div class="flex items-center gap-1.5">
+        <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.credit_card_installment_expenses") %></h2>
+        <span class="relative group flex items-center">
+          <%= svg_icon "help-circle", css_class: "w-3.5 h-3.5 cursor-help", stroke: "#4A5568" %>
+          <span class="absolute left-0 top-full mt-1 w-56 p-2.5 rounded-lg text-xs pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-10 leading-relaxed" style="background-color: #2A2F45; color: #94A3B8; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
+            <%= t("expenses.index.credit_card_installment_expenses_tooltip") %>
+          </span>
+        </span>
+      </div>
       <span class="text-sm font-semibold" style="color: #FF6B6B;" data-expense-filter-target="creditCardInstallmentTotal"><%= format_currency(@variable_credit_card_installment_total) %></span>
     </div>
     <% if @variable_credit_card_installment_expenses.any? %>
@@ -111,7 +135,15 @@
   <%# Variable other expenses %>
   <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
     <div class="px-4 py-3 border-b flex items-center justify-between" style="border-color: #2A2F45;">
-      <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.variable_other") %></h2>
+      <div class="flex items-center gap-1.5">
+        <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.variable_other") %></h2>
+        <span class="relative group flex items-center">
+          <%= svg_icon "help-circle", css_class: "w-3.5 h-3.5 cursor-help", stroke: "#4A5568" %>
+          <span class="absolute left-0 top-full mt-1 w-56 p-2.5 rounded-lg text-xs pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-10 leading-relaxed" style="background-color: #2A2F45; color: #94A3B8; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
+            <%= t("expenses.index.variable_other_tooltip") %>
+          </span>
+        </span>
+      </div>
       <span class="text-sm font-semibold" style="color: #FF6B6B;" data-expense-filter-target="regularTotal"><%= format_currency(@variable_regular_total) %></span>
     </div>
     <% if @variable_regular_expenses.any? %>
