@@ -708,7 +708,7 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
   test "GET index renders installment sub-section when installment expenses exist" do
     group_id = SecureRandom.uuid
     create(:expense, user: @user, category: @category, description: "Laptop 1/3",
-           expense_type: "variable", date: Date.current,
+           expense_type: "variable", date: Date.current, payment_method: "pix",
            installment_group_id: group_id, installment_number: 1, total_installments: 3)
 
     sign_in @user
@@ -722,7 +722,7 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
   test "GET index installment expenses appear in installment list not variable list" do
     group_id = SecureRandom.uuid
     installment = create(:expense, user: @user, category: @category, description: "Phone 1/6",
-                         expense_type: "variable", date: Date.current,
+                         expense_type: "variable", date: Date.current, payment_method: "pix",
                          installment_group_id: group_id, installment_number: 1, total_installments: 6)
 
     sign_in @user
