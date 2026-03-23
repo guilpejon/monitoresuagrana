@@ -2,7 +2,7 @@ class PwaController < ApplicationController
   skip_after_action :verify_same_origin_request, only: :service_worker
 
   def service_worker
-    render template: "pwa/service-worker", layout: false, content_type: "text/javascript", formats: [:js]
+    render template: "pwa/service-worker", layout: false, content_type: "text/javascript", formats: [ :js ]
   end
 
   def manifest
