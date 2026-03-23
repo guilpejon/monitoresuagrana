@@ -60,7 +60,7 @@
     <% end %>
   </div>
 
-  <%# Installment expenses %>
+  <%# Installment expenses (manual) %>
   <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
     <div class="px-4 py-3 border-b flex items-center justify-between" style="border-color: #2A2F45;">
       <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.installment_expenses") %></h2>
@@ -79,6 +79,30 @@
       <div id="installment_expenses_list">
         <div class="flex flex-col items-center justify-center py-10 gap-2">
           <p class="text-sm" style="color: #8892A4;"><%= t("expenses.index.no_installment_expenses") %></p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Credit card installment expenses %>
+  <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
+    <div class="px-4 py-3 border-b flex items-center justify-between" style="border-color: #2A2F45;">
+      <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.credit_card_installment_expenses") %></h2>
+      <span class="text-sm font-semibold" style="color: #FF6B6B;" data-expense-filter-target="creditCardInstallmentTotal"><%= format_currency(@variable_credit_card_installment_total) %></span>
+    </div>
+    <% if @variable_credit_card_installment_expenses.any? %>
+      <div id="credit_card_installment_expenses_list" class="divide-y" style="border-color: #2A2F45;">
+        <% @variable_credit_card_installment_expenses.each do |expense| %>
+          <%= render "expense", expense: expense %>
+        <% end %>
+        <div data-expense-filter-target="creditCardInstallmentEmpty" hidden class="flex flex-col items-center justify-center py-10 gap-2">
+          <p class="text-sm" style="color: #8892A4;"><%= t("expenses.index.no_results") %></p>
+        </div>
+      </div>
+    <% else %>
+      <div id="credit_card_installment_expenses_list">
+        <div class="flex flex-col items-center justify-center py-10 gap-2">
+          <p class="text-sm" style="color: #8892A4;"><%= t("expenses.index.no_credit_card_installment_expenses") %></p>
         </div>
       </div>
     <% end %>

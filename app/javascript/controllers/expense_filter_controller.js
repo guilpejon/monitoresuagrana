@@ -1,8 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "row", "fixedEmpty", "variableEmpty", "installmentEmpty", "clear",
-                    "grandTotal", "fixedTotal", "variableTotal", "installmentTotal", "regularTotal"]
+  static targets = ["input", "row", "fixedEmpty", "variableEmpty", "installmentEmpty", "creditCardInstallmentEmpty", "clear",
+                    "grandTotal", "fixedTotal", "variableTotal", "installmentTotal", "regularTotal", "creditCardInstallmentTotal"]
 
   filter() {
     const query = this.inputTarget.value.toLowerCase().trim()
@@ -11,10 +11,12 @@ export default class extends Controller {
     let fixedVisible = 0
     let variableVisible = 0
     let installmentVisible = 0
+    let creditCardInstallmentVisible = 0
     let fixedSum = 0
     let variableSum = 0
     let installmentSum = 0
     let regularSum = 0
+    let creditCardInstallmentSum = 0
 
     this.rowTargets.forEach(row => {
       const visible = query === "" || row.dataset.searchText.toLowerCase().includes(query)
@@ -27,6 +29,10 @@ export default class extends Controller {
         } else if (row.dataset.section === "installment") {
           installmentVisible++
           installmentSum += amount
+          variableSum += amount
+        } else if (row.dataset.section === "credit_card_installment") {
+          creditCardInstallmentVisible++
+          creditCardInstallmentSum += amount
           variableSum += amount
         } else {
           variableVisible++
@@ -45,6 +51,9 @@ export default class extends Controller {
     if (this.hasInstallmentEmptyTarget) {
       this.installmentEmptyTarget.hidden = !(installmentVisible === 0 && query !== "")
     }
+    if (this.hasCreditCardInstallmentEmptyTarget) {
+      this.creditCardInstallmentEmptyTarget.hidden = !(creditCardInstallmentVisible === 0 && query !== "")
+    }
 
     if (this.hasGrandTotalTarget) {
       this.grandTotalTarget.innerHTML = `<span class="sensitive-value">${this.formatCurrency(fixedSum + variableSum)}</span>`
@@ -60,6 +69,9 @@ export default class extends Controller {
     }
     if (this.hasRegularTotalTarget) {
       this.regularTotalTarget.innerHTML = `<span class="sensitive-value">${this.formatCurrency(regularSum)}</span>`
+    }
+    if (this.hasCreditCardInstallmentTotalTarget) {
+      this.creditCardInstallmentTotalTarget.innerHTML = `<span class="sensitive-value">${this.formatCurrency(creditCardInstallmentSum)}</span>`
     }
   }
 

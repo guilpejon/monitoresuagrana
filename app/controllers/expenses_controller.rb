@@ -9,8 +9,11 @@ class ExpensesController < ApplicationController
 
     variable_base = base.variable.order(date: :desc)
     @variable_regular_expenses = variable_base.reject(&:installment?)
-    @variable_installment_expenses = variable_base.select(&:installment?).sort_by(&:date)
+    all_installment_expenses = variable_base.select(&:installment?).sort_by(&:date)
+    @variable_installment_expenses = all_installment_expenses.reject(&:credit_card_installment?)
+    @variable_credit_card_installment_expenses = all_installment_expenses.select(&:credit_card_installment?)
     @variable_installment_total = @variable_installment_expenses.sum(&:amount)
+    @variable_credit_card_installment_total = @variable_credit_card_installment_expenses.sum(&:amount)
     @variable_regular_total = @variable_regular_expenses.sum(&:amount)
 
     @categories = current_user.categories.order(:name)
