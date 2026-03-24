@@ -1,4 +1,5 @@
 class PwaController < ApplicationController
+  skip_before_action :authenticate_user!
   skip_after_action :verify_same_origin_request, only: :service_worker
 
   def service_worker
