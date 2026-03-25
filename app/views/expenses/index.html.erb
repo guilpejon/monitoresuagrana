@@ -48,7 +48,11 @@
           </span>
         </span>
       </div>
-      <span class="text-sm font-semibold" style="color: #FF6B6B;" data-expense-filter-target="fixedTotal"><%= format_currency(@fixed_total) %></span>
+      <div class="flex items-center gap-2 text-sm font-semibold">
+        <span id="fixed_paid_total" data-value="<%= @fixed_paid_total.to_f %>" style="color: #00D4AA;" data-expense-filter-target="fixedPaidTotal"><%= format_currency(@fixed_paid_total) %></span>
+        <span style="color: #4A5568;">·</span>
+        <span id="fixed_unpaid_total" data-value="<%= @fixed_unpaid_total.to_f %>" style="color: #FF6B6B;" data-expense-filter-target="fixedUnpaidTotal"><%= format_currency(@fixed_unpaid_total) %></span>
+      </div>
     </div>
     <% if @fixed_expenses.any? %>
       <div id="fixed_expenses_list" class="divide-y" style="border-color: #2A2F45;">
@@ -80,7 +84,11 @@
           </span>
         </span>
       </div>
-      <span class="text-sm font-semibold" style="color: #FF6B6B;" data-expense-filter-target="installmentTotal"><%= format_currency(@variable_installment_total) %></span>
+      <div class="flex items-center gap-2 text-sm font-semibold">
+        <span id="installment_paid_total" data-value="<%= @variable_installment_paid_total.to_f %>" style="color: #00D4AA;" data-expense-filter-target="installmentPaidTotal"><%= format_currency(@variable_installment_paid_total) %></span>
+        <span style="color: #4A5568;">·</span>
+        <span id="installment_unpaid_total" data-value="<%= @variable_installment_unpaid_total.to_f %>" style="color: #FF6B6B;" data-expense-filter-target="installmentUnpaidTotal"><%= format_currency(@variable_installment_unpaid_total) %></span>
+      </div>
     </div>
     <% if @variable_installment_expenses.any? %>
       <div id="installment_expenses_list" class="divide-y" style="border-color: #2A2F45;">

@@ -16,6 +16,11 @@ class ExpensesController < ApplicationController
     @variable_credit_card_installment_total = @variable_credit_card_installment_expenses.sum(&:amount)
     @variable_regular_total = @variable_regular_expenses.sum(&:amount)
 
+    @fixed_paid_total = @fixed_expenses.select { |e| e.payment_status == "paid" }.sum(&:amount)
+    @fixed_unpaid_total = @fixed_expenses.reject { |e| e.payment_status == "paid" }.sum(&:amount)
+    @variable_installment_paid_total = @variable_installment_expenses.select { |e| e.payment_status == "paid" }.sum(&:amount)
+    @variable_installment_unpaid_total = @variable_installment_expenses.reject { |e| e.payment_status == "paid" }.sum(&:amount)
+
     @categories = current_user.categories.order(:name)
     @credit_cards = current_user.credit_cards.order(:name)
     @bank_accounts = current_user.bank_accounts.order(:name)
