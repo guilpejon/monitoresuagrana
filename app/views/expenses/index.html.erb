@@ -18,9 +18,12 @@
   <%# Credit card filter banner %>
   <% if @credit_card_filter %>
     <div class="flex items-center justify-between px-3 py-2 rounded-lg text-sm" style="background-color: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.3);">
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 min-w-0">
         <div class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: <%= @credit_card_filter.color_hex %>;"></div>
-        <span style="color: #E2E8F0;"><%= t("expenses.index.filtered_by_card", name: @credit_card_filter.name) %></span>
+        <span class="truncate" style="color: #E2E8F0;"><%= t("expenses.index.filtered_by_card", name: @credit_card_filter.name) %></span>
+        <% if @filter_period_start %>
+          <span class="text-xs flex-shrink-0" style="color: #8892A4;"><%= l(@filter_period_start, format: "%-d %b") %> – <%= l(@filter_period_end, format: "%-d %b") %></span>
+        <% end %>
       </div>
       <%= link_to expenses_path, class: "flex items-center gap-1 text-xs font-medium hover:opacity-70 transition-opacity", style: "color: #8892A4;" do %>
         <%= svg_icon "x", css_class: "w-3.5 h-3.5" %>

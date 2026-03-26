@@ -30,7 +30,7 @@
                   <span class="text-xs font-semibold px-1.5 py-0.5 rounded-full flex-shrink-0" style="background-color: #6C63FF22; color: #6C63FF; border: 1px solid #6C63FF44;"><%= t("credit_cards.index.default_badge") %></span>
                 <% end %>
               </div>
-              <%= link_to expenses_path(credit_card_id: card.id), class: "text-sm font-bold flex-shrink-0 hover:opacity-80 transition-opacity", style: "color: #F7B731;" do %>
+              <%= link_to expenses_path(credit_card_id: card.id, period_start: period_start.iso8601, period_end: period_end.iso8601), class: "text-sm font-bold flex-shrink-0 hover:opacity-80 transition-opacity", style: "color: #F7B731;" do %>
                 <%= format_currency(bill) %>
               <% end %>
             </div>
@@ -129,7 +129,7 @@
             <%# Current bill (linked) %>
             <div class="flex items-center justify-between text-xs">
               <span style="color: #8892A4;"><%= t("credit_cards.index.current_bill") %></span>
-              <%= link_to expenses_path(credit_card_id: card.id), class: "font-semibold hover:opacity-80 transition-opacity", style: "color: #F7B731;" do %>
+              <%= link_to expenses_path(credit_card_id: card.id, period_start: period_start.iso8601, period_end: period_end.iso8601), class: "font-semibold hover:opacity-80 transition-opacity", style: "color: #F7B731;" do %>
                 <%= format_currency(bill) %>
               <% end %>
             </div>

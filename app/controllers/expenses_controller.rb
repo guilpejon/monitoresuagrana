@@ -5,7 +5,16 @@ class ExpensesController < ApplicationController
   def index
     @credit_card_filter = params[:credit_card_id].present? ? current_user.credit_cards.find_by(id: params[:credit_card_id]) : nil
 
-    scope = current_user.expenses.for_month(@current_date)
+    if @credit_card_filter && params[:period_start].present? && params[:period_end].present?
+      @filter_period_start = Date.parse(params[:period_start]) rescue nil
+      @filter_period_end   = Date.parse(params[:period_end])   rescue nil
+    end
+
+    scope = if @filter_period_start && @filter_period_end
+      current_user.expenses.where(date: @filter_period_start..@filter_period_end)
+    else
+      current_user.expenses.for_month(@current_date)
+    end
     scope = scope.where(credit_card_id: @credit_card_filter.id) if @credit_card_filter
     base  = scope.includes(:category, :credit_card)
 
