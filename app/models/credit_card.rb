@@ -11,9 +11,13 @@ class CreditCard < ApplicationRecord
   validates :due_day, numericality: { in: 1..28 }
 
   def current_bill(reference_date = Date.current)
-    # Bill covers from last billing_day+1 to current billing_day
-    period_start = reference_date.change(day: billing_day) - 1.month + 1.day
-    period_end = reference_date.change(day: billing_day)
+    # Bill covers from last billing_day+1 to current (upcoming) billing_day
+    period_end = if reference_date.day < billing_day
+      reference_date.change(day: billing_day)
+    else
+      (reference_date + 1.month).change(day: billing_day)
+    end
+    period_start = period_end - 1.month + 1.day
 
     if expenses.loaded?
       expenses.select { |e| e.date.between?(period_start, period_end) }.sum(&:amount)

@@ -211,12 +211,16 @@ class ExpensesController < ApplicationController
 
   def propagate_bank_account_to_installment_group!
     return if @expense.installment_group_id.blank?
-    return unless @expense.saved_change_to_bank_account_id?
+
+    updates = {}
+    updates[:bank_account_id] = @expense.bank_account_id if @expense.saved_change_to_bank_account_id?
+    updates[:credit_card_id] = @expense.credit_card_id if @expense.saved_change_to_credit_card_id?
+    return if updates.empty?
 
     current_user.expenses
       .where(installment_group_id: @expense.installment_group_id)
       .where.not(id: @expense.id)
-      .update_all(bank_account_id: @expense.bank_account_id)
+      .update_all(updates)
   end
 
   def renumber_installments(group_id)

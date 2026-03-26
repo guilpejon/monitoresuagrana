@@ -39,9 +39,10 @@ class CreditCardTest < ActiveSupport::TestCase
     category = user.categories.first
     card = create(:credit_card, user: user, billing_day: 10)
 
-    reference_date = Date.current.change(day: 15)
-    period_start = reference_date.change(day: card.billing_day) - 1.month + 1.day
+    # Use a reference_date where billing_day hasn't passed yet (day 5 < billing_day 10)
+    reference_date = Date.current.change(day: 5)
     period_end = reference_date.change(day: card.billing_day)
+    period_start = period_end - 1.month + 1.day
 
     in_period = create(:expense, user: user, category: category, credit_card: card,
                        date: period_start + 3.days, amount: 200.00)
@@ -50,6 +51,25 @@ class CreditCardTest < ActiveSupport::TestCase
 
     bill = card.current_bill(reference_date)
     assert_equal 200.00, bill.to_f
+  end
+
+  test "current_bill uses next billing_day when billing_day has already passed" do
+    user = create(:user)
+    category = user.categories.first
+    card = create(:credit_card, user: user, billing_day: 10)
+
+    # Use a reference_date where billing_day has already passed (day 20 > billing_day 10)
+    reference_date = Date.current.change(day: 20)
+    period_end = (reference_date + 1.month).change(day: card.billing_day)
+    period_start = period_end - 1.month + 1.day
+
+    in_period = create(:expense, user: user, category: category, credit_card: card,
+                       date: period_start + 3.days, amount: 300.00)
+    old_period = create(:expense, user: user, category: category, credit_card: card,
+                        date: period_start - 5.days, amount: 100.00)
+
+    bill = card.current_bill(reference_date)
+    assert_equal 300.00, bill.to_f
   end
 
   test "current_bill returns 0 when no expenses" do
