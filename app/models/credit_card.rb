@@ -10,20 +10,43 @@ class CreditCard < ApplicationRecord
   validates :billing_day, numericality: { in: 1..28 }
   validates :due_day, numericality: { in: 1..28 }
 
-  def current_bill(reference_date = Date.current)
-    # Bill covers from last billing_day+1 to current (upcoming) billing_day
+  def billing_period(reference_date = Date.current)
     period_end = if reference_date.day < billing_day
       reference_date.change(day: billing_day)
     else
       (reference_date + 1.month).change(day: billing_day)
     end
-    period_start = period_end - 1.month + 1.day
+    [ period_end - 1.month + 1.day, period_end ]
+  end
 
+  def current_bill(reference_date = Date.current)
+    period_start, period_end = billing_period(reference_date)
     if expenses.loaded?
       expenses.select { |e| e.date.between?(period_start, period_end) }.sum(&:amount)
     else
       expenses.where(date: period_start..period_end).sum(:amount)
     end
+  end
+
+  def previous_bill(reference_date = Date.current)
+    period_start, = billing_period(reference_date)
+    prev_end   = period_start - 1.day
+    prev_start = prev_end - 1.month + 1.day
+    if expenses.loaded?
+      expenses.select { |e| e.date.between?(prev_start, prev_end) }.sum(&:amount)
+    else
+      expenses.where(date: prev_start..prev_end).sum(:amount)
+    end
+  end
+
+  def due_date(reference_date = Date.current)
+    _, period_end = billing_period(reference_date)
+    due_day > billing_day ? period_end.change(day: due_day) : (period_end + 1.month).change(day: due_day)
+  end
+
+  def days_until_close(reference_date = Date.current)
+    _, period_end = billing_period(reference_date)
+    (period_end - reference_date).to_i
   end
 
   def color_hex

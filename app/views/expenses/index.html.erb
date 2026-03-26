@@ -15,6 +15,20 @@
     <% end %>
   </div>
 
+  <%# Credit card filter banner %>
+  <% if @credit_card_filter %>
+    <div class="flex items-center justify-between px-3 py-2 rounded-lg text-sm" style="background-color: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.3);">
+      <div class="flex items-center gap-2">
+        <div class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: <%= @credit_card_filter.color_hex %>;"></div>
+        <span style="color: #E2E8F0;"><%= t("expenses.index.filtered_by_card", name: @credit_card_filter.name) %></span>
+      </div>
+      <%= link_to expenses_path, class: "flex items-center gap-1 text-xs font-medium hover:opacity-70 transition-opacity", style: "color: #8892A4;" do %>
+        <%= svg_icon "x", css_class: "w-3.5 h-3.5" %>
+        <%= t("expenses.index.clear_filter") %>
+      <% end %>
+    </div>
+  <% end %>
+
   <%# Search bar %>
   <div class="relative">
     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -38,7 +52,7 @@
 
   <%# Fixed expenses %>
   <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
-    <div class="px-4 py-3 border-b flex items-center justify-between" style="border-color: #2A2F45;">
+    <div class="px-4 py-3 border-b flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between" style="border-color: #2A2F45;">
       <div class="flex items-center gap-1.5">
         <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.fixed_expenses") %></h2>
         <span class="relative group flex items-center">
@@ -74,7 +88,7 @@
 
   <%# Installment expenses (manual) %>
   <div data-section="installment" class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: #2A2F45;">
-    <div class="px-4 py-3 border-b flex items-center justify-between" style="border-color: #2A2F45;">
+    <div class="px-4 py-3 border-b flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between" style="border-color: #2A2F45;">
       <div class="flex items-center gap-1.5">
         <h2 class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("expenses.index.installment_expenses") %></h2>
         <span class="relative group flex items-center">

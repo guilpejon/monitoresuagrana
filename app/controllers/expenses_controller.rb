@@ -3,7 +3,11 @@ class ExpensesController < ApplicationController
   before_action :prevent_locked_edit, only: %i[edit update]
 
   def index
-    base = current_user.expenses.includes(:category, :credit_card).for_month(@current_date)
+    @credit_card_filter = params[:credit_card_id].present? ? current_user.credit_cards.find_by(id: params[:credit_card_id]) : nil
+
+    scope = current_user.expenses.for_month(@current_date)
+    scope = scope.where(credit_card_id: @credit_card_filter.id) if @credit_card_filter
+    base  = scope.includes(:category, :credit_card)
 
     @fixed_expenses = base.fixed.ordered
 
@@ -25,7 +29,7 @@ class ExpensesController < ApplicationController
     @credit_cards = current_user.credit_cards.order(:name)
     @bank_accounts = current_user.bank_accounts.order(:name)
 
-    totals = current_user.expenses.for_month(@current_date).group(:expense_type).sum(:amount)
+    totals = scope.group(:expense_type).sum(:amount)
     @fixed_total = totals["fixed"] || 0
     @variable_total = totals["variable"] || 0
     @total = @fixed_total + @variable_total

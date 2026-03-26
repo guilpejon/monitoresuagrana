@@ -184,6 +184,8 @@ pt-BR:
       variable_other_tooltip: "Despesas variáveis avulsas, sem parcelamento — como compras e gastos pontuais."
       search_placeholder: "Buscar despesas..."
       no_results: "Nenhuma despesa encontrada"
+      filtered_by_card: "Filtrando por cartão: %{name}"
+      clear_filter: "Limpar filtro"
       add_expense_short: "Adicionar"
     new:
       title: "Nova Despesa"
@@ -301,6 +303,9 @@ pt-BR:
       set_default: "Definir como padrão"
       unset_default: "Remover padrão"
       default_badge: "Padrão"
+      closes_in: "fecha em %{days}d"
+      due_on: "vence em %{date}"
+      previous_bill: "Última fatura:"
     new:
       title: "Adicionar Cartão de Crédito"
     edit:

@@ -149,6 +149,8 @@ en:
       variable_other_tooltip: "One-off variable expenses, not in installments — like occasional purchases."
       search_placeholder: "Search expenses..."
       no_results: "No expenses match your search"
+      filtered_by_card: "Filtered by card: %{name}"
+      clear_filter: "Clear filter"
       add_expense_short: "Add"
     new:
       title: "New Expense"
@@ -266,6 +268,9 @@ en:
       set_default: "Set as default"
       unset_default: "Remove default"
       default_badge: "Default"
+      closes_in: "closes in %{days}d"
+      due_on: "due %{date}"
+      previous_bill: "Last bill:"
     new:
       title: "Add Credit Card"
     edit:

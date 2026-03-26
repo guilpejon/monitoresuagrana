@@ -184,6 +184,8 @@ es:
       variable_other_tooltip: "Gastos variables únicos, sin cuotas — como compras y gastos ocasionales."
       search_placeholder: "Buscar gastos..."
       no_results: "Ningún gasto coincide con tu búsqueda"
+      filtered_by_card: "Filtrando por tarjeta: %{name}"
+      clear_filter: "Quitar filtro"
       add_expense_short: "Agregar"
     new:
       title: "Nuevo Gasto"
@@ -301,6 +303,9 @@ es:
       set_default: "Establecer por defecto"
       unset_default: "Quitar por defecto"
       default_badge: "Por defecto"
+      closes_in: "cierra en %{days}d"
+      due_on: "vence el %{date}"
+      previous_bill: "Última factura:"
     new:
       title: "Agregar Tarjeta de Crédito"
     edit:
