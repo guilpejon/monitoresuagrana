@@ -213,6 +213,7 @@ pt-BR:
       installments: "Parcelas"
       per_installment: "Por parcela:"
       installment_label: "Parcela"
+      installment_of: "de"
       installment_note: "— somente esta parcela será atualizada"
       installment_no_recurring: "Não disponível para despesas parceladas"
       installment_locked_note: "Tipo e método de pagamento são fixos para manter a consistência entre as parcelas."

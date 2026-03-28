@@ -110,7 +110,7 @@
     <% if @variable_installment_expenses.any? %>
       <div id="installment_expenses_list" class="divide-y" style="border-color: #2A2F45;">
         <% @variable_installment_expenses.each do |expense| %>
-          <%= render "expense", expense: expense %>
+          <%= render "expense", expense: expense, group_total: @installment_group_totals[expense.installment_group_id] %>
         <% end %>
         <div data-expense-filter-target="installmentEmpty" hidden class="flex flex-col items-center justify-center py-10 gap-2">
           <p class="text-sm" style="color: #8892A4;"><%= t("expenses.index.no_results") %></p>
@@ -142,7 +142,7 @@
     <% if @variable_credit_card_installment_expenses.any? %>
       <div id="credit_card_installment_expenses_list" class="divide-y" style="border-color: #2A2F45;">
         <% @variable_credit_card_installment_expenses.each do |expense| %>
-          <%= render "expense", expense: expense %>
+          <%= render "expense", expense: expense, group_total: @installment_group_totals[expense.installment_group_id] %>
         <% end %>
         <div data-expense-filter-target="creditCardInstallmentEmpty" hidden class="flex flex-col items-center justify-center py-10 gap-2">
           <p class="text-sm" style="color: #8892A4;"><%= t("expenses.index.no_results") %></p>

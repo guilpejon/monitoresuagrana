@@ -213,6 +213,7 @@ es:
       installments: "Cuotas"
       per_installment: "Por cuota:"
       installment_label: "Cuota"
+      installment_of: "de"
       installment_note: "— solo esta cuota será actualizada"
       installment_no_recurring: "No disponible para gastos en cuotas"
       installment_locked_note: "El tipo y método de pago están bloqueados para mantener la consistencia entre cuotas."

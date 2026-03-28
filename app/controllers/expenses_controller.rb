@@ -29,6 +29,9 @@ class ExpensesController < ApplicationController
     @variable_credit_card_installment_total = @variable_credit_card_installment_expenses.sum(&:amount)
     @variable_regular_total = @variable_regular_expenses.sum(&:amount)
 
+    group_ids = all_installment_expenses.map(&:installment_group_id).compact.uniq
+    @installment_group_totals = group_ids.any? ? current_user.expenses.where(installment_group_id: group_ids).group(:installment_group_id).sum(:amount) : {}
+
     @fixed_paid_total = @fixed_expenses.select { |e| e.payment_status == "paid" }.sum(&:amount)
     @fixed_unpaid_total = @fixed_expenses.reject { |e| e.payment_status == "paid" }.sum(&:amount)
     @variable_installment_paid_total = @variable_installment_expenses.select { |e| e.payment_status == "paid" }.sum(&:amount)
@@ -73,6 +76,7 @@ class ExpensesController < ApplicationController
     @categories = current_user.categories.order(:name)
     @credit_cards = current_user.credit_cards.order(:name)
     @bank_accounts = current_user.bank_accounts.order(:name)
+    @installment_group_total = @expense.installment? ? current_user.expenses.where(installment_group_id: @expense.installment_group_id).sum(:amount) : nil
   end
 
   def update

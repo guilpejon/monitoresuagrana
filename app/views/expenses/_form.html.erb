@@ -165,7 +165,10 @@
     <%= f.hidden_field :installment_group_id %>
     <div class="px-3 py-2.5 rounded-lg border text-sm" style="background-color: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.3);">
       <span style="color: #F59E0B;"><%= t("expenses.form.installment_label") %> <%= expense.installment_label %></span>
-      <span class="ml-2" style="color: #8892A4;"><%= t("expenses.form.installment_note") %></span>
+      <% if local_assigns[:installment_group_total] %>
+        <span style="color: #F59E0B;"> (<%= t("expenses.form.installment_of") %> <%= format_currency(local_assigns[:installment_group_total]) %>)</span>
+      <% end %>
+      <span style="color: #8892A4;"> <%= t("expenses.form.installment_note") %></span>
     </div>
   <% end %>
 

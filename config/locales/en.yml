@@ -178,6 +178,7 @@ en:
       installments: "Installments"
       per_installment: "Per installment:"
       installment_label: "Installment"
+      installment_of: "of"
       installment_note: "— only this installment will be updated"
       installment_no_recurring: "Not available for installment expenses"
       installment_locked_note: "Type and payment method are locked to keep all installments consistent."
