@@ -574,20 +574,28 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "PATCH update on recurring replica propagates date day to future siblings and updates template" do
-    template = create(:expense, user: @user, category: @category, expense_type: "fixed", recurring: true, date: Date.new(2026, 1, 20))
-    past_replica = create(:expense, user: @user, category: @category, expense_type: "fixed", recurring: true, recurring_source_id: template.id, date: Date.new(2026, 2, 20))
-    edited_replica = create(:expense, user: @user, category: @category, expense_type: "fixed", recurring: true, recurring_source_id: template.id, date: Date.new(2026, 3, 20))
-    future_replica = create(:expense, user: @user, category: @category, expense_type: "fixed", recurring: true, recurring_source_id: template.id, date: Date.new(2026, 4, 20))
+    # Travel to the 10th so that day 20 is in the current month (not locked) and day 25 is after today (future sibling propagation works)
+    travel_to Date.current.beginning_of_month + 9.days do
+      template_date = Date.current.change(day: 20) - 3.months
+      past_date = Date.current.change(day: 20) - 2.months
+      edited_date = Date.current.change(day: 20)
+      future_date = (Date.current + 1.month).change(day: 20)
 
-    sign_in @user
-    patch expense_path(edited_replica), params: { expense: { date: Date.new(2026, 3, 25) } }
+      template = create(:expense, user: @user, category: @category, expense_type: "fixed", recurring: true, date: template_date)
+      past_replica = create(:expense, user: @user, category: @category, expense_type: "fixed", recurring: true, recurring_source_id: template.id, date: past_date)
+      edited_replica = create(:expense, user: @user, category: @category, expense_type: "fixed", recurring: true, recurring_source_id: template.id, date: edited_date)
+      future_replica = create(:expense, user: @user, category: @category, expense_type: "fixed", recurring: true, recurring_source_id: template.id, date: future_date)
 
-    assert_redirected_to expenses_path
-    assert_equal Date.new(2026, 3, 25), edited_replica.reload.date
-    assert_equal Date.new(2026, 4, 25), future_replica.reload.date
-    assert_equal 25, template.reload.recurrence_day              # template recurrence_day updated, date untouched
-    assert_equal Date.new(2026, 1, 20), template.reload.date     # template date itself unchanged
-    assert_equal Date.new(2026, 2, 20), past_replica.reload.date # past replica not updated
+      sign_in @user
+      patch expense_path(edited_replica), params: { expense: { date: Date.current.change(day: 25) } }
+
+      assert_redirected_to expenses_path
+      assert_equal Date.current.change(day: 25), edited_replica.reload.date
+      assert_equal (Date.current + 1.month).change(day: 25), future_replica.reload.date
+      assert_equal 25, template.reload.recurrence_day              # template recurrence_day updated, date untouched
+      assert_equal template_date, template.reload.date             # template date itself unchanged
+      assert_equal past_date, past_replica.reload.date             # past replica not updated
+    end
   end
 
   test "PATCH update on recurring template propagates credit_card_id to future replicas" do
@@ -827,34 +835,40 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "GET index variable regular expenses are ordered most recent first" do
-    older = create(:expense, user: @user, category: @category, description: "Older Expense",
-                   expense_type: "variable", date: Date.current - 5.days)
-    newer = create(:expense, user: @user, category: @category, description: "Newer Expense",
-                   expense_type: "variable", date: Date.current)
+    # Travel to mid-month so that subtracting 5 days stays within the same month
+    travel_to Date.current.beginning_of_month + 14.days do
+      older = create(:expense, user: @user, category: @category, description: "Older Expense",
+                     expense_type: "variable", date: Date.current - 5.days)
+      newer = create(:expense, user: @user, category: @category, description: "Newer Expense",
+                     expense_type: "variable", date: Date.current)
 
-    sign_in @user
-    get expenses_path
+      sign_in @user
+      get expenses_path
 
-    newer_pos = response.body.index("Newer Expense")
-    older_pos = response.body.index("Older Expense")
-    assert newer_pos < older_pos, "Newer expense should appear before older expense"
+      newer_pos = response.body.index("Newer Expense")
+      older_pos = response.body.index("Older Expense")
+      assert newer_pos < older_pos, "Newer expense should appear before older expense"
+    end
   end
 
   test "GET index variable installment expenses are ordered most recent first" do
-    group1 = SecureRandom.uuid
-    group2 = SecureRandom.uuid
-    older_inst = create(:expense, user: @user, category: @category, description: "Old TV 1/3",
-                        expense_type: "variable", date: Date.current - 5.days,
-                        installment_group_id: group1, installment_number: 1, total_installments: 3)
-    newer_inst = create(:expense, user: @user, category: @category, description: "New Phone 1/3",
-                        expense_type: "variable", date: Date.current,
-                        installment_group_id: group2, installment_number: 1, total_installments: 3)
+    # Travel to mid-month so that subtracting 5 days stays within the same month
+    travel_to Date.current.beginning_of_month + 14.days do
+      group1 = SecureRandom.uuid
+      group2 = SecureRandom.uuid
+      older_inst = create(:expense, user: @user, category: @category, description: "Old TV 1/3",
+                          expense_type: "variable", date: Date.current - 5.days,
+                          installment_group_id: group1, installment_number: 1, total_installments: 3)
+      newer_inst = create(:expense, user: @user, category: @category, description: "New Phone 1/3",
+                          expense_type: "variable", date: Date.current,
+                          installment_group_id: group2, installment_number: 1, total_installments: 3)
 
-    sign_in @user
-    get expenses_path
+      sign_in @user
+      get expenses_path
 
-    newer_pos = response.body.index("New Phone 1/3")
-    older_pos = response.body.index("Old TV 1/3")
-    assert newer_pos > older_pos, "Older installment should appear before newer installment"
+      newer_pos = response.body.index("New Phone 1/3")
+      older_pos = response.body.index("Old TV 1/3")
+      assert newer_pos > older_pos, "Older installment should appear before newer installment"
+    end
   end
 end
