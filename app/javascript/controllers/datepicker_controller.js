@@ -30,6 +30,7 @@ export default class extends Controller {
     this.picker = flatpickr(this.element, {
       dateFormat: "Y-m-d",
       defaultDate: currentValue || null,
+      disableMobile: true,
     })
   }
 }
