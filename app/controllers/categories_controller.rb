@@ -78,8 +78,11 @@ class CategoriesController < ApplicationController
   end
 
   def destroy
-    @category.destroy
-    redirect_to categories_path, notice: t("controllers.categories.destroyed")
+    if @category.destroy
+      redirect_to categories_path, notice: t("controllers.categories.destroyed")
+    else
+      redirect_to categories_path, alert: @category.errors.full_messages.to_sentence
+    end
   end
 
   def set_default

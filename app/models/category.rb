@@ -1,6 +1,6 @@
 class Category < ApplicationRecord
   belongs_to :user
-  has_many :expenses, dependent: :nullify
+  has_many :expenses, dependent: :restrict_with_error
 
   before_destroy :clear_user_default
   before_validation :generate_slug

@@ -1,5 +1,6 @@
 class BankAccount < ApplicationRecord
   belongs_to :user
+  has_many :expenses, dependent: :nullify
 
   TYPES = %w[checking savings other].freeze
   COLORS = ColorPalette::COLORS
