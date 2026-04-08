@@ -52,7 +52,7 @@
         <div class="px-4 py-3 border-b" style="border-color: #2A2F45; background-color: rgba(42,47,69,0.4);">
           <div class="flex items-center justify-between">
             <h2 class="text-sm font-semibold capitalize" style="color: #E2E8F0;">
-              <%= type.capitalize %>
+              <%= t("bank_accounts.form.#{type}") %>
               <span class="ml-2 text-xs font-normal" style="color: #8892A4;"><%= accounts.count %></span>
             </h2>
             <span class="text-sm font-semibold" style="color: #E2E8F0;"><%= format_currency(accounts.sum(&:balance)) %></span>
