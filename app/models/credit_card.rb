@@ -69,7 +69,7 @@ class CreditCard < ApplicationRecord
 
   def usage_percentage(reference_date = Date.current)
     return 0 unless limit.positive?
-    [ (current_bill(reference_date) / limit * 100).round, 100 ].min
+    [ (committed_amount(reference_date) / limit * 100).round, 100 ].min
   end
 
   def due_date(reference_date = Date.current)
@@ -87,6 +87,33 @@ class CreditCard < ApplicationRecord
   end
 
   private
+
+  # Total credit committed on this card: current-period non-recurring expenses
+  # plus all future installment expenses already planned in upcoming periods.
+  # Recurring CC expenses are excluded because they are not committed at the card
+  # level the way installments are.
+  def committed_amount(reference_date = Date.current)
+    period_start, period_end = billing_period(reference_date)
+    if expenses.loaded?
+      current = expenses
+        .select { |e| e.date.between?(period_start, period_end) && !e.recurring? }
+        .sum(&:amount)
+      future = expenses
+        .select { |e| e.date > period_end && e.installment? }
+        .sum(&:amount)
+      current + future
+    else
+      current = expenses
+        .where(date: period_start..period_end)
+        .where(recurring: false)
+        .sum(:amount)
+      future = expenses
+        .where("date > ?", period_end)
+        .where("total_installments > 1")
+        .sum(:amount)
+      current + future
+    end
+  end
 
   def clear_user_default
     user.update_column(:default_credit_card_id, nil) if user.default_credit_card_id == id

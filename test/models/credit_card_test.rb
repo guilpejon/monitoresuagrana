@@ -142,6 +142,42 @@ class CreditCardTest < ActiveSupport::TestCase
     assert_equal 100, card.usage_percentage(reference_date)
   end
 
+  test "usage_percentage includes future installments" do
+    user = create(:user)
+    category = user.categories.first
+    card = create(:credit_card, user: user, billing_day: 1, limit: 1000)
+
+    reference_date = Date.new(2024, 3, 15)
+    period_start, period_end = card.billing_period(reference_date)
+
+    create(:expense, user: user, category: category, credit_card: card,
+           date: period_start + 1.day, amount: 200.00)
+    # Future installment — outside current billing period but already committed
+    create(:expense, user: user, category: category, credit_card: card,
+           date: period_end + 1.day, amount: 100.00,
+           total_installments: 3, installment_number: 2)
+
+    assert_equal 30, card.usage_percentage(reference_date)
+  end
+
+  test "usage_percentage excludes recurring credit card expenses" do
+    user = create(:user)
+    category = user.categories.first
+    card = create(:credit_card, user: user, billing_day: 1, limit: 1000)
+
+    reference_date = Date.new(2024, 3, 15)
+    period_start, = card.billing_period(reference_date)
+
+    create(:expense, user: user, category: category, credit_card: card,
+           date: period_start + 1.day, amount: 200.00)
+    # Recurring CC expense — should not count towards usage percentage
+    create(:expense, user: user, category: category, credit_card: card,
+           date: period_start + 2.days, amount: 300.00,
+           expense_type: "fixed", recurrence_day: 15)
+
+    assert_equal 20, card.usage_percentage(reference_date)
+  end
+
   test "usage_percentage returns 0 when limit is zero" do
     card = build(:credit_card, limit: 0)
     assert_equal 0, card.usage_percentage
