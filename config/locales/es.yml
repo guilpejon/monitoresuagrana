@@ -292,6 +292,7 @@ es:
       title: "Tarjetas de Crédito"
       add: "Agregar Tarjeta"
       current_bill: "Factura Actual"
+      available: "Disponible"
       limit: "Límite"
       billing_due: "Cierre / Vencimiento"
       day: "Día"

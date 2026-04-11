@@ -72,6 +72,10 @@ class CreditCard < ApplicationRecord
     [ (committed_amount(reference_date) / limit * 100).round, 100 ].min
   end
 
+  def available_limit(reference_date = Date.current)
+    [ limit - committed_amount(reference_date), 0 ].max
+  end
+
   def due_date(reference_date = Date.current)
     _, period_end = billing_period(reference_date)
     due_day > billing_day ? period_end.change(day: due_day) : (period_end + 1.month).change(day: due_day)

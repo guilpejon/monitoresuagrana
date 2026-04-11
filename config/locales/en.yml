@@ -257,6 +257,7 @@ en:
       title: "Credit Cards"
       add: "Add Card"
       current_bill: "Current Bill"
+      available: "Available"
       limit: "Limit"
       billing_due: "Billing / Due"
       day: "Day"

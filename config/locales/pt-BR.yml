@@ -292,6 +292,7 @@ pt-BR:
       title: "Cartões de Crédito"
       add: "Adicionar Cartão"
       current_bill: "Fatura Atual"
+      available: "Disponível"
       limit: "Limite"
       billing_due: "Fechamento / Vencimento"
       day: "Dia"

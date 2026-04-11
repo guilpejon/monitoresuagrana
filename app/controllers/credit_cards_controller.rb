@@ -3,6 +3,26 @@ class CreditCardsController < ApplicationController
 
   def index
     @credit_cards = current_user.credit_cards.order(:name)
+    today = Date.current
+    @card_data = @credit_cards.index_with do |card|
+      usage_pct = card.usage_percentage(today)
+      period_start, period_end = card.billing_period(today)
+      prev_start, prev_end = card.previous_billing_period(today)
+      {
+        is_default:   current_user.default_credit_card_id == card.id,
+        bill:         card.current_bill(today),
+        prev_bill:    card.previous_bill(today),
+        usage_pct:    usage_pct,
+        bar_color:    usage_pct > 80 ? "#FF6B6B" : card.color_hex,
+        available:    card.available_limit(today),
+        period_start: period_start,
+        period_end:   period_end,
+        prev_start:   prev_start,
+        prev_end:     prev_end,
+        days_close:   card.days_until_close(today),
+        due_date:     card.due_date(today)
+      }
+    end
   end
 
   def new

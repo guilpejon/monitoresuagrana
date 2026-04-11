@@ -12,13 +12,8 @@
     <%# Mobile: compact list %>
     <div class="md:hidden space-y-2">
       <% @credit_cards.each do |card| %>
-        <% is_default = current_user.default_credit_card_id == card.id %>
-        <% bill = card.current_bill(@current_date) %>
-        <% usage_pct = card.usage_percentage(@current_date) %>
-        <% period_start, period_end = card.billing_period(@current_date) %>
-        <% prev_start, prev_end = card.previous_billing_period(@current_date) %>
-        <% days_close = card.days_until_close(@current_date) %>
-        <div class="rounded-xl border overflow-hidden flex" style="background-color: #1E2130; border-color: <%= is_default ? '#6C63FF' : '#2A2F45' %>;">
+        <% d = @card_data[card] %>
+        <div class="rounded-xl border overflow-hidden flex" style="background-color: #1E2130; border-color: <%= d[:is_default] ? '#6C63FF' : '#2A2F45' %>;">
           <%# Color accent bar %>
           <div class="w-1.5 flex-shrink-0" style="background-color: <%= card.color_hex %>;"></div>
 
@@ -27,43 +22,43 @@
             <div class="flex items-center justify-between gap-2">
               <div class="flex items-center gap-2 min-w-0">
                 <p class="text-sm font-semibold truncate" style="color: #E2E8F0;"><%= card.name %></p>
-                <% if is_default %>
+                <% if d[:is_default] %>
                   <span class="text-xs font-semibold px-1.5 py-0.5 rounded-full flex-shrink-0" style="background-color: #6C63FF22; color: #6C63FF; border: 1px solid #6C63FF44;"><%= t("credit_cards.index.default_badge") %></span>
                 <% end %>
               </div>
-              <%= link_to expenses_path(credit_card_id: card.id, period_start: period_start.iso8601, period_end: period_end.iso8601), class: "text-sm font-bold flex-shrink-0 hover:opacity-80 transition-opacity", style: "color: #F7B731;" do %>
-                <%= format_currency(bill) %>
+              <%= link_to expenses_path(credit_card_id: card.id, period_start: d[:period_start].iso8601, period_end: d[:period_end].iso8601), class: "text-sm font-bold flex-shrink-0 hover:opacity-80 transition-opacity", style: "color: #F7B731;" do %>
+                <%= format_currency(d[:bill]) %>
               <% end %>
             </div>
 
             <%# Second row: period dates + closes in %>
             <div class="flex items-center justify-between mt-1">
               <p class="text-xs" style="color: #8892A4;">
-                <%= l(period_start, format: "%-d %b") %> – <%= l(period_end, format: "%-d %b") %>
+                <%= l(d[:period_start], format: "%-d %b") %> – <%= l(d[:period_end], format: "%-d %b") %>
               </p>
               <p class="text-xs" style="color: #8892A4;">
-                <%= t("credit_cards.index.closes_in", days: days_close) %>
+                <%= t("credit_cards.index.closes_in", days: d[:days_close]) %>
               </p>
             </div>
 
             <%# Third row: due date + last bill %>
             <div class="flex items-center justify-between mt-0.5">
               <p class="text-xs" style="color: #8892A4;">
-                <%= t("credit_cards.index.due_on", date: l(card.due_date(@current_date), format: "%-d %b")) %>
+                <%= t("credit_cards.index.due_on", date: l(d[:due_date], format: "%-d %b")) %>
               </p>
               <p class="text-xs" style="color: #8892A4;">
-                <%= t("credit_cards.index.previous_bill") %> <%= link_to format_currency(card.previous_bill(@current_date)), expenses_path(credit_card_id: card.id, period_start: prev_start.iso8601, period_end: prev_end.iso8601), class: "hover:opacity-80 transition-opacity", style: "color: #CBD5E0;" %>
+                <%= t("credit_cards.index.previous_bill") %> <%= link_to format_currency(d[:prev_bill]), expenses_path(credit_card_id: card.id, period_start: d[:prev_start].iso8601, period_end: d[:prev_end].iso8601), class: "hover:opacity-80 transition-opacity", style: "color: #CBD5E0;" %>
               </p>
             </div>
 
             <%# Progress bar with usage % %>
             <div class="mt-2">
               <div class="flex justify-between text-xs mb-1" style="color: #8892A4;">
-                <span><%= t("credit_cards.index.usage") %> · <%= t("credit_cards.index.limit") %> <%= format_currency(card.limit) %></span>
-                <span><%= usage_pct %>%</span>
+                <span><%= t("credit_cards.index.available") %> <%= format_currency(d[:available]) %> / <%= format_currency(card.limit) %></span>
+                <span><%= d[:usage_pct] %>%</span>
               </div>
               <div class="h-1 rounded-full" style="background-color: #2A2F45;">
-                <div class="h-1 rounded-full transition-all" style="width: <%= usage_pct %>%; background-color: <%= usage_pct > 80 ? '#FF6B6B' : card.color_hex %>;"></div>
+                <div class="h-1 rounded-full transition-all" style="width: <%= d[:usage_pct] %>%; background-color: <%= d[:bar_color] %>;"></div>
               </div>
             </div>
 
@@ -71,9 +66,9 @@
             <div class="flex items-center gap-1.5 mt-2.5">
               <%= button_to set_default_credit_card_path(card), method: :patch,
                   class: "flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors hover:bg-white/5",
-                  style: "border: 1px solid #{is_default ? '#6C63FF' : '#2A2F45'}; color: #{is_default ? '#6C63FF' : '#8892A4'}; background: none; cursor: pointer;" do %>
+                  style: "border: 1px solid #{d[:is_default] ? '#6C63FF' : '#2A2F45'}; color: #{d[:is_default] ? '#6C63FF' : '#8892A4'}; background: none; cursor: pointer;" do %>
                 <%= svg_icon "star", css_class: "w-3 h-3" %>
-                <%= is_default ? t("credit_cards.index.unset_default") : t("credit_cards.index.set_default") %>
+                <%= d[:is_default] ? t("credit_cards.index.unset_default") : t("credit_cards.index.set_default") %>
               <% end %>
               <%= link_to edit_credit_card_path(card), class: "flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors hover:bg-white/5", style: "color: #8892A4; border: 1px solid #2A2F45;" do %>
                 <%= svg_icon "edit", css_class: "w-3 h-3" %> <%= t("credit_cards.index.edit") %>
@@ -98,13 +93,8 @@
     <%# Desktop: card grid %>
     <div class="hidden md:grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
       <% @credit_cards.each do |card| %>
-        <% is_default = current_user.default_credit_card_id == card.id %>
-        <% bill = card.current_bill(@current_date) %>
-        <% usage_pct = card.usage_percentage(@current_date) %>
-        <% period_start, period_end = card.billing_period(@current_date) %>
-        <% prev_start, prev_end = card.previous_billing_period(@current_date) %>
-        <% days_close = card.days_until_close(@current_date) %>
-        <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: <%= is_default ? '#6C63FF' : '#2A2F45' %>;">
+        <% d = @card_data[card] %>
+        <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: <%= d[:is_default] ? '#6C63FF' : '#2A2F45' %>;">
           <%# Card visual %>
           <div class="px-4 py-3 relative" style="background: linear-gradient(135deg, <%= card.color_hex %>, <%= card.color_hex %>88);">
             <div class="flex items-start justify-between mb-3">
@@ -113,7 +103,7 @@
                 <p class="text-sm font-bold mt-0.5" style="color: white;"><%= card.name %></p>
               </div>
               <div class="flex items-center gap-2">
-                <% if is_default %>
+                <% if d[:is_default] %>
                   <span class="text-xs font-semibold px-2 py-0.5 rounded-full" style="background-color: rgba(255,255,255,0.2); color: white;"><%= t("credit_cards.index.default_badge") %></span>
                 <% end %>
                 <div class="opacity-80">
@@ -134,37 +124,37 @@
             <%# Current bill (linked) %>
             <div class="flex items-center justify-between text-xs">
               <span style="color: #8892A4;"><%= t("credit_cards.index.current_bill") %></span>
-              <%= link_to expenses_path(credit_card_id: card.id, period_start: period_start.iso8601, period_end: period_end.iso8601), class: "font-semibold hover:opacity-80 transition-opacity", style: "color: #F7B731;" do %>
-                <%= format_currency(bill) %>
+              <%= link_to expenses_path(credit_card_id: card.id, period_start: d[:period_start].iso8601, period_end: d[:period_end].iso8601), class: "font-semibold hover:opacity-80 transition-opacity", style: "color: #F7B731;" do %>
+                <%= format_currency(d[:bill]) %>
               <% end %>
             </div>
 
             <%# Billing period %>
             <div class="flex items-center justify-between text-xs">
-              <span style="color: #8892A4;"><%= l(period_start, format: "%-d %b") %> – <%= l(period_end, format: "%-d %b") %></span>
-              <span style="color: #8892A4;"><%= t("credit_cards.index.closes_in", days: days_close) %></span>
+              <span style="color: #8892A4;"><%= l(d[:period_start], format: "%-d %b") %> – <%= l(d[:period_end], format: "%-d %b") %></span>
+              <span style="color: #8892A4;"><%= t("credit_cards.index.closes_in", days: d[:days_close]) %></span>
             </div>
 
             <%# Due date %>
             <div class="flex items-center justify-between text-xs">
-              <span style="color: #8892A4;"><%= t("credit_cards.index.due_on", date: l(card.due_date(@current_date), format: "%-d %b")) %></span>
-              <span style="color: #8892A4;"><%= t("credit_cards.index.previous_bill") %> <%= link_to format_currency(card.previous_bill(@current_date)), expenses_path(credit_card_id: card.id, period_start: prev_start.iso8601, period_end: prev_end.iso8601), class: "hover:opacity-80 transition-opacity", style: "color: #CBD5E0;" %></span>
+              <span style="color: #8892A4;"><%= t("credit_cards.index.due_on", date: l(d[:due_date], format: "%-d %b")) %></span>
+              <span style="color: #8892A4;"><%= t("credit_cards.index.previous_bill") %> <%= link_to format_currency(d[:prev_bill]), expenses_path(credit_card_id: card.id, period_start: d[:prev_start].iso8601, period_end: d[:prev_end].iso8601), class: "hover:opacity-80 transition-opacity", style: "color: #CBD5E0;" %></span>
             </div>
 
-            <%# Limit %>
+            <%# Available / Limit %>
             <div class="flex items-center justify-between text-xs">
-              <span style="color: #8892A4;"><%= t("credit_cards.index.limit") %></span>
-              <span class="font-medium" style="color: #E2E8F0;"><%= format_currency(card.limit) %></span>
+              <span style="color: #8892A4;"><%= t("credit_cards.index.available") %></span>
+              <span class="font-medium" style="color: #E2E8F0;"><%= format_currency(d[:available]) %> <span style="color: #8892A4;">/ <%= format_currency(card.limit) %></span></span>
             </div>
 
             <%# Progress bar %>
             <div>
               <div class="flex justify-between text-xs mb-1" style="color: #8892A4;">
                 <span><%= t("credit_cards.index.usage") %></span>
-                <span><%= usage_pct %>%</span>
+                <span><%= d[:usage_pct] %>%</span>
               </div>
               <div class="h-1 rounded-full" style="background-color: #2A2F45;">
-                <div class="h-1 rounded-full transition-all" style="width: <%= usage_pct %>%; background-color: <%= usage_pct > 80 ? '#FF6B6B' : card.color_hex %>;"></div>
+                <div class="h-1 rounded-full transition-all" style="width: <%= d[:usage_pct] %>%; background-color: <%= d[:bar_color] %>;"></div>
               </div>
             </div>
 
@@ -173,9 +163,9 @@
               <div class="basis-full xl:basis-auto xl:flex-1">
                 <%= button_to set_default_credit_card_path(card), method: :patch,
                     class: "w-full flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg text-xs font-medium transition-colors hover:bg-white/5",
-                    style: "border: 1px solid #{is_default ? '#6C63FF' : '#2A2F45'}; color: #{is_default ? '#6C63FF' : '#8892A4'}; background: none; cursor: pointer;" do %>
+                    style: "border: 1px solid #{d[:is_default] ? '#6C63FF' : '#2A2F45'}; color: #{d[:is_default] ? '#6C63FF' : '#8892A4'}; background: none; cursor: pointer;" do %>
                   <%= svg_icon "star", css_class: "w-3 h-3 flex-shrink-0" %>
-                  <span class="truncate"><%= is_default ? t("credit_cards.index.unset_default") : t("credit_cards.index.set_default") %></span>
+                  <span class="truncate"><%= d[:is_default] ? t("credit_cards.index.unset_default") : t("credit_cards.index.set_default") %></span>
                 <% end %>
               </div>
               <%# Edit %>
