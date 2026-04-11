@@ -307,6 +307,12 @@ es:
       closes_in: "cierra en %{days}d"
       due_on: "vence el %{date}"
       previous_bill: "Última factura:"
+      history: "Historial"
+    invoices:
+      title: "Historial de Facturas"
+      open: "Abierta"
+      estimate: "Estimación"
+      view: "Ver"
     new:
       title: "Agregar Tarjeta de Crédito"
     edit:

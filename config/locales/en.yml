@@ -272,6 +272,12 @@ en:
       closes_in: "closes in %{days}d"
       due_on: "due %{date}"
       previous_bill: "Last bill:"
+      history: "History"
+    invoices:
+      title: "Invoice History"
+      open: "Open"
+      estimate: "Estimate"
+      view: "View"
     new:
       title: "Add Credit Card"
     edit:

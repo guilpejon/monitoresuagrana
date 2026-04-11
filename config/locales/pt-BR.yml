@@ -301,12 +301,18 @@ pt-BR:
       delete_modal_title: "Remover cartão"
       no_cards: "Nenhum cartão de crédito adicionado"
       add_first: "Adicionar primeiro cartão"
-      set_default: "Definir como padrão"
+      set_default: "Definir padrão"
       unset_default: "Remover padrão"
       default_badge: "Padrão"
       closes_in: "fecha em %{days}d"
       due_on: "vence em %{date}"
       previous_bill: "Última fatura:"
+      history: "Histórico"
+    invoices:
+      title: "Histórico de Faturas"
+      open: "Aberta"
+      estimate: "Estimativa"
+      view: "Ver"
     new:
       title: "Adicionar Cartão de Crédito"
     edit:
@@ -356,7 +362,7 @@ pt-BR:
       delete_confirm: "Remover esta conta?"
       delete_modal_title: "Remover conta"
       default_badge: "Padrão"
-      set_default: "Definir como padrão"
+      set_default: "Definir padrão"
       unset_default: "Remover padrão"
     new:
       title: "Adicionar Conta Bancária"
@@ -437,7 +443,7 @@ pt-BR:
       delete_confirm: "Excluir esta categoria? As despesas perderão sua categoria."
       delete_modal_title: "Excluir categoria"
       no_categories: "Nenhuma categoria ainda"
-      set_default: "Definir como padrão"
+      set_default: "Definir padrão"
       unset_default: "Remover padrão"
       default_badge: "Padrão"
     show:
@@ -477,7 +483,7 @@ pt-BR:
       name_placeholder: "ex: Assinaturas"
       color: "Cor *"
       icon: "Ícone"
-      set_as_default: "Definir como categoria padrão"
+      set_as_default: "Definir categoria padrão"
       add: "Criar Categoria"
       update: "Atualizar Categoria"
       cancel: "Cancelar"
@@ -599,14 +605,14 @@ pt-BR:
 
   install_prompt:
     banner_title: "Instale o app"
-    banner_ios_hint: "Toque em Compartilhar (↑) e depois em \"Adicionar à Tela de Início\""
+    banner_ios_hint: 'Toque em Compartilhar (↑) e depois em "Adicionar à Tela de Início"'
     banner_android_btn: "Instalar"
     dismiss: "Agora não"
     settings_title: "Instalar como App"
     settings_subtitle: "Adicione à sua tela inicial para acesso rápido"
-    settings_ios_hint: "Toque no botão Compartilhar (↑) na parte inferior do seu navegador e depois toque em \"Adicionar à Tela de Início\"."
+    settings_ios_hint: 'Toque no botão Compartilhar (↑) na parte inferior do seu navegador e depois toque em "Adicionar à Tela de Início".'
     settings_android_btn: "Adicionar à tela inicial"
-    settings_android_static_hint: "Abra o menu do navegador (⋮) e toque em \"Adicionar à tela inicial\"."
+    settings_android_static_hint: 'Abra o menu do navegador (⋮) e toque em "Adicionar à tela inicial".'
 
   shared:
     delete_modal:

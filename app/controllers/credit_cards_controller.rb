@@ -1,5 +1,5 @@
 class CreditCardsController < ApplicationController
-  before_action :set_credit_card, only: %i[edit update destroy set_default]
+  before_action :set_credit_card, only: %i[edit update destroy set_default invoices]
 
   def index
     @credit_cards = current_user.credit_cards.order(:name)
@@ -36,6 +36,27 @@ class CreditCardsController < ApplicationController
   def destroy
     @credit_card.destroy
     redirect_to credit_cards_path, notice: t("controllers.credit_cards.destroyed")
+  end
+
+  def invoices
+    current_start, current_end = @credit_card.billing_period(Date.current)
+    past_periods     = @credit_card.billing_periods_history(12)
+    upcoming_periods = @credit_card.billing_periods_upcoming(6)
+
+    oldest_start = past_periods.last.first
+    newest_end   = upcoming_periods.last.last
+    expenses_in_range = @credit_card.expenses
+                          .where(date: oldest_start..newest_end)
+                          .select(:date, :amount)
+
+    build_entry = ->(ps, pe, status) do
+      total = expenses_in_range.select { |e| e.date.between?(ps, pe) }.sum(&:amount)
+      { period_start: ps, period_end: pe, total: total, status: status }
+    end
+
+    @invoices = upcoming_periods.reverse.map { |ps, pe| build_entry.(ps, pe, :upcoming) } +
+                [ build_entry.(current_start, current_end, :current) ] +
+                past_periods.map { |ps, pe| build_entry.(ps, pe, :past) }
   end
 
   def set_default

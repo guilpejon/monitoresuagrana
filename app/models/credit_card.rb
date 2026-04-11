@@ -44,6 +44,29 @@ class CreditCard < ApplicationRecord
     end
   end
 
+  def billing_periods_history(count = 12)
+    periods = []
+    period_end = billing_period(Date.current).first - 1.day
+    count.times do
+      period_start = period_end - 1.month + 1.day
+      periods << [ period_start, period_end ]
+      period_end = period_start - 1.day
+    end
+    periods
+  end
+
+  def billing_periods_upcoming(count = 6)
+    periods = []
+    _, current_end = billing_period(Date.current)
+    period_start = current_end + 1.day
+    count.times do
+      period_end = period_start + 1.month - 1.day
+      periods << [ period_start, period_end ]
+      period_start = period_end + 1.day
+    end
+    periods
+  end
+
   def usage_percentage(reference_date = Date.current)
     return 0 unless limit.positive?
     [ (current_bill(reference_date) / limit * 100).round, 100 ].min

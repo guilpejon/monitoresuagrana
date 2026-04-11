@@ -1,0 +1,68 @@
+<% provide :title, t('.title') %>
+<div class="space-y-4">
+
+  <%# Header %>
+  <div class="flex items-center gap-3">
+    <%= link_to credit_cards_path,
+          class: "p-1.5 rounded-lg hover:bg-white/5 transition-colors",
+          style: "color: #8892A4;" do %>
+      <%= svg_icon "chevron-left", css_class: "w-4 h-4" %>
+    <% end %>
+    <div>
+      <h1 class="text-xl font-bold" style="color: #E2E8F0;"><%= t('.title') %></h1>
+      <p class="text-sm" style="color: #8892A4;"><%= @credit_card.name %></p>
+    </div>
+  </div>
+
+  <%# Period list %>
+  <div class="rounded-xl border overflow-hidden divide-y"
+       style="background-color: #1E2130; border-color: #2A2F45;">
+    <% @invoices.each do |entry| %>
+      <% is_upcoming = entry[:status] == :upcoming %>
+      <% is_current  = entry[:status] == :current %>
+      <div class="flex items-center justify-between px-4 py-3 transition-colors <%= is_current ? '' : 'hover:bg-white/5' %>"
+           style="<%= is_current ? 'background-color: #6C63FF11;' : '' %>">
+
+        <%# Left: date range + status badge %>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <p class="text-sm font-medium" style="color: #E2E8F0;">
+              <%= l(entry[:period_start], format: "%-d %b %Y") %>
+              &ndash;
+              <%= l(entry[:period_end], format: "%-d %b %Y") %>
+            </p>
+            <% if is_current %>
+              <span class="text-xs font-semibold px-1.5 py-0.5 rounded-full"
+                    style="background-color: #6C63FF22; color: #6C63FF; border: 1px solid #6C63FF44;">
+                <%= t('.open') %>
+              </span>
+            <% elsif is_upcoming %>
+              <span class="text-xs font-semibold px-1.5 py-0.5 rounded-full"
+                    style="background-color: #2A2F45; color: #8892A4;">
+                <%= t('.estimate') %>
+              </span>
+            <% end %>
+          </div>
+        </div>
+
+        <%# Right: amount + link %>
+        <div class="flex items-center gap-3 flex-shrink-0">
+          <span class="text-sm font-bold" style="color: <%= is_upcoming ? '#8892A4' : '#F7B731' %>;">
+            <%= format_currency(entry[:total]) %>
+          </span>
+          <%= link_to expenses_path(
+                        credit_card_id: @credit_card.id,
+                        period_start:   entry[:period_start].iso8601,
+                        period_end:     entry[:period_end].iso8601
+                      ),
+                class: "flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors hover:opacity-90",
+                style: "background-color: #6C63FF22; color: #6C63FF; border: 1px solid #6C63FF44;" do %>
+            <%= t('.view') %>
+            <%= svg_icon "chevron-right", css_class: "w-3 h-3" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+</div>

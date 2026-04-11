@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   resources :credit_cards do
     member do
       patch :set_default
+      get   :invoices
     end
   end
   resources :investments do

@@ -147,6 +147,75 @@ class CreditCardTest < ActiveSupport::TestCase
     assert_equal 0, card.usage_percentage
   end
 
+  test "billing_periods_upcoming returns 6 periods by default" do
+    card = build(:credit_card, billing_day: 10)
+    assert_equal 6, card.billing_periods_upcoming.length
+  end
+
+  test "billing_periods_upcoming accepts a custom count" do
+    card = build(:credit_card, billing_day: 10)
+    assert_equal 3, card.billing_periods_upcoming(3).length
+  end
+
+  test "billing_periods_upcoming first period starts the day after the current period ends" do
+    card = build(:credit_card, billing_day: 10)
+    _, current_end = card.billing_period(Date.current)
+    first_start, = card.billing_periods_upcoming(1).first
+    assert_equal current_end + 1.day, first_start
+  end
+
+  test "billing_periods_upcoming periods are contiguous" do
+    card = build(:credit_card, billing_day: 10)
+    card.billing_periods_upcoming(4).each_cons(2) do |(_, earlier_end), (later_start, _)|
+      assert_equal earlier_end + 1.day, later_start
+    end
+  end
+
+  test "billing_periods_upcoming returns correct boundary dates for a known billing_day" do
+    travel_to Date.new(2025, 4, 11) do
+      card = build(:credit_card, billing_day: 10)
+      # Current period: Apr 11 – May 10; first upcoming: May 11 – Jun 10
+      first_start, first_end = card.billing_periods_upcoming(1).first
+      assert_equal Date.new(2025, 5, 11), first_start
+      assert_equal Date.new(2025, 6, 10), first_end
+    end
+  end
+
+  test "billing_periods_history returns 12 periods by default" do
+    card = build(:credit_card, billing_day: 10)
+    assert_equal 12, card.billing_periods_history.length
+  end
+
+  test "billing_periods_history accepts a custom count" do
+    card = build(:credit_card, billing_day: 10)
+    assert_equal 3, card.billing_periods_history(3).length
+  end
+
+  test "billing_periods_history periods are contiguous" do
+    card = build(:credit_card, billing_day: 10)
+    card.billing_periods_history(4).each_cons(2) do |(newer_start, _), (_, older_end)|
+      assert_equal newer_start - 1.day, older_end
+    end
+  end
+
+  test "billing_periods_history does not include the currently open period" do
+    card = build(:credit_card, billing_day: 10)
+    current_start, = card.billing_period(Date.current)
+    card.billing_periods_history.each do |_, period_end|
+      assert period_end < current_start
+    end
+  end
+
+  test "billing_periods_history returns correct boundary dates for a known billing_day" do
+    travel_to Date.new(2025, 4, 11) do
+      card = build(:credit_card, billing_day: 10)
+      # Current period: Apr 11 – May 10; most recent closed: Mar 11 – Apr 10
+      first_start, first_end = card.billing_periods_history(1).first
+      assert_equal Date.new(2025, 3, 11), first_start
+      assert_equal Date.new(2025, 4, 10), first_end
+    end
+  end
+
   test "color_hex returns color when present" do
     card = build(:credit_card, color: "#FF0000")
     assert_equal "#FF0000", card.color_hex

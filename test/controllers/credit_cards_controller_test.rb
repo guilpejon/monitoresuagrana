@@ -146,4 +146,60 @@ class CreditCardsControllerTest < ActionDispatch::IntegrationTest
     delete credit_card_path(@credit_card)
     assert_nil @user.reload.default_credit_card_id
   end
+
+  test "GET invoices returns success" do
+    sign_in @user
+    get invoices_credit_card_path(@credit_card)
+    assert_response :success
+  end
+
+  test "GET invoices renders 19 period rows (6 upcoming + 1 current + 12 past)" do
+    sign_in @user
+    get invoices_credit_card_path(@credit_card)
+    # Each row has a link to expenses_path with period_start param
+    assert_equal 19, response.body.scan(/period_start=/).count
+  end
+
+  test "GET invoices renders exactly one open badge" do
+    sign_in @user
+    get invoices_credit_card_path(@credit_card)
+    assert_equal 1, response.body.scan(I18n.t("credit_cards.invoices.open")).count
+  end
+
+  test "GET invoices shows past expense amount" do
+    category = @user.categories.first
+    past_start, = @credit_card.billing_periods_history(1).first
+    create(:expense, user: @user, category: category, credit_card: @credit_card,
+           date: past_start + 1.day, amount: 88.00)
+
+    sign_in @user
+    get invoices_credit_card_path(@credit_card)
+    assert_match "88", response.body
+  end
+
+  test "GET invoices shows future installment amount" do
+    category = @user.categories.first
+    upcoming_start, = @credit_card.billing_periods_upcoming(1).first
+    create(:expense, user: @user, category: category, credit_card: @credit_card,
+           date: upcoming_start + 1.day, amount: 55.00,
+           payment_method: "credit_card", total_installments: 3, installment_number: 1)
+
+    sign_in @user
+    get invoices_credit_card_path(@credit_card)
+    assert_match "55", response.body
+  end
+
+  test "GET invoices on another user's card returns 404" do
+    other_user = create(:user)
+    other_card  = create(:credit_card, user: other_user)
+
+    sign_in @user
+    get invoices_credit_card_path(other_card)
+    assert_response :not_found
+  end
+
+  test "GET invoices redirects to sign in when not authenticated" do
+    get invoices_credit_card_path(@credit_card)
+    assert_redirected_to new_user_session_path
+  end
 end
