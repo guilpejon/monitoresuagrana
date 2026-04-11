@@ -14,8 +14,9 @@
       <% @credit_cards.each do |card| %>
         <% is_default = current_user.default_credit_card_id == card.id %>
         <% bill = card.current_bill(@current_date) %>
-        <% usage_pct = card.limit.positive? ? [(bill / card.limit * 100).round, 100].min : 0 %>
+        <% usage_pct = card.usage_percentage(@current_date) %>
         <% period_start, period_end = card.billing_period(@current_date) %>
+        <% prev_start, prev_end = card.previous_billing_period(@current_date) %>
         <% days_close = card.days_until_close(@current_date) %>
         <div class="rounded-xl border overflow-hidden flex" style="background-color: #1E2130; border-color: <%= is_default ? '#6C63FF' : '#2A2F45' %>;">
           <%# Color accent bar %>
@@ -51,7 +52,7 @@
                 <%= t("credit_cards.index.due_on", date: l(card.due_date(@current_date), format: "%-d %b")) %>
               </p>
               <p class="text-xs" style="color: #8892A4;">
-                <%= t("credit_cards.index.previous_bill") %> <span style="color: #CBD5E0;"><%= format_currency(card.previous_bill(@current_date)) %></span>
+                <%= t("credit_cards.index.previous_bill") %> <%= link_to format_currency(card.previous_bill(@current_date)), expenses_path(credit_card_id: card.id, period_start: prev_start.iso8601, period_end: prev_end.iso8601), class: "hover:opacity-80 transition-opacity", style: "color: #CBD5E0;" %>
               </p>
             </div>
 
@@ -92,12 +93,13 @@
     </div>
 
     <%# Desktop: card grid %>
-    <div class="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <div class="hidden md:grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
       <% @credit_cards.each do |card| %>
         <% is_default = current_user.default_credit_card_id == card.id %>
         <% bill = card.current_bill(@current_date) %>
-        <% usage_pct = card.limit.positive? ? [(bill / card.limit * 100).round, 100].min : 0 %>
+        <% usage_pct = card.usage_percentage(@current_date) %>
         <% period_start, period_end = card.billing_period(@current_date) %>
+        <% prev_start, prev_end = card.previous_billing_period(@current_date) %>
         <% days_close = card.days_until_close(@current_date) %>
         <div class="rounded-xl border overflow-hidden" style="background-color: #1E2130; border-color: <%= is_default ? '#6C63FF' : '#2A2F45' %>;">
           <%# Card visual %>
@@ -143,7 +145,7 @@
             <%# Due date %>
             <div class="flex items-center justify-between text-xs">
               <span style="color: #8892A4;"><%= t("credit_cards.index.due_on", date: l(card.due_date(@current_date), format: "%-d %b")) %></span>
-              <span style="color: #8892A4;"><%= t("credit_cards.index.previous_bill") %> <span style="color: #CBD5E0;"><%= format_currency(card.previous_bill(@current_date)) %></span></span>
+              <span style="color: #8892A4;"><%= t("credit_cards.index.previous_bill") %> <%= link_to format_currency(card.previous_bill(@current_date)), expenses_path(credit_card_id: card.id, period_start: prev_start.iso8601, period_end: prev_end.iso8601), class: "hover:opacity-80 transition-opacity", style: "color: #CBD5E0;" %></span>
             </div>
 
             <%# Limit %>

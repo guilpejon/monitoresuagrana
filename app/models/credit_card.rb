@@ -28,15 +28,25 @@ class CreditCard < ApplicationRecord
     end
   end
 
-  def previous_bill(reference_date = Date.current)
+  def previous_billing_period(reference_date = Date.current)
     period_start, = billing_period(reference_date)
     prev_end   = period_start - 1.day
     prev_start = prev_end - 1.month + 1.day
+    [ prev_start, prev_end ]
+  end
+
+  def previous_bill(reference_date = Date.current)
+    prev_start, prev_end = previous_billing_period(reference_date)
     if expenses.loaded?
       expenses.select { |e| e.date.between?(prev_start, prev_end) }.sum(&:amount)
     else
       expenses.where(date: prev_start..prev_end).sum(:amount)
     end
+  end
+
+  def usage_percentage(reference_date = Date.current)
+    return 0 unless limit.positive?
+    [ (current_bill(reference_date) / limit * 100).round, 100 ].min
   end
 
   def due_date(reference_date = Date.current)

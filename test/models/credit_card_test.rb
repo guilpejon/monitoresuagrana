@@ -80,6 +80,73 @@ class CreditCardTest < ActiveSupport::TestCase
     assert_equal 0, card.current_bill.to_f
   end
 
+  test "previous_billing_period returns the month before the current billing period" do
+    card = build(:credit_card, billing_day: 10)
+    reference_date = Date.new(2024, 3, 5) # day < billing_day, so period_end = Mar 10
+
+    prev_start, prev_end = card.previous_billing_period(reference_date)
+
+    assert_equal Date.new(2024, 1, 11), prev_start
+    assert_equal Date.new(2024, 2, 10), prev_end
+  end
+
+  test "previous_billing_period works when billing_day has already passed" do
+    card = build(:credit_card, billing_day: 10)
+    reference_date = Date.new(2024, 3, 20) # day > billing_day, so period_end = Apr 10
+
+    prev_start, prev_end = card.previous_billing_period(reference_date)
+
+    assert_equal Date.new(2024, 2, 11), prev_start
+    assert_equal Date.new(2024, 3, 10), prev_end
+  end
+
+  test "previous_bill sums expenses in the previous billing period" do
+    user = create(:user)
+    category = user.categories.first
+    card = create(:credit_card, user: user, billing_day: 10)
+
+    reference_date = Date.new(2024, 3, 5)
+    prev_start, prev_end = card.previous_billing_period(reference_date)
+
+    create(:expense, user: user, category: category, credit_card: card,
+           date: prev_start + 2.days, amount: 150.00)
+    create(:expense, user: user, category: category, credit_card: card,
+           date: prev_start - 1.day, amount: 999.00) # outside previous period
+
+    assert_equal 150.00, card.previous_bill(reference_date).to_f
+  end
+
+  test "usage_percentage returns correct percentage" do
+    user = create(:user)
+    category = user.categories.first
+    card = create(:credit_card, user: user, billing_day: 1, limit: 1000)
+
+    reference_date = Date.new(2024, 3, 15)
+    period_start, period_end = card.billing_period(reference_date)
+    create(:expense, user: user, category: category, credit_card: card,
+           date: period_start + 1.day, amount: 250.00)
+
+    assert_equal 25, card.usage_percentage(reference_date)
+  end
+
+  test "usage_percentage caps at 100 when over limit" do
+    user = create(:user)
+    category = user.categories.first
+    card = create(:credit_card, user: user, billing_day: 1, limit: 100)
+
+    reference_date = Date.new(2024, 3, 15)
+    period_start, = card.billing_period(reference_date)
+    create(:expense, user: user, category: category, credit_card: card,
+           date: period_start + 1.day, amount: 500.00)
+
+    assert_equal 100, card.usage_percentage(reference_date)
+  end
+
+  test "usage_percentage returns 0 when limit is zero" do
+    card = build(:credit_card, limit: 0)
+    assert_equal 0, card.usage_percentage
+  end
+
   test "color_hex returns color when present" do
     card = build(:credit_card, color: "#FF0000")
     assert_equal "#FF0000", card.color_hex
