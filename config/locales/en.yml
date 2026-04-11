@@ -320,6 +320,9 @@ en:
       add_first: "Add your first account"
       delete_confirm: "Remove this account?"
       delete_modal_title: "Remove account"
+      default_badge: "Default"
+      set_default: "Set as default"
+      unset_default: "Remove default"
     new:
       title: "Add Bank Account"
     edit:
@@ -713,6 +716,8 @@ en:
       created: "Bank account added."
       updated: "Bank account updated."
       destroyed: "Bank account removed."
+      default_set: "Default bank account set."
+      default_cleared: "Default bank account removed."
     investments:
       created: "Investment added."
       updated: "Investment updated."

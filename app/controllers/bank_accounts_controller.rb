@@ -1,5 +1,5 @@
 class BankAccountsController < ApplicationController
-  before_action :set_bank_account, only: %i[edit update destroy]
+  before_action :set_bank_account, only: %i[edit update destroy set_default]
 
   def index
     @bank_accounts = current_user.bank_accounts.order(:account_type, :name)
@@ -53,6 +53,16 @@ class BankAccountsController < ApplicationController
   def destroy
     @bank_account.destroy
     redirect_to bank_accounts_path, notice: t("controllers.bank_accounts.destroyed")
+  end
+
+  def set_default
+    if current_user.default_bank_account_id == @bank_account.id
+      current_user.update!(default_bank_account_id: nil)
+      redirect_to bank_accounts_path, notice: t("controllers.bank_accounts.default_cleared")
+    else
+      current_user.update!(default_bank_account_id: @bank_account.id)
+      redirect_to bank_accounts_path, notice: t("controllers.bank_accounts.default_set")
+    end
   end
 
   private

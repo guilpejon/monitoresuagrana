@@ -70,13 +70,19 @@
 
         <div class="divide-y" style="border-color: #2A2F45;">
           <% accounts.each do |account| %>
+            <% is_default = current_user.default_bank_account_id == account.id %>
             <div class="px-4 py-3 hover:bg-white/[0.02] transition-colors">
               <div class="flex items-center justify-between md:grid md:grid-cols-6 md:gap-3">
                 <%# Name %>
                 <div class="col-span-2 flex items-center gap-2 min-w-0">
                   <div class="w-8 h-8 rounded-lg flex-shrink-0" style="background-color: <%= account.color %>;"></div>
                   <div class="min-w-0">
-                    <p class="text-sm font-medium truncate" style="color: #E2E8F0;"><%= account.name %></p>
+                    <div class="flex items-center gap-2">
+                      <p class="text-sm font-medium truncate" style="color: #E2E8F0;"><%= account.name %></p>
+                      <% if is_default %>
+                        <span class="text-xs font-semibold px-1.5 py-0.5 rounded-full flex-shrink-0" style="background-color: #6C63FF22; color: #6C63FF; border: 1px solid #6C63FF44;"><%= t("bank_accounts.index.default_badge") %></span>
+                      <% end %>
+                    </div>
                     <p class="text-xs md:hidden" style="color: #8892A4;"><%= account.bank_name.presence || "—" %></p>
                   </div>
                 </div>
@@ -111,6 +117,11 @@
                   <% end %>
                 </div>
                 <div class="hidden md:flex items-center justify-end gap-1">
+                  <%= button_to set_default_bank_account_path(account), method: :patch,
+                      class: "flex items-center gap-1 p-1.5 rounded-lg hover:bg-white/5 transition-colors",
+                      style: "border: none; background: none; cursor: pointer; color: #{is_default ? '#6C63FF' : '#8892A4'};" do %>
+                    <%= svg_icon "star", css_class: "w-3.5 h-3.5" %>
+                  <% end %>
                   <%= link_to edit_bank_account_path(account), class: "p-1.5 rounded-lg hover:bg-white/5 transition-colors", style: "color: #8892A4;" do %>
                     <%= svg_icon "edit", css_class: "w-3.5 h-3.5" %>
                   <% end %>
@@ -125,6 +136,11 @@
 
               <%# Mobile actions %>
               <div class="flex items-center justify-end gap-1 mt-1 md:hidden">
+                <%= button_to set_default_bank_account_path(account), method: :patch,
+                    class: "flex items-center gap-1 p-1.5 rounded-lg hover:bg-white/5 transition-colors",
+                    style: "border: none; background: none; cursor: pointer; color: #{is_default ? '#6C63FF' : '#8892A4'};" do %>
+                  <%= svg_icon "star", css_class: "w-3.5 h-3.5" %>
+                <% end %>
                 <%= link_to edit_bank_account_path(account), class: "p-1.5 rounded-lg hover:bg-white/5 transition-colors", style: "color: #8892A4;" do %>
                   <%= svg_icon "edit", css_class: "w-3.5 h-3.5" %>
                 <% end %>

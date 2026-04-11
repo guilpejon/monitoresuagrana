@@ -355,6 +355,9 @@ es:
       add_first: "Agrega tu primera cuenta"
       delete_confirm: "¿Eliminar esta cuenta?"
       delete_modal_title: "Eliminar cuenta"
+      default_badge: "Por defecto"
+      set_default: "Establecer por defecto"
+      unset_default: "Quitar por defecto"
     new:
       title: "Agregar Cuenta Bancaria"
     edit:
@@ -748,6 +751,8 @@ es:
       created: "Cuenta bancaria agregada."
       updated: "Cuenta bancaria actualizada."
       destroyed: "Cuenta bancaria eliminada."
+      default_set: "Cuenta bancaria predeterminada establecida."
+      default_cleared: "Cuenta bancaria predeterminada eliminada."
     investments:
       created: "Inversión agregada."
       updated: "Inversión actualizada."

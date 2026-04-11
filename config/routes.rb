@@ -25,7 +25,11 @@ Rails.application.routes.draw do
       post :refresh_all_prices
     end
   end
-  resources :bank_accounts
+  resources :bank_accounts do
+    member do
+      patch :set_default
+    end
+  end
   resources :categories do
     member do
       patch :set_default

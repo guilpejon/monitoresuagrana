@@ -2,6 +2,8 @@ class BankAccount < ApplicationRecord
   belongs_to :user
   has_many :expenses, dependent: :nullify
 
+  before_destroy :clear_user_default
+
   TYPES = %w[checking savings other].freeze
   COLORS = ColorPalette::COLORS
   RATE_TYPES = %w[fixed cdi_percentage].freeze
@@ -45,5 +47,11 @@ class BankAccount < ApplicationRecord
     return if rate <= 0
 
     update!(balance: (balance * (1 + rate)).round(2))
+  end
+
+  private
+
+  def clear_user_default
+    user.update_column(:default_bank_account_id, nil) if user.default_bank_account_id == id
   end
 end

@@ -355,6 +355,9 @@ pt-BR:
       add_first: "Adicionar primeira conta"
       delete_confirm: "Remover esta conta?"
       delete_modal_title: "Remover conta"
+      default_badge: "Padrão"
+      set_default: "Definir como padrão"
+      unset_default: "Remover padrão"
     new:
       title: "Adicionar Conta Bancária"
     edit:
@@ -748,6 +751,8 @@ pt-BR:
       created: "Conta bancária adicionada."
       updated: "Conta bancária atualizada."
       destroyed: "Conta bancária removida."
+      default_set: "Conta padrão definida."
+      default_cleared: "Conta padrão removida."
     investments:
       created: "Investimento adicionado."
       updated: "Investimento atualizado."
