@@ -47,10 +47,12 @@ class CreditCardsController < ApplicationController
     newest_end   = upcoming_periods.last.last
     expenses_in_range = @credit_card.expenses
                           .where(date: oldest_start..newest_end)
-                          .select(:date, :amount)
+                          .select(:date, :amount, :recurring)
 
     build_entry = ->(ps, pe, status) do
-      total = expenses_in_range.select { |e| e.date.between?(ps, pe) }.sum(&:amount)
+      period_expenses = expenses_in_range.select { |e| e.date.between?(ps, pe) }
+      period_expenses = period_expenses.reject(&:recurring?) if status == :upcoming
+      total = period_expenses.sum(&:amount)
       { period_start: ps, period_end: pe, total: total, status: status }
     end
 

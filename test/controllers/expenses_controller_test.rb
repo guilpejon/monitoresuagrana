@@ -871,4 +871,58 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
       assert newer_pos > older_pos, "Older installment should appear before newer installment"
     end
   end
+
+  # CC invoice drill-down: future period filtering
+  test "GET index with future CC period excludes recurring expenses" do
+    card = create(:credit_card, user: @user)
+    future_start = 1.month.from_now.to_date
+    future_end   = future_start + 30.days
+
+    recurring = create(:expense, user: @user, category: @category,
+                       description: "Netflix Recurring",
+                       expense_type: "fixed", recurring: true,
+                       payment_method: "credit_card", credit_card: card,
+                       date: future_start)
+    sign_in @user
+    get expenses_path, params: { credit_card_id: card.id, period_start: future_start.iso8601, period_end: future_end.iso8601 }
+
+    assert_response :success
+    assert_no_match recurring.description, response.body
+  end
+
+  test "GET index with future CC period includes installment expenses" do
+    card = create(:credit_card, user: @user)
+    future_start = 1.month.from_now.to_date
+    future_end   = future_start + 30.days
+
+    installment = create(:expense, user: @user, category: @category,
+                         description: "New Laptop 2/12",
+                         expense_type: "variable", recurring: false,
+                         payment_method: "credit_card", credit_card: card,
+                         date: future_start,
+                         installment_number: 2, total_installments: 12,
+                         installment_group_id: SecureRandom.uuid)
+    sign_in @user
+    get expenses_path, params: { credit_card_id: card.id, period_start: future_start.iso8601, period_end: future_end.iso8601 }
+
+    assert_response :success
+    assert_match installment.description, response.body
+  end
+
+  test "GET index with past CC period still includes recurring expenses" do
+    card = create(:credit_card, user: @user)
+    past_start = 2.months.ago.to_date
+    past_end   = past_start + 30.days
+
+    recurring = create(:expense, user: @user, category: @category,
+                       description: "Spotify Past",
+                       expense_type: "fixed", recurring: true,
+                       payment_method: "credit_card", credit_card: card,
+                       date: past_start)
+    sign_in @user
+    get expenses_path, params: { credit_card_id: card.id, period_start: past_start.iso8601, period_end: past_end.iso8601 }
+
+    assert_response :success
+    assert_match recurring.description, response.body
+  end
 end

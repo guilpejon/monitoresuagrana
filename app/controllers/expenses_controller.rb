@@ -16,6 +16,7 @@ class ExpensesController < ApplicationController
       current_user.expenses.for_month(@current_date)
     end
     scope = scope.where(credit_card_id: @credit_card_filter.id) if @credit_card_filter
+    scope = scope.where(recurring: false) if @credit_card_filter && @filter_period_start && @filter_period_start > Date.current
     base  = scope.includes(:category, :credit_card)
 
     @fixed_expenses = base.fixed.ordered
