@@ -20,11 +20,19 @@
     <% @invoices.each do |entry| %>
       <% is_upcoming = entry[:status] == :upcoming %>
       <% is_current  = entry[:status] == :current %>
-      <div class="flex items-center justify-between px-4 py-3 transition-colors <%= is_current ? '' : 'hover:bg-white/5' %>"
-           style="<%= is_current ? 'background-color: #6C63FF11;' : '' %>">
-
+      <%= link_to expenses_path(
+                    credit_card_id: @credit_card.id,
+                    period_start:   entry[:period_start].iso8601,
+                    period_end:     entry[:period_end].iso8601
+                  ),
+            class: [
+              "flex items-center justify-between px-4 py-3 transition-colors w-full text-left no-underline cursor-pointer",
+              "focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#6C63FF]",
+              (is_current ? "" : "hover:bg-white/5")
+            ].join(" "),
+            style: (is_current ? "background-color: #6C63FF11;" : "") do %>
         <%# Left: date range + status badge %>
-        <div>
+        <div class="min-w-0">
           <div class="flex items-center gap-2 flex-wrap">
             <p class="text-sm font-medium" style="color: #E2E8F0;">
               <%= l(entry[:period_start], format: "%-d %b %Y") %>
@@ -45,23 +53,13 @@
           </div>
         </div>
 
-        <%# Right: amount + link %>
-        <div class="flex items-center gap-3 flex-shrink-0">
+        <%# Right: amount %>
+        <div class="flex items-center flex-shrink-0 pl-3">
           <span class="text-sm font-bold" style="color: <%= is_upcoming ? '#8892A4' : '#F7B731' %>;">
             <%= format_currency(entry[:total]) %>
           </span>
-          <%= link_to expenses_path(
-                        credit_card_id: @credit_card.id,
-                        period_start:   entry[:period_start].iso8601,
-                        period_end:     entry[:period_end].iso8601
-                      ),
-                class: "flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors hover:opacity-90",
-                style: "background-color: #6C63FF22; color: #6C63FF; border: 1px solid #6C63FF44;" do %>
-            <%= t('.view') %>
-            <%= svg_icon "chevron-right", css_class: "w-3 h-3" %>
-          <% end %>
         </div>
-      </div>
+      <% end %>
     <% end %>
   </div>
 

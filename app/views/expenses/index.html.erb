@@ -1,9 +1,20 @@
-<% provide :title, t('.title') %>
+<% 
+  expenses_page_title = if @credit_card_filter && @filter_period_start && @filter_period_end
+    t("expenses.index.title_with_invoice",
+      card: @credit_card_filter.name,
+      period: "#{l(@filter_period_start, format: '%-d %b')} – #{l(@filter_period_end, format: '%-d %b')}")
+  elsif @credit_card_filter
+    t("expenses.index.title_with_card", card: @credit_card_filter.name)
+  else
+    t("expenses.index.title")
+  end
+%>
+<% provide :title, expenses_page_title %>
 <div class="space-y-4" data-controller="expense-filter" data-currency="<%= current_user.currency || 'BRL' %>">
   <%# Header %>
   <div class="flex items-center justify-between">
-    <div>
-      <h1 class="text-xl font-bold" style="color: #E2E8F0;"><%= t("expenses.index.title") %></h1>
+    <div class="min-w-0 flex-1 pr-2">
+      <h1 class="text-xl font-bold leading-snug break-words" style="color: #E2E8F0;"><%= expenses_page_title %></h1>
       <p class="text-sm mt-0.5" style="color: #8892A4;">
         <%= t("expenses.index.total") %> <span class="font-semibold" style="color: #FF6B6B;" id="expenses-total-amount" data-expense-filter-target="grandTotal"><%= format_currency(@total) %></span>
       </p>
@@ -17,16 +28,13 @@
 
   <%# Credit card filter banner %>
   <% if @credit_card_filter %>
-    <div class="flex items-center justify-between px-3 py-2 rounded-lg text-sm" style="background-color: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.3);">
-      <div class="flex items-center gap-2 min-w-0">
+    <div class="flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-sm min-w-0" style="<%= credit_card_filter_banner_style(@credit_card_filter.color_hex) %>">
+      <div class="flex items-center gap-2 min-w-0 flex-1">
         <div class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: <%= @credit_card_filter.color_hex %>;"></div>
-        <span class="truncate" style="color: #E2E8F0;"><%= t("expenses.index.filtered_by_card", name: @credit_card_filter.name) %></span>
-        <% if @filter_period_start %>
-          <span class="text-xs flex-shrink-0" style="color: #8892A4;"><%= l(@filter_period_start, format: "%-d %b") %> – <%= l(@filter_period_end, format: "%-d %b") %></span>
-        <% end %>
+        <span class="min-w-0 text-sm truncate" style="color: #E2E8F0;"><%= t("expenses.index.filtered_by_card", name: @credit_card_filter.name) %></span>
       </div>
-      <%= link_to expenses_path, class: "flex items-center gap-1 text-xs font-medium hover:opacity-70 transition-opacity", style: "color: #8892A4;" do %>
-        <%= svg_icon "x", css_class: "w-3.5 h-3.5" %>
+      <%= link_to expenses_path, class: "flex items-center gap-1.5 text-xs font-medium whitespace-nowrap flex-shrink-0 hover:opacity-70 transition-opacity", style: "color: #8892A4;" do %>
+        <%= svg_icon "x", css_class: "w-3.5 h-3.5 flex-shrink-0" %>
         <%= t("expenses.index.clear_filter") %>
       <% end %>
     </div>

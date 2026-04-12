@@ -153,11 +153,27 @@ class CreditCardsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "GET invoices renders 19 period rows (6 upcoming + 1 current + 12 past)" do
+  test "GET invoices renders 19 period rows when no future installments beyond six months (6 upcoming + 1 current + 12 past)" do
     sign_in @user
     get invoices_credit_card_path(@credit_card)
     # Each row has a link to expenses_path with period_start param
     assert_equal 19, response.body.scan(/period_start=/).count
+  end
+
+  test "GET invoices adds extra upcoming rows so all future installments appear" do
+    travel_to Date.new(2025, 4, 11) do
+      card = create(:credit_card, user: @user, billing_day: 10)
+      category = @user.categories.first
+      eighth = card.billing_periods_upcoming(8).last
+      create(:expense, user: @user, category: category, credit_card: card,
+             date: eighth[0] + 1.day, amount: 42.00,
+             payment_method: "credit_card", total_installments: 3, installment_number: 3)
+
+      sign_in @user
+      get invoices_credit_card_path(card)
+      assert_response :success
+      assert_equal 21, response.body.scan(/period_start=/).count
+    end
   end
 
   test "GET invoices renders exactly one open badge" do

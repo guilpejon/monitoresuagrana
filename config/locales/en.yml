@@ -130,6 +130,8 @@ en:
   expenses:
     index:
       title: "Expenses"
+      title_with_card: "Expenses · %{card}"
+      title_with_invoice: "Expenses · %{card} · %{period}"
       total: "Total:"
       add_expense: "Add Expense"
       no_expenses: "No expenses this month"

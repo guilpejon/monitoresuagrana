@@ -165,6 +165,8 @@ es:
   expenses:
     index:
       title: "Gastos"
+      title_with_card: "Gastos · %{card}"
+      title_with_invoice: "Gastos · %{card} · %{period}"
       total: "Total:"
       add_expense: "Agregar Gasto"
       no_expenses: "Sin gastos este mes"

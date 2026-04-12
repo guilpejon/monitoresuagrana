@@ -6,6 +6,7 @@
 
   <%# Month selector with boundaries — absolutely centred so it stays centred on all screen sizes %>
   <% show_month_selector = controller_name.in?(%w[expenses incomes forecast]) %>
+  <% billing_period_in_nav = controller_name == "expenses" && @filter_period_start.present? && @filter_period_end.present? %>
   <% today_month = Date.current.beginning_of_month %>
   <% min_month = today_month - 24.months %>
   <% max_month = @max_date || today_month + 1.month %>
@@ -15,35 +16,43 @@
   <% at_max = @current_date >= max_month %>
   <% on_today = @current_date.beginning_of_month == today_month %>
 
-  <div class="absolute left-1/2 -translate-x-1/2 flex items-center gap-1 <%= 'invisible' unless show_month_selector %>">
-    <% if at_min %>
-      <span class="p-1.5 rounded-lg cursor-not-allowed opacity-25" style="color: #8892A4;">
-        <%= svg_icon "chevron-left", css_class: "w-4 h-4" %>
-      </span>
+  <div class="absolute left-1/2 -translate-x-1/2 flex items-center gap-1 max-w-[calc(100vw-8rem)] <%= 'invisible' unless show_month_selector %>">
+    <% if billing_period_in_nav %>
+      <div class="flex items-center justify-center px-1 min-w-0">
+        <span class="text-xs sm:text-sm font-semibold text-center leading-tight whitespace-normal" style="color: #E2E8F0;">
+          <%= l(@filter_period_start, format: "%-d %b %Y") %> – <%= l(@filter_period_end, format: "%-d %b %Y") %>
+        </span>
+      </div>
     <% else %>
-      <%= link_to request.path + "?month=#{prev_date.strftime('%Y-%m')}", class: "p-1.5 rounded-lg transition-colors hover:bg-white/5", style: "color: #8892A4;", data: { turbo_prefetch: "false" } do %>
-        <%= svg_icon "chevron-left", css_class: "w-4 h-4" %>
-      <% end %>
-    <% end %>
-
-    <div class="flex items-center gap-2 min-w-44 justify-center">
-      <span class="text-sm font-semibold" style="color: #E2E8F0;">
-        <%= l(@current_date || Date.current, format: "%B %Y") %>
-      </span>
-      <% unless on_today %>
-        <%= link_to request.path + "?month=#{today_month.strftime('%Y-%m')}", class: "px-2 py-0.5 rounded text-xs font-medium transition-colors hover:opacity-80", style: "background-color: rgba(108,99,255,0.2); color: #6C63FF;" do %>
-          <%= t("layouts.topbar.back") %>
+      <% if at_min %>
+        <span class="p-1.5 rounded-lg cursor-not-allowed opacity-25" style="color: #8892A4;">
+          <%= svg_icon "chevron-left", css_class: "w-4 h-4" %>
+        </span>
+      <% else %>
+        <%= link_to request.path + "?month=#{prev_date.strftime('%Y-%m')}", class: "p-1.5 rounded-lg transition-colors hover:bg-white/5", style: "color: #8892A4;", data: { turbo_prefetch: "false" } do %>
+          <%= svg_icon "chevron-left", css_class: "w-4 h-4" %>
         <% end %>
       <% end %>
-    </div>
 
-    <% if at_max %>
-      <span class="p-1.5 rounded-lg cursor-not-allowed opacity-25" style="color: #8892A4;">
-        <%= svg_icon "chevron-right", css_class: "w-4 h-4" %>
-      </span>
-    <% else %>
-      <%= link_to request.path + "?month=#{next_date.strftime('%Y-%m')}", class: "p-1.5 rounded-lg transition-colors hover:bg-white/5", style: "color: #8892A4;", data: { turbo_prefetch: "false" } do %>
-        <%= svg_icon "chevron-right", css_class: "w-4 h-4" %>
+      <div class="flex items-center gap-2 min-w-44 justify-center">
+        <span class="text-sm font-semibold" style="color: #E2E8F0;">
+          <%= l(@current_date || Date.current, format: "%B %Y") %>
+        </span>
+        <% unless on_today %>
+          <%= link_to request.path + "?month=#{today_month.strftime('%Y-%m')}", class: "px-2 py-0.5 rounded text-xs font-medium transition-colors hover:opacity-80", style: "background-color: rgba(108,99,255,0.2); color: #6C63FF;" do %>
+            <%= t("layouts.topbar.back") %>
+          <% end %>
+        <% end %>
+      </div>
+
+      <% if at_max %>
+        <span class="p-1.5 rounded-lg cursor-not-allowed opacity-25" style="color: #8892A4;">
+          <%= svg_icon "chevron-right", css_class: "w-4 h-4" %>
+        </span>
+      <% else %>
+        <%= link_to request.path + "?month=#{next_date.strftime('%Y-%m')}", class: "p-1.5 rounded-lg transition-colors hover:bg-white/5", style: "color: #8892A4;", data: { turbo_prefetch: "false" } do %>
+          <%= svg_icon "chevron-right", css_class: "w-4 h-4" %>
+        <% end %>
       <% end %>
     <% end %>
   </div>

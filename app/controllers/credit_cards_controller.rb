@@ -60,8 +60,9 @@ class CreditCardsController < ApplicationController
 
   def invoices
     current_start, current_end = @credit_card.billing_period(Date.current)
-    past_periods     = @credit_card.billing_periods_history(12)
-    upcoming_periods = @credit_card.billing_periods_upcoming(6)
+    past_periods = @credit_card.billing_periods_history(12)
+    upcoming_n   = @credit_card.upcoming_periods_count_for_installments(Date.current)
+    upcoming_periods = @credit_card.billing_periods_upcoming(upcoming_n)
 
     oldest_start = past_periods.last.first
     newest_end   = upcoming_periods.last.last

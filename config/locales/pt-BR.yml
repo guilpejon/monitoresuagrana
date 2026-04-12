@@ -165,6 +165,8 @@ pt-BR:
   expenses:
     index:
       title: "Despesas"
+      title_with_card: "Despesas · %{card}"
+      title_with_invoice: "Despesas · %{card} · %{period}"
       total: "Total:"
       add_expense: "Adicionar Despesa"
       no_expenses: "Nenhuma despesa este mês"

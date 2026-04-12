@@ -67,6 +67,32 @@ class CreditCard < ApplicationRecord
     periods
   end
 
+  # How many billing periods after the current one we must list so every
+  # installment line with date after the current closing (the same rows that
+  # count toward committed_amount) appears on the invoice screen. The invoice
+  # list used to cap at 6 upcoming months, which hid later parcels and made
+  # the sum of "future" faturas fall short of limit usage.
+  def upcoming_periods_count_for_installments(reference_date = Date.current, min_count: 6, max_count: 120)
+    _, period_end = billing_period(reference_date)
+    last_date = expenses
+      .where("date > ?", period_end)
+      .where("total_installments > ?", 1)
+      .maximum(:date)
+
+    return min_count if last_date.nil?
+
+    needed = 0
+    ps = period_end + 1.day
+    loop do
+      break if needed >= max_count
+      pe = ps + 1.month - 1.day
+      needed += 1
+      break if last_date.between?(ps, pe)
+      ps = pe + 1.day
+    end
+    [ needed, min_count ].max
+  end
+
   def usage_percentage(reference_date = Date.current)
     return 0 unless limit.positive?
     [ (committed_amount(reference_date) / limit * 100).round, 100 ].min

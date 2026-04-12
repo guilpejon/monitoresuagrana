@@ -28,6 +28,16 @@ module ApplicationHelper
     content_tag(:span, label, class: "px-2 py-0.5 rounded text-xs font-medium", style: "background-color: #{color}22; color: #{color};")
   end
 
+  # Background + border for the expenses "Filtrando por cartão" filter strip (not global flash toasts).
+  def credit_card_filter_banner_style(hex)
+    h = hex.to_s.delete("#")
+    unless h.length == 6 && h.match?(/\A[0-9a-fA-F]+\z/)
+      return "background-color: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.3);"
+    end
+    r, g, b = h.scan(/../).map(&:hex)
+    "background-color: rgba(#{r},#{g},#{b},0.15); border: 1px solid rgba(#{r},#{g},#{b},0.35);"
+  end
+
   def income_type_badge(type)
     colors = {
       "salary" => "#00D4AA",

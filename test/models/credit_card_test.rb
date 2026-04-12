@@ -183,6 +183,54 @@ class CreditCardTest < ActiveSupport::TestCase
     assert_equal 0, card.usage_percentage
   end
 
+  test "upcoming_periods_count_for_installments returns at least min_count when no future installments" do
+    card = create(:credit_card, billing_day: 10)
+    assert_equal 6, card.upcoming_periods_count_for_installments
+  end
+
+  test "upcoming_periods_count_for_installments extends past 6 when installments go further" do
+    travel_to Date.new(2025, 4, 11) do
+      user = create(:user)
+      category = user.categories.first
+      card = create(:credit_card, user: user, billing_day: 10)
+      eighth = card.billing_periods_upcoming(8).last
+      create(:expense, user: user, category: category, credit_card: card,
+             date: eighth[0] + 1.day, amount: 50.00,
+             payment_method: "credit_card", total_installments: 3, installment_number: 3)
+
+      assert_equal 8, card.upcoming_periods_count_for_installments(Date.current)
+    end
+  end
+
+  test "sum of amounts in each dynamic upcoming period equals future installment total" do
+    travel_to Date.new(2025, 4, 11) do
+      user = create(:user)
+      category = user.categories.first
+      card = create(:credit_card, user: user, billing_day: 10)
+      _, current_end = card.billing_period(Date.current)
+      third = card.billing_periods_upcoming(3).last
+      create(:expense, user: user, category: category, credit_card: card,
+             date: third[0] + 1.day, amount: 33.33,
+             payment_method: "credit_card", total_installments: 4, installment_number: 3)
+      create(:expense, user: user, category: category, credit_card: card,
+             date: third[0] + 2.days, amount: 12.00,
+             payment_method: "credit_card", total_installments: 2, installment_number: 2)
+
+      n = card.upcoming_periods_count_for_installments(Date.current)
+      upcoming_periods = card.billing_periods_upcoming(n)
+      first_start = upcoming_periods.first.first
+      last_end = upcoming_periods.last.last
+      in_span = card.expenses.where(date: first_start..last_end)
+
+      per_period = upcoming_periods.sum do |ps, pe|
+        in_span.select { |e| e.date.between?(ps, pe) && !e.recurring? }.sum(&:amount)
+      end
+
+      future_install = card.expenses.where("date > ?", current_end).where("total_installments > ?", 1).sum(:amount)
+      assert_equal future_install, per_period
+    end
+  end
+
   test "billing_periods_upcoming returns 6 periods by default" do
     card = build(:credit_card, billing_day: 10)
     assert_equal 6, card.billing_periods_upcoming.length
