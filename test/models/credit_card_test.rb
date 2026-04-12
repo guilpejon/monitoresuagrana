@@ -231,6 +231,37 @@ class CreditCardTest < ActiveSupport::TestCase
     end
   end
 
+  test "sum of open plus upcoming invoice row totals matches committed_amount" do
+    travel_to Date.new(2025, 6, 15) do
+      user = create(:user)
+      category = user.categories.first
+      card = create(:credit_card, user: user, billing_day: 10)
+      period_start, period_end = card.billing_period(Date.current)
+
+      create(:expense, user: user, category: category, credit_card: card,
+             date: period_start + 1.day, amount: 999.00,
+             expense_type: "fixed", recurrence_day: 10)
+
+      create(:expense, user: user, category: category, credit_card: card,
+             date: Date.new(2025, 6, 14), amount: 50.00)
+
+      create(:expense, user: user, category: category, credit_card: card,
+             date: Date.new(2025, 7, 15), amount: 75.50,
+             payment_method: "credit_card", total_installments: 2, installment_number: 2)
+
+      n = card.upcoming_periods_count_for_installments(Date.current)
+      upcoming_periods = card.billing_periods_upcoming(n)
+
+      current_sum = card.expenses.where(date: period_start..period_end).where(recurring: false).sum(:amount)
+      upcoming_sum = upcoming_periods.sum do |ps, pe|
+        card.expenses.where(date: ps..pe).where(recurring: false).sum(:amount)
+      end
+
+      committed = card.send(:committed_amount)
+      assert_equal committed, current_sum + upcoming_sum
+    end
+  end
+
   test "billing_periods_upcoming returns 6 periods by default" do
     card = build(:credit_card, billing_day: 10)
     assert_equal 6, card.billing_periods_upcoming.length

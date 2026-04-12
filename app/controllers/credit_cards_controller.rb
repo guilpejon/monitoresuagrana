@@ -72,7 +72,9 @@ class CreditCardsController < ApplicationController
 
     build_entry = ->(ps, pe, status) do
       period_expenses = expenses_in_range.select { |e| e.date.between?(ps, pe) }
-      period_expenses = period_expenses.reject(&:recurring?) if status == :upcoming
+      # Open + future rows use the same scope as CreditCard#committed_amount so that
+      # sum(Aberta + all Estimativa) equals limit usage; past rows stay full statement totals.
+      period_expenses = period_expenses.reject(&:recurring?) if status == :upcoming || status == :current
       total = period_expenses.sum(&:amount)
       { period_start: ps, period_end: pe, total: total, status: status }
     end
