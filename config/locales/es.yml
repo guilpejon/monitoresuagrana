@@ -112,6 +112,10 @@ es:
     topbar:
       back: "Actual"
       add_expense: "Agregar Gasto"
+      jump_month_aria: "Elegir otro mes"
+      jump_month_title: "Ir al mes"
+      jump_month_apply: "Ir"
+      jump_month_cancel: "Cancelar"
     mobile_nav:
       home: "Inicio"
       expenses: "Gastos"

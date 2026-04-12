@@ -24,36 +24,82 @@
         </span>
       </div>
     <% else %>
-      <% if at_min %>
-        <span class="p-1.5 rounded-lg cursor-not-allowed opacity-25" style="color: #8892A4;">
-          <%= svg_icon "chevron-left", css_class: "w-4 h-4" %>
-        </span>
-      <% else %>
-        <%= link_to request.path + "?month=#{prev_date.strftime('%Y-%m')}", class: "p-1.5 rounded-lg transition-colors hover:bg-white/5", style: "color: #8892A4;", data: { turbo_prefetch: "false" } do %>
-          <%= svg_icon "chevron-left", css_class: "w-4 h-4" %>
-        <% end %>
-      <% end %>
-
-      <div class="flex items-center gap-2 min-w-44 justify-center">
-        <span class="text-sm font-semibold" style="color: #E2E8F0;">
-          <%= l(@current_date || Date.current, format: "%B %Y") %>
-        </span>
-        <% unless on_today %>
-          <%= link_to request.path + "?month=#{today_month.strftime('%Y-%m')}", class: "px-2 py-0.5 rounded text-xs font-medium transition-colors hover:opacity-80", style: "background-color: rgba(108,99,255,0.2); color: #6C63FF;" do %>
-            <%= t("layouts.topbar.back") %>
+      <div class="flex items-center gap-1 justify-center w-full"
+           data-controller="month-jump"
+           data-month-jump-min-value="<%= min_month.strftime('%Y-%m') %>"
+           data-month-jump-max-value="<%= max_month.beginning_of_month.strftime('%Y-%m') %>"
+           data-month-jump-current-value="<%= @current_date.beginning_of_month.strftime('%Y-%m') %>"
+           data-month-jump-path-value="<%= request.path %>"
+           data-month-jump-locale-value="<%= I18n.locale %>">
+        <% if at_min %>
+          <span class="p-1.5 rounded-lg cursor-not-allowed opacity-25" style="color: #8892A4;">
+            <%= svg_icon "chevron-left", css_class: "w-4 h-4" %>
+          </span>
+        <% else %>
+          <%= link_to request.path + "?month=#{prev_date.strftime('%Y-%m')}", class: "p-1.5 rounded-lg transition-colors hover:bg-white/5", style: "color: #8892A4;", data: { turbo_prefetch: "false" } do %>
+            <%= svg_icon "chevron-left", css_class: "w-4 h-4" %>
           <% end %>
         <% end %>
-      </div>
 
-      <% if at_max %>
-        <span class="p-1.5 rounded-lg cursor-not-allowed opacity-25" style="color: #8892A4;">
-          <%= svg_icon "chevron-right", css_class: "w-4 h-4" %>
-        </span>
-      <% else %>
-        <%= link_to request.path + "?month=#{next_date.strftime('%Y-%m')}", class: "p-1.5 rounded-lg transition-colors hover:bg-white/5", style: "color: #8892A4;", data: { turbo_prefetch: "false" } do %>
-          <%= svg_icon "chevron-right", css_class: "w-4 h-4" %>
+        <div class="flex items-center gap-2 min-w-44 justify-center">
+          <button type="button"
+                  data-action="month-jump#open"
+                  class="text-sm font-semibold rounded-lg px-2 py-1 -mx-1 transition-colors hover:bg-white/5 cursor-pointer text-left"
+                  style="color: #E2E8F0;"
+                  aria-haspopup="dialog"
+                  aria-label="<%= t('layouts.topbar.jump_month_aria') %>">
+            <%= l(@current_date || Date.current, format: "%B %Y") %>
+          </button>
+          <% unless on_today %>
+            <%= link_to request.path + "?month=#{today_month.strftime('%Y-%m')}", class: "px-2 py-0.5 rounded text-xs font-medium transition-colors hover:opacity-80", style: "background-color: rgba(108,99,255,0.2); color: #6C63FF;" do %>
+              <%= t("layouts.topbar.back") %>
+            <% end %>
+          <% end %>
+        </div>
+
+        <% if at_max %>
+          <span class="p-1.5 rounded-lg cursor-not-allowed opacity-25" style="color: #8892A4;">
+            <%= svg_icon "chevron-right", css_class: "w-4 h-4" %>
+          </span>
+        <% else %>
+          <%= link_to request.path + "?month=#{next_date.strftime('%Y-%m')}", class: "p-1.5 rounded-lg transition-colors hover:bg-white/5", style: "color: #8892A4;", data: { turbo_prefetch: "false" } do %>
+            <%= svg_icon "chevron-right", css_class: "w-4 h-4" %>
+          <% end %>
         <% end %>
-      <% end %>
+
+        <dialog data-month-jump-target="dialog"
+                class="month-jump-dialog m-auto rounded-xl border shadow-2xl p-0 backdrop:bg-black/60 overflow-visible max-h-none"
+                style="background-color: #1E2130; border-color: #2A2F45; color: #E2E8F0; max-width: min(100vw - 2rem, 22rem); width: min(100vw - 2rem, 22rem);">
+          <form data-action="submit->month-jump#apply" class="p-4 space-y-4 overflow-visible max-w-full">
+            <h3 id="month-jump-title" class="text-sm font-semibold" style="color: #E2E8F0;"><%= t("layouts.topbar.jump_month_title") %></h3>
+            <div class="relative">
+              <input type="text"
+                     data-month-jump-target="input"
+                     aria-labelledby="month-jump-title"
+                     autocomplete="off"
+                     readonly
+                     class="w-full pl-3 pr-9 py-2.5 rounded-lg border text-sm outline-none focus:ring-2 focus:ring-[#6C63FF] transition-all cursor-pointer flatpickr-input"
+                     style="background-color: #0F1117; border-color: #2A2F45; color: #E2E8F0; color-scheme: dark;">
+              <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" style="color: #8892A4;">
+                <%= svg_icon "calendar", css_class: "w-4 h-4" %>
+              </span>
+            </div>
+            <div class="flex justify-end gap-2 pt-1">
+              <button type="button"
+                      data-action="month-jump#cancel"
+                      class="px-3 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/5"
+                      style="color: #8892A4;">
+                <%= t("layouts.topbar.jump_month_cancel") %>
+              </button>
+              <button type="submit"
+                      class="px-4 py-2 rounded-lg text-sm font-semibold transition-colors hover:opacity-90"
+                      style="background-color: #6C63FF; color: white;">
+                <%= t("layouts.topbar.jump_month_apply") %>
+              </button>
+            </div>
+          </form>
+        </dialog>
+      </div>
     <% end %>
   </div>
 

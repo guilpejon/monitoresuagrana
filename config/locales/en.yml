@@ -77,6 +77,10 @@ en:
     topbar:
       back: "Current"
       add_expense: "Add Expense"
+      jump_month_aria: "Choose a different month"
+      jump_month_title: "Go to month"
+      jump_month_apply: "Go"
+      jump_month_cancel: "Cancel"
     mobile_nav:
       home: "Home"
       expenses: "Expenses"

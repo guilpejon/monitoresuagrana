@@ -112,6 +112,10 @@ pt-BR:
     topbar:
       back: "Atual"
       add_expense: "Adicionar Despesa"
+      jump_month_aria: "Escolher outro mês"
+      jump_month_title: "Ir para o mês"
+      jump_month_apply: "Ir"
+      jump_month_cancel: "Cancelar"
     mobile_nav:
       home: "Início"
       expenses: "Despesas"
