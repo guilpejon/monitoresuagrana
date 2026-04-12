@@ -214,6 +214,8 @@ pt-BR:
       no_bank_account: "Sem conta"
       installments: "Parcelas"
       per_installment: "Por parcela:"
+      # Placeholders __RN__, __R__, __L__ — filled in JS (installment preview)
+      per_installment_split: "__RN__× __R__ + última __L__"
       installment_label: "Parcela"
       installment_of: "de"
       installment_note: "— somente esta parcela será atualizada"

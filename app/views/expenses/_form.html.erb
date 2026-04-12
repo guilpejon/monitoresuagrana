@@ -1,6 +1,9 @@
 <% locked_installment = expense.persisted? && expense.installment? %>
 <% locked_recurring = expense.persisted? && expense.recurring? && !locked_installment %>
-<%= form_with model: expense, class: "space-y-4", data: { controller: "expense-payment" } do |f| %>
+<%= form_with model: expense, class: "space-y-4", data: {
+      controller: "expense-payment",
+      expense_payment_split_template_value: t("expenses.form.per_installment_split")
+    } do |f| %>
   <% if expense.errors.any? %>
     <div class="px-4 py-3 rounded-lg border text-sm" style="background-color: rgba(255,107,107,0.1); border-color: #FF6B6B; color: #FF6B6B;">
       <ul class="space-y-1">

@@ -261,17 +261,15 @@ class ExpensesController < ApplicationController
 
   def create_installments(total_installments)
     @expense = current_user.expenses.build(expense_params)
-    group_id  = SecureRandom.uuid
-    total     = @expense.amount
-    per       = (total / total_installments).round(2)
+    group_id = SecureRandom.uuid
     base_date = @expense.date
+    split_amounts = ::InstallmentSplit.amounts(@expense.amount, total_installments)
 
     records = (1..total_installments).map do |n|
-      amount = n == total_installments ? total - per * (total_installments - 1) : per
       current_user.expenses.build(
         expense_params.merge(
           date: base_date >> (n - 1),
-          amount: amount,
+          amount: split_amounts[n - 1],
           installment_number: n,
           total_installments: total_installments,
           installment_group_id: group_id

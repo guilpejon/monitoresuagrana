@@ -214,6 +214,7 @@ es:
       no_bank_account: "Sin cuenta"
       installments: "Cuotas"
       per_installment: "Por cuota:"
+      per_installment_split: "__RN__× __R__ + última __L__"
       installment_label: "Cuota"
       installment_of: "de"
       installment_note: "— solo esta cuota será actualizada"

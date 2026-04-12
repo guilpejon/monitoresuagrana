@@ -309,6 +309,26 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
     assert_equal [ 100.0, 100.0, 100.0 ], amounts
   end
 
+  test "POST create with 12 installments puts cent remainder on last installment" do
+    sign_in @user
+    post expenses_path, params: {
+      expense: {
+        description: "Big purchase",
+        amount: 1000.00,
+        date: Date.current,
+        expense_type: "variable",
+        category_id: @category.id,
+        payment_method: "credit_card",
+        total_installments: 12,
+        installment_number: 1
+      }
+    }
+    amounts = @user.expenses.order(id: :asc).last(12).map(&:amount).map(&:to_f)
+    assert_equal 11, amounts.count(83.33)
+    assert_in_delta 83.37, amounts.last, 0.001
+    assert_in_delta 1000.0, amounts.sum, 0.001
+  end
+
   test "POST create with multiple installments advances date by month" do
     sign_in @user
     base = Date.new(2026, 3, 1)

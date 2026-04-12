@@ -1,6 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
+  static values = { splitTemplate: String }
+
   static targets = [
     "creditCardField",
     "bankAccountField",
@@ -16,6 +18,18 @@ export default class extends Controller {
     this.updatePerInstallment()
   }
 
+  // Mirrors InstallmentSplit in app/services/installment_split.rb
+  static installmentAmounts(total, count) {
+    if (count <= 1) return [total]
+    const per = Math.round((total / count) * 100) / 100
+    const last = Math.round((total - per * (count - 1)) * 100) / 100
+    return [...Array(count - 1).fill(per), last]
+  }
+
+  static formatBrl(n) {
+    return `R$ ${n.toFixed(2).replace(".", ",")}`
+  }
+
   methodChanged() {
     this.updateVisibility()
     this.updatePerInstallment()
@@ -26,8 +40,27 @@ export default class extends Controller {
 
     const amount = parseFloat(this.amountTarget.value) || 0
     const installments = parseInt(this.installmentsTarget.value) || 1
-    const per = installments > 0 ? (amount / installments).toFixed(2) : amount.toFixed(2)
-    this.perInstallmentDisplayTarget.textContent = `R$ ${per.replace(".", ",")}`
+
+    if (installments <= 1) {
+      this.perInstallmentDisplayTarget.textContent = this.constructor.formatBrl(amount)
+      return
+    }
+
+    const amounts = this.constructor.installmentAmounts(amount, installments)
+    const per = amounts[0]
+    const last = amounts[amounts.length - 1]
+
+    if (Math.abs(per - last) < 0.005) {
+      this.perInstallmentDisplayTarget.textContent = this.constructor.formatBrl(per)
+      return
+    }
+
+    const tpl = this.hasSplitTemplateValue ? this.splitTemplateValue : "__RN__× __R__ + last __L__"
+    const text = tpl
+      .replaceAll("__RN__", String(installments - 1))
+      .replaceAll("__R__", this.constructor.formatBrl(per))
+      .replaceAll("__L__", this.constructor.formatBrl(last))
+    this.perInstallmentDisplayTarget.textContent = text
   }
 
   updateVisibility() {

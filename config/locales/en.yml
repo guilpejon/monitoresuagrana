@@ -179,6 +179,7 @@ en:
       no_bank_account: "No account"
       installments: "Installments"
       per_installment: "Per installment:"
+      per_installment_split: "__RN__× __R__ + last __L__"
       installment_label: "Installment"
       installment_of: "of"
       installment_note: "— only this installment will be updated"
